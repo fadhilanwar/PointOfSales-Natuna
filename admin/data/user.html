@@ -1,110 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    <title>Data Pelanggan - NATUNA Grosir</title>
     <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
-<div class="container">
 
-    <!-- Navigation bar -->
-    <nav class="flex justify-between items-center sticky top-0 p-4 bg-[#314158] shadow-md">
-        <div class="flex items-center">
+    <div class="header">
+        <div class="logo">NATUNA Grosir</div>
+        
+        <ul class="menu-kiri">
+            <li><a href="../index.html">Dashboard</a></li>
+            <li><a href="jenis.html">Jenis Barang</a></li>
+            <li><a href="barang.html">Barang</a></li>
+            <li><a href="#" class="aktif">User</a></li>
+        </ul>
 
-            <div class="text-xl text-white font-bold mr-5">NATUNA Grosir</div>
-            <ul class="flex items-center text-white space-x-6">
-                <li class="border-transparent hover:border-b hover:border-gray-100 transition-colors duration-200 ease-in">
-                    <a href="../index.html">Dashboard</a>
-                </li>
-                <li class="border-transparent hover:border-b hover:border-gray-100 transition-colors duration-200 ease-in">
-                    <a href="jenis.html">Jenis Barang</a>
-                </li>
-                <li class="border-transparent hover:border-b hover:border-gray-100 transition-colors duration-200 ease-in">
-                    <a href="barang.html">Barang</a>
-                </li>
-                <li class="border-b border-gray-100">
-                    <a href="#">User</a>
-                </li>
-                
-                
-                
-            </ul>
-        </div>
-        <ul class="flex items-center text-white space-x-6">
+        <ul class="menu-kanan">
             <li><a href="">Kasir</a></li>
             <li><a href="">Laporan</a></li>
         </ul>
-    </nav>
-
-    <!-- Navigation bar END END -->    
-     
-
- 
-
-     <!-- Main Content -->
-    <div class="h-screen">    
-        <main class="p-10">
-             <!-- Header Page -->
-            <h1 class="text-2xl">Data User</h1>
-            <h5 class="text-gray-500 text-sm pb-4">Pengguna yang dapat melakukan akses login</h5>
-            <!-- Header Page END -->
-            <div class="shadow-lg border rounded-lg">
-                <table class="w-full text-sm">
-                    <thead class="bg-gray-100 border-b-2 border-gray-200 text-left">
-                    <tr>
-                        <th class="p-3 text-gray-700">#</th>
-                        <th class="p-3 text-gray-700">Nama Barang</th>
-                        <th class="p-3 text-gray-700">Kategori</th>
-                        <th class="p-3 text-gray-700">Stok</th>
-                        <th class="p-3 text-gray-700">Harga</th>
-                        <th class="p-3 text-gray-700 text-center">Aksi</th>
-                    </tr>
-                    </thead>
-
-                
-                    <tbody class="bg-white">
-                    <!-- Baris -->
-                    <tr class="border-b hover:bg-gray-50 transition duration-300">
-                        <td class="p-3 font-bold">1</td>
-                        <td class="p-3">Susu Kotak Ultra</td>
-                        <td class="p-3">Minuman</td>
-                        <td class="p-3 text-green-600 font-bold">25</td>
-                        <td class="p-3">Rp 6.000</td>
-                        <td class="p-3 text-center">
-                        <button class="bg-blue-500 text-sm text-white px-5 py-1 rounded hover:bg-blue-700 transition duration-300">Edit</button>
-                        <button class="bg-red-500 text-sm text-white px-5 py-1 rounded hover:bg-red-700 transition duration-300">Hapus</button>
-                        </td>
-                    </tr>
-                    <!-- BARIS -->
-                    <!-- Baris -->
-                    <tr class="border-b hover:bg-gray-50 transition duration-300">
-                        <td class="p-3 font-bold">2</td>
-                        <td class="p-3">Indomie Goreng</td>
-                        <td class="p-3">Minuman</td>
-                        <td class="p-3 text-red-600 font-bold">5</td>
-                        <td class="p-3">Rp 3.000</td>
-                        <td class="p-3 text-center">
-                        <button class="bg-blue-500 text-sm text-white px-5 py-1 rounded hover:bg-blue-700 transition duration-300">Edit</button>
-                        <button class="bg-red-500 text-sm text-white px-5 py-1 rounded hover:bg-red-700 transition duration-300">Hapus</button>
-                        </td>
-                    </tr>
-                    <!-- BARIS -->
-
-                    </tbody>
-                </table>
-            </div>
-            <!-- Tablenya -->
-        </main>
     </div>
-    <!-- Main Content END -->
-</div>
+
+    <div class="konten">
+        <h1>Data Pelanggan / Client</h1>
+        <p class="keterangan">Pengguna yang dapat melakukan akses login</p>
+        <div class="header-konten">
+            <a class="tombol-insert" href="crud-page/insert-user.html">
+                + Tambah Data
+            </a>
+            
+            <div class="grup-pencarian">
+                <input type="text" class="input-cari" placeholder="Cari...">
+                <button class="tombol-cari">Cari</button>
+            </div>
+        </div>  
+
+        <div class="bungkus-tabel">
+            <table class="tabel-data">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID User</th>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>1</b></td>
+                        <td>USR0001</td>
+                        <td>Udin Jamaludin</td>
+                        <td>Jl. Kenanga, U7 No. 10</td>
+                        <td>
+                            <a href="crud-page/edit-user.html">
+                                <button class="tombol-edit">Edit</button>
+                            </a>                            
+                            <button onclick="confirm('Apakah Anda yakin ingin menghapus user ini?')" class="tombol-hapus">Hapus</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>2</b></td>
+                        <td>USR0002</td>
+                        <td>Asep Surasep</td>
+                        <td>Jl. Bugenville, U8 No. 03</td>
+                        <td>
+                            <a href="crud-page/edit-user.html">
+                                <button class="tombol-edit">Edit</button>
+                            </a>
+                            <button onclick="confirm('Apakah Anda yakin ingin menghapus user ini?')" class="tombol-hapus">Hapus</button>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+    </div>
         
 </body>
 </html>
