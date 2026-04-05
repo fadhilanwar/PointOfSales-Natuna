@@ -1,16 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>Natuna E-Commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontSize: {
+                        'display': '60px',
+                        'h1': '44px',
+                        'h2': '36px',
+                        'h3': '28px',
+                        'h4': '24px',
+                        'h5': '20px',
+                        'p18': '18px',
+                        'p16': '16px',
+                        'p12': '12px',
+                        'l18': '18px',
+                        'l16': '16px',
+                        'l12': '12px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer components {
+            .btn-sm {
+                @apply text-l12 font-medium px-[8px] py-[4px] bg-cyan-600 text-neutral-50 hover:bg-cyan-700 active:bg-cyan-900 focus:outline focus:outline-[3px] focus:outline-cyan-100 transition-colors rounded;
+            }
+            .btn-md {
+                @apply text-l12 font-medium px-[16px] py-[8px] bg-cyan-600 text-neutral-50 hover:bg-cyan-700 active:bg-cyan-900 focus:outline focus:outline-[3px] focus:outline-cyan-100 transition-colors rounded;
+            }
+            .btn-lg {
+                @apply text-l18 font-medium px-[16px] py-[8px] bg-cyan-600 text-neutral-50 hover:bg-cyan-700 active:bg-cyan-900 focus:outline focus:outline-[3px] focus:outline-cyan-100 transition-colors rounded;
+            }
+        }
+    </style>
 </head>
-<body>
-    <h2>Halaman Landing Page</h2>
-    
+
+<body class="bg-neutral-50 text-neutral-800 font-sans">
+
+    <header class="bg-white sticky top-0 z-50 shadow-sm border-b border-neutral-200">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center gap-6">
+            <div class="text-cyan-600 font-bold text-h3">
+                Natuna
+            </div>
+
+            <div class="flex-1 flex items-center border-2 border-cyan-600 rounded-md overflow-hidden bg-white">
+                <select
+                    class="bg-neutral-100 text-p12 px-3 py-3 border-neutral-200 outline-none text-neutral-600 font-medium">
+                    <option>Semua Kategori</option>
+                </select>
+                <input type="text" placeholder="Cari produk di sini..."
+                    class="w-full px-4 py-2 text-p16 outline-none font-regular">
+                <button class="bg-cyan-600 text-white px-6 py-3 hover:bg-cyan-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-4 text-p16">
+                <a href="#" class="text-cyan-600 font-semibold hover:underline">Masuk / Daftar</a>
+                <div class="relative cursor-pointer text-cyan-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-4 py-6">
+
+        <div
+            class="w-full h-[300px] bg-gradient-to-r from-cyan-600 to-cyan-400 rounded-xl mb-8 flex items-center justify-center shadow-md relative overflow-hidden">
+            <div class="text-center text-neutral-50">
+                <h1 class="text-h1 font-bold mb-2 uppercase drop-shadow-md">Beli 2 Gratis 1</h1>
+                <p class="text-p18 font-medium bg-neutral-900/20 inline-block px-4 py-1 rounded-full">Periode 12 - 15
+                    April</p>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-x-8 gap-y-4 mb-10">
+            <div class="flex flex-col items-center gap-2 cursor-pointer group">
+                <div
+                    class="w-32 h-32 bg-neutral-100 border border-neutral-200 rounded-xl flex items-center justify-center group-hover:bg-cyan-50 transition overflow-hidden">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkhOcYs77uQe6BLkOZ7oL3mx8VxBfW3TjGYQ&s"
+                        alt="Kategori Barang"
+                        class="w-20 h-20 object-contain transition-transform duration-300 group-hover:scale-110">
+                </div>
+                <span class="text-l12 font-medium text-neutral-600 text-center w-16">Makanan</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 cursor-pointer group">
+                <div
+                    class="w-32 h-32 bg-neutral-100 border border-neutral-200 rounded-xl flex items-center justify-center group-hover:bg-cyan-50 transition overflow-hidden">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRet52dN9P5o_hh2zN3sup_8r0sOh6Kf0oR8w&s"
+                        alt="Kategori Barang"
+                        class="w-20 h-20 object-contain transition-transform duration-300 group-hover:scale-110">
+                </div>
+                <span class="text-l12 font-medium text-neutral-600 text-center w-16">Minuman</span>
+            </div>
+
+        </div>
+
+        <section class="mb-8 mt-12">
+            <h2 class="text-h4 font-bold text-neutral-800 mb-6 border-b border-neutral-200 pb-2">Rekomendasi Untuk Anda
+            </h2>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+
+                <div
+                    class="bg-white rounded-lg p-3 flex flex-col border border-neutral-200 hover:border-cyan-600 hover:shadow-lg transition group">
+                    <div class="h-32 flex items-center justify-center bg-neutral-50 mb-3 rounded-md overflow-hidden">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3KCVDPokmiGz03Mensgl5Og9M7c27EeRxag&s"
+                            alt="Kecap"
+                            class="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105">
+                    </div>
+
+                    <h3
+                        class="text-p16 font-medium text-neutral-700 line-clamp-2 mb-2 flex-1 hover:text-cyan-600 cursor-pointer">
+                        Kecap Manis 520ml
+                    </h3>
+                    <div>
+                        <div class="text-cyan-600 font-bold text-h5 leading-none mb-3">Rp 18.500</div>
+                        <button class="btn-sm w-full">
+                            Beli
+                        </button>
+                    </div>
+                </div>
+                <div
+                    class="bg-white rounded-lg p-3 flex flex-col border border-neutral-200 hover:border-cyan-600 hover:shadow-lg transition group">
+                    <div class="h-32 flex items-center justify-center bg-neutral-50 mb-3 rounded-md overflow-hidden">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQm1LOoVc3WiL9kUXusEBV6Z0xl2iFTHlEEvg&s"
+                            alt="Kecap"
+                            class="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105">
+                    </div>
+
+                    <h3
+                        class="text-p16 font-medium text-neutral-700 line-clamp-2 mb-2 flex-1 hover:text-cyan-600 cursor-pointer">
+                        Air Mineral Botol 600ml
+                    </h3>
+                    <div>
+                        <div class="text-cyan-600 font-bold text-h5 leading-none mb-3">Rp 2.000</div>
+                        <button class="btn-sm w-full">
+                            Beli
+                        </button>
+                    </div>
+                </div>
+                <div
+                    class="bg-white rounded-lg p-3 flex flex-col border border-neutral-200 hover:border-cyan-600 hover:shadow-lg transition group">
+                    <div class="h-32 flex items-center justify-center bg-neutral-50 mb-3 rounded-md overflow-hidden">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1l_9YAH-3fQcQA6iANZ-Ved_Ea2ohC0UFIA&s"
+                            alt="Kecap"
+                            class="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105">
+                    </div>
+
+                    <h3
+                        class="text-p16 font-medium text-neutral-700 line-clamp-2 mb-2 flex-1 hover:text-cyan-600 cursor-pointer">
+                        Mie Goreng Instan
+                    </h3>
+                    <div>
+                        <div class="text-cyan-600 font-bold text-h5 leading-none mb-3">Rp 3.000</div>
+                        <button class="btn-sm w-full">
+                            Beli
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="bg-cyan-800 text-neutral-50 p-6 mt-10">
+        <div
+            class="max-w-7xl mx-auto px-4 border-t border-cyan-700 flex flex-col md:flex-row justify-between items-center text-p12 text-cyan-200 font-regular">
+            <p>Copyright &copy; 2026 <b>Natuna</b>.</p>
+        </div>
+    </footer>
+
 </body>
+
 </html>
