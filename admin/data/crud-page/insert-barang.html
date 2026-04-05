@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data User - NATUNA Grosir</title>
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">NATUNA Grosir</div>
+        
+        <ul class="menu-kiri">
+            <li><a href="../../index.html">Dashboard</a></li>
+            <li><a href="../jenis.html">Jenis Barang</a></li>
+            <li><a class="aktif" href="../barang.html">Barang</a></li>
+            <li><a href="../user.html">User</a></li>
+        </ul>
+
+        <ul class="menu-kanan">
+            <li><a href="">Kasir</a></li>
+            <li><a href="">Laporan</a></li>
+        </ul>
+    </div>
+
+    <div class="konten">
+        <h1>INSERT - Data Barang</h1>
+        <p class="keterangan">Tambahkan Data Barang</p>
+
+    <div class="bungkus-form">
+            <form action="../barang.html" method="POST">
+                
+                <div class="grup-input">
+                    <label>Nama Barang</label>
+                    <input type="text"  placeholder="Masukkan nama barang" required>
+                </div>
+                <div class="grup-input">
+                    <label for="name">Kategori</label>
+                    <select name="" id="">
+                        <option value="">Makanan</option>
+                        <option value="">Minuman</option>
+                        <option value="">Pembersih Pakaian</option>
+                    </select>
+                </div>
+
+                <div class="grup-input">
+                    <label for="">Harga Supplier (Rp.)</label>
+                    <input type="number" id="" name="" placeholder="Masukkan harga dari supplier" required>
+                </div>
+                <div class="grup-input">
+                    <label for="">Harga Jual Satuan (Rp.)</label>
+                    <input type="number" id="" name="" placeholder="Masukkan harga jual" required>
+                </div>
+                <div class="grup-input">
+                    <label for="">Stok</label>
+                    <input type="number" id="" name="" placeholder="Masukkan stok awal" required>
+                </div>
+
+               
+
+
+                <div class="aksi-form">
+                    <div class="aksi-form-kiri">
+
+                        <button type="submit" class="tombol-simpan">Simpan Data</button>
+                        <button type="reset" class="tombol-batal">Clear</button>
+                    </div>
+                    <div class="aksi-form-kanan">
+                        <a class="tombol-batal" href="../barang.html">Kembali</a>
+                    </div>
+
+                    
+                </div>
+
+            </form>
+        </div>        
+
+    </div>
+        
+</body>
+</html>

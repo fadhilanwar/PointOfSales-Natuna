@@ -2,9 +2,330 @@
     margin: 0;
     padding: 0;
     font-family: Figtree;
+
 }
 
 /* STYLING ADMIN */
-*{
-    
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
 }
+
+/* --- BAGIAN NAVBAR --- */
+.header {
+    background-color: #314158;
+    padding: 15px 25px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.logo {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 30px;
+}
+
+.menu-kiri {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.menu-kiri li {
+    margin-right: 20px;
+}
+
+.menu-kiri li a {
+    color: white;
+    text-decoration: none;
+    padding-bottom: 5px;
+}
+
+.menu-kiri li a:hover {
+    border-bottom: 2px solid white;
+}
+
+.aktif {
+    border-bottom: 2px solid white;
+}
+
+.menu-kanan {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    margin-left: auto; /* Dorong menu ini ke paling kanan */
+}
+
+.menu-kanan li {
+    margin-left: 20px;
+}
+
+.menu-kanan li a {
+    color: white;
+    text-decoration: none;
+}
+
+/* --- BAGIAN KONTEN --- */
+.header-konten{
+    margin-bottom: 20px;
+}
+.konten {
+    padding: 30px 40px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+    margin-top: 0;
+    color: #333;
+}
+
+.keterangan {
+    color: gray;
+    font-size: 14px;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+/* --- BAGIAN CARD --- */
+.bungkus-kotak {
+    display: flex;
+    justify-content: space-between; /* Biar ada jarak di antara kotak */
+}
+
+.kotak {
+    background-color: white;
+    width: 31%;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #cccccc;
+    box-sizing: border-box; 
+}
+
+/* --- BAGIAN TABEL --- */
+.bungkus-tabel {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #cccccc;
+    overflow: hidden; /* Supaya sudut lengkung (border-radius) tidak tertutup tabel */
+}
+
+.tabel-data {
+    width: 100%;
+    border-collapse: collapse; /* Menghapus spasi bawaan antar garis tabel */
+    font-size: 14px;
+}
+
+.tabel-data thead {
+    background-color: #f3f4f6;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+}
+
+.tabel-data th, .tabel-data td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.tabel-data tbody tr:hover {
+    background-color: #f9fafb; /* Efek hover saat mouse melewati baris */
+}
+
+.stok-hijau {
+    color: #16a34a; 
+}
+
+.stok-merah {
+    color: #dc2626; 
+}
+
+/* --- per tombol an --- */
+.tombol-edit {
+    background-color: #3b82f6; 
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.tombol-edit:hover {
+    background-color: #2563eb; 
+}
+
+.tombol-hapus {
+    background-color: #ef4444; 
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.aksi-form .aksi-form-kanan .tombol-batal{
+    background-color: #ef4444;
+    color: white;
+}
+
+.aksi-form .aksi-form-kanan .tombol-batal:hover{
+    background-color: #dc2626;
+    color: white;
+}
+
+.tombol-hapus:hover {
+    background-color: #dc2626; 
+}
+
+/* --- BAGIAN ATAS TABEL (TOMBOL & PENCARIAN) --- */
+.header-konten {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 15px; 
+}
+
+/* Styling Tombol Tambah Data */
+.tombol-insert {
+    background-color: #16a34a;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 1px 1px 3px #cccccc;
+}
+
+.tombol-insert:hover {
+    background-color: #15803d; /* Hijau lebih gelap */
+}
+
+/* Styling Grup Pencarian */
+.grup-pencarian {
+    display: flex;
+}
+
+.input-cari {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    width: 250px;
+    font-family: Arial, sans-serif;
+}
+
+.input-cari:focus {
+    border-color: #3b82f6;
+}
+
+.tombol-cari {
+    background-color: #3b82f6; /* Warna biru */
+    color: white;
+    border: 1px solid #3b82f6;
+    padding: 8px 15px;
+    border-radius: 0 4px 4px 0; /* Sudut lengkung hanya di sebelah kanan */
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tombol-cari:hover {
+    background-color: #2563eb; /* Biru lebih gelap */
+}
+
+
+
+/* Styling Form CRUD */
+textarea, input{
+    font-family: Figtree;
+}
+.bungkus-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 5px #cccccc;
+    width: 50%;
+    min-width: 400px;
+}
+
+.grup-input {
+    margin-bottom: 20px;
+}
+
+.grup-input label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #444;
+    font-size: 14px;
+}
+
+.grup-input input, 
+.grup-input select,
+.grup-input textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* Efek saat input diklik/difokuskan */
+.grup-input input:focus, 
+.grup-input select:focus,
+.grup-input textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+.aksi-form {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px; 
+    justify-content: space-between;
+}
+
+.aksi-form-kiri{
+    display: flex;
+    gap: 15px;
+}
+
+.tombol-simpan {
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tombol-simpan:hover {
+    background-color: #15803d; /* Hijau lebih gelap */
+}
+
+.tombol-batal {
+    background-color: #f3f4f6; /* Abu-abu terang */
+    color: #333;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block; /* Agar tag <a> bisa dikasih padding seperti tombol */
+}
+
+.tombol-batal:hover {
+    background-color: #e5e7eb; /* Abu-abu lebih gelap sedikit */
+}   

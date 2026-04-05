@@ -1,57 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    <title>Data Barang - NATUNA Grosir</title>
     <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
-    <!-- Navigation bar -->
-    <nav class="flex justify-between items-center sticky top-0 p-4 bg-[#314158] shadow-md">
-        <div class="flex items-center">
+    <div class="header">
+        <div class="logo">NATUNA Grosir</div>
+        
+        <ul class="menu-kiri">
+            <li><a href="../index.html">Dashboard</a></li>
+            <li><a href="jenis.html">Jenis Barang</a></li>
+            <li><a href="#" class="aktif">Barang</a></li>
+            <li><a href="user.html">User</a></li>
+        </ul>
 
-            <div class="text-xl text-white font-bold mr-5">NATUNA Grosir</div>
-            <ul class="flex items-center text-white space-x-6">
-                <li class="border-transparent hover:border-b hover:border-gray-100 transition-colors duration-200 ease-in">
-                    <a href="../index.html">Dashboard</a>
-                </li>
-                <li class="border-transparent hover:border-b hover:border-gray-100 transition-colors duration-200 ease-in">
-                    <a href="#">Jenis Barang</a>
-                </li>
-                <li class="border-b border-gray-100">
-                    <a href="barang.html">Barang</a>
-                </li>
-                <li class="border-transparent hover:border-b hover:border-gray-100 transition-colors duration-200 ease-in">
-                    <a href="user.html">User</a>
-                </li>
-                
-                
-                
-            </ul>
-        </div>
-        <ul class="flex items-center text-white space-x-6">
+        <ul class="menu-kanan">
             <li><a href="">Kasir</a></li>
             <li><a href="">Laporan</a></li>
         </ul>
-    </nav>
-
-    <!-- Navigation bar END -->
-    <!-- Main Content -->
-    <div class="h-screen">    
-        <main class="p-10">
-             <!-- Header Page -->
-            <h1 class="text-2xl">Data Barang</h1>
-            <h5 class="text-gray-500 text-sm pb-4">Daftar Semua Barang di Gudang</h5>
-            <!-- Header Page END -->
-        </main>
     </div>
-    <!-- Main Content END --> 
+    <div class="konten">
+        <h1>Data Barang</h1>
+        <p class="keterangan">Daftar Semua Barang di Gudang</p>
+
+        <div class="header-konten">
+            <a class="tombol-insert" href="crud-page/insert-barang.html">
+                + Tambah Data
+            </a>
+            
+            <div class="grup-pencarian">
+                <input type="text" class="input-cari" placeholder="Cari...">
+                <button class="tombol-cari">Cari</button>
+            </div>
+        </div>  
+
+        <div class="bungkus-tabel">
+            <table class="tabel-data">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Kategori</th>
+                        <th>Harga Supplier</th>
+                        <th>Harga Satuan(Jual)</th>
+                        <th>Stok</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>1</b></td>
+                        <td>BRG0001</td>
+                        <td>Indomie Goreng</td>
+                        <td>Makanan</td>
+                        <td>Rp. 2900</td>
+                        <td>Rp. 3000</td>
+                        <td>40</td>
+                        <td>
+                            <a href="crud-page/edit-barang.html">
+                                <button class="tombol-edit">Edit</button>
+                            </a>                            
+                            <button onclick="confirm('Apakah Anda yakin ingin menghapus barang ini?')" class="tombol-hapus">Hapus</button>
+                        </td>
+                    </tr>
+            
+                    
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    
     
 </body>
 </html>
