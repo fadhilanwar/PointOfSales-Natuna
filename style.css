@@ -246,6 +246,17 @@ h1 {
 textarea, input{
     font-family: Figtree;
 }
+.bungkus {
+    background-color: white;
+    padding: 30px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 5px #cccccc;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 400px;
+}
+
 .bungkus-form {
     background-color: white;
     padding: 30px;
