@@ -28,78 +28,57 @@
     </div>
 
     <div class="konten">
-        <h1>Menu Kasir</h1>
-        <p class="keterangan">Buat Transaksi</p>
+        <h1>Masukan ke Keranjang</h1>
+        <p class="keterangan">Menampilkan semua Data Barang di Gudang</p>
 
         <div class="bungkus">
             <!-- MASUKAN DESAIN KESINI -->
-            <div class="header-kasir">
-                <a class="tombol-simpan" href="tambah-keranjang.html">Tambah Barang ke Keranjang</a>
+             <div class="header-kasir">
+                <a class="tombol-biru" href="kasir.html">Kembali</a>
             </div>
 
-        
+            <div class="kasir-input-produk">
+            <label>ID Barang</label>
+            <input type="text" placeholder="Ketik atau Scan Kode Barcode..." class="input-cari">
+            <button class="tombol-cari-kasir">Cari</button>
+        </div>
 
-        <div class="bungkus-tabel" style="margin-top: 15px;">
+        <div class="bungkus-tabel">
             <table class="tabel-data">
                 <thead>
                     <tr>
-                        <th>List</th>
+                        <th>#</th>
                         <th>ID Barang</th>
                         <th>Nama Barang</th>
-                        <th>Harga Satuan</th>
-                        <th>Qty</th>
-                        <th>Subtotal</th>
+                        <th>Kategori</th>
+                        <th>Harga Supplier</th>
+                        <th>Harga Satuan(Jual)</th>
+                        <th>Stok</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>1</td>
+                        <td><b>1</b></td>
                         <td>BRG0001</td>
                         <td>Indomie Goreng</td>
-                        <td>Rp. 3500</td>
-                        <td>2</td>
-                        <td>Rp. 7000</td>
-                        <td class="tengah">
-                            <a href="edit-qty.html">
-                                <button class="tombol-edit">Edit Qty</button>
-                            </a>
-                            <button class="tombol-hapus">Hapus</button>
+                        <td>Makanan</td>
+                        <td>Rp. 2900</td>
+                        <td>Rp. 3000</td>
+                        <td>
+                            <input class="input-jumlah" placeholder="Qty" type="number" name="" id=""></td>
+                        <td>
+                            <a href="kasir.html">
+                                <button class="tombol-biru">Tambah ke Keranjang</button>
+                            </a>                            
                         </td>
                     </tr>
+            
+                    
                 </tbody>
             </table>
         </div>
-
-        <div class="kasir-bawah">
-            
-            <div class="kasir-kiri">
-                <div class="banner-kembali">
-                    Kembali: Rp. 0
-                </div>
-            </div>
-
-            <div class="kasir-kanan">
-                <div class="baris-bayar">
-                    <label>Grand Total</label>
-                    <input type="text" value="Rp. 7000" disabled>
-                </div>
-                
-
-
-
-                <div class="baris-bayar">
-                    <label>Diterima</label>
-                    <input type="number">
-                </div>
-
-
-                <div class="baris-simpan">
-                    <button class="tombol-simpan-transaksi">Simpan Transaksi</button>
-                </div>
-            </div>
-
-        </div>
+        
              <!-- END -->
         </div>
 
