@@ -160,7 +160,78 @@ h1 {
     padding: 6px 15px;
     border-radius: 3px;
     cursor: pointer;
-    font-size: 13px;
+}
+
+.tombol-biru{
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.tombol-simpan {
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tombol-simpan:hover {
+    background-color: #15803d;
+    /* Hijau lebih gelap */
+}
+
+.tombol-batal {
+    background-color: #f3f4f6;
+    /* Abu-abu terang */
+    color: #333;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    /* Agar tag <a> bisa dikasih padding seperti tombol */
+}
+
+.tombol-batal:hover {
+    background-color: #e5e7eb;
+    /* Abu-abu lebih gelap sedikit */
+}
+
+.tombol-cari-kasir {
+    padding: 10px 15px;
+    background-color: #0ea5e9; /* Biru terang khas tombol kasir */
+    color: white;
+    border: 1px solid #0ea5e9;
+    cursor: pointer;
+}
+
+.tombol-cari-kasir:hover {
+    background-color: #0284c7;
+}
+
+.tombol-simpan-transaksi {
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 1px 1px 3px #ccc;
+}
+
+.tombol-simpan-transaksi:hover {
+    background-color: #15803d;
 }
 
 .tombol-edit:hover {
@@ -174,8 +245,9 @@ h1 {
     padding: 6px 15px;
     border-radius: 3px;
     cursor: pointer;
-    font-size: 13px;
 }
+
+
 
 .aksi-form .aksi-form-kanan .tombol-batal {
     background-color: #ef4444;
@@ -206,14 +278,10 @@ h1 {
     text-decoration: none;
     padding: 8px 15px;
     border-radius: 4px;
-    font-size: 14px;
-    font-weight: bold;
-    box-shadow: 1px 1px 3px #cccccc;
 }
 
 .tombol-insert:hover {
     background-color: #15803d;
-    /* Hijau lebih gelap */
 }
 
 /* Styling Grup Pencarian */
@@ -321,37 +389,107 @@ textarea, input {
     gap: 15px;
 }
 
-.tombol-simpan {
-    background-color: #16a34a;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-}
 
-.tombol-simpan:hover {
-    background-color: #15803d;
-    /* Hijau lebih gelap */
-}
 
-.tombol-batal {
-    background-color: #f3f4f6;
-    /* Abu-abu terang */
-    color: #333;
+/* STYLING TRANSAKSI */
+.header-kasir{
+    margin-bottom: 25px;
+}
+.header-kasir a{
     text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    font-weight: bold;
-    display: inline-block;
-    /* Agar tag <a> bisa dikasih padding seperti tombol */
+}
+.kasir-input-produk {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
 }
 
-.tombol-batal:hover {
-    background-color: #e5e7eb;
-    /* Abu-abu lebih gelap sedikit */
+.kasir-input-produk label {
+    font-weight: bold;
+    margin-right: 15px;
+    width: 100px;
 }
+
+.kasir-input-produk .input-cari {
+    flex-grow: 1; /* Input memanjang otomatis */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-right: none; /* Hilangkan garis kanan supaya nyambung dengan tombol */
+}
+
+
+
+
+/* --- BAGIAN BAWAH (KEMBALIAN & PEMBAYARAN) --- */
+.kasir-bawah {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Bagian Kiri (Banner Biru Besar) */
+.kasir-kiri {
+    width: 60%;
+}
+
+.banner-kembali {
+    background-color: #3b82f6;
+    color: white;
+    font-size: 50px; /* Ukuran font super besar */
+    text-align: center;
+    padding: 50px 20px;
+    border-radius: 3px;
+}
+
+/* Bagian kanan */
+.kasir-kanan {
+    width: 37%;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.baris-bayar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.baris-bayar label {
+    width: 100px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.baris-bayar input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #f3f4f6; /* Warna input mati/disabled */
+}
+
+/* Membedakan input yang bisa diketik (diterima) dengan yang sekadar info */
+.baris-bayar input:not([disabled]) {
+    background-color: white; 
+}
+
+.baris-simpan {
+    margin-top: 25px;
+    text-align: right; /* Taruh tombol di kanan */
+}
+
+.input-jumlah {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+
+/* STYLING TRANSAKSI END */
