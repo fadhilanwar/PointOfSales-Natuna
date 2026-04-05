@@ -24,6 +24,8 @@
             <li><a href="transaksi-masuk.html">Transaksi Masuk</a></li>
             <li><a href="jadwal-pengiriman.html">Jadwal Pengiriman</a></li>
             <li><a href="../laporan/laporan.html">Laporan</a></li>
+            <li><a style="color: red;" href="../../login.html">Logout</a></li>
+
         </ul>
     </div>
 
@@ -71,6 +73,7 @@
             </table>
         </div>
 
+        <form action="transaksi-masuk.html" method="post">
         <div class="kasir-bawah">
             
             <div class="kasir-kiri">
@@ -80,16 +83,20 @@
             </div>
 
             <div class="kasir-kanan">
-                <div class="baris-bayar">
+                <div class="grup-input">
                     <label>Grand Total</label>
                     <input type="text" value="Rp. 7000" disabled>
+                </div>
+                <div class=" grup-input">
+                    <label>Nama Pembeli (opsional)</label>
+                    <input type="text" value="">
                 </div>
                 
 
 
 
-                <div class="baris-bayar">
-                    <label>Diterima</label>
+                <div class="grup-input">
+                    <label>Diterima (Rp.)</label>
                     <input type="number">
                 </div>
 
@@ -100,6 +107,7 @@
             </div>
 
         </div>
+        </form>
              <!-- END -->
         </div>
 

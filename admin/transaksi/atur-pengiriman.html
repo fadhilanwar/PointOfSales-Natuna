@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NATUNA Grosir</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">NATUNA Grosir</div>
+        
+        <ul class="menu-kiri">
+            <li><a href="../index.html" >Dashboard</a></li>
+            <li><a href="../data/jenis.html">Jenis Barang</a></li>
+            <li><a href="../data/barang.html">Barang</a></li>
+            <li><a href="../data/user.html">User</a></li>
+            <li><a href="../data/karyawan.html">Karyawan</a></li>
+        </ul>
+
+        <ul class="menu-kanan">
+            <li><a class="aktif" href="../transaksi/kasir.html">Kasir</a></li>
+            <li><a href="transaksi-masuk.html">Transaksi Masuk</a></li>
+            <li><a href="jadwal-pengiriman.html">Jadwal Pengiriman</a></li>
+            <li><a href="../laporan/laporan.html">Laporan</a></li>
+            <li><a style="color: red;" href="../../login.html">Logout</a></li>
+
+        </ul>
+    </div>
+
+    <div class="konten">
+        <h1>Atur Pengiriman : TRX0002</h1>
+        <p class="keterangan">Data Pengiriman untuk transaksi</p>
+        <form action="transaksi-masuk.html" method="post">
+            <!-- BUAT DISINI HALAMAN ATUR PENGIRIMAN -->
+             <div class="bungkus-pengiriman">
+            
+            <div class="kartu-kiri">
+                <h3>Detail Barang</h3>
+                
+                <div class="bungkus-tabel" style="margin-top: 15px;">
+                    <table class="tabel-data">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Barang</th>
+                                <th>Qty</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Gas Melon Isi 5kg</td>
+                                <td>1</td>
+                                <td>Rp 18.000</td>
+                            </tr>
+                        
+                            <tr>
+                                <td colspan="3" style="text-align: right; font-weight: bold;">Total Belanja:</td>
+                                <td style="font-weight: bold; color: #16a34a;">Rp 18.000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="kartu-kanan">
+                <h3>Informasi Pengiriman</h3>
+                
+                <div class="detail-info">
+                    <p><b>Nama Pemesan:</b> Asep Surasep / Warung Pak Asep</p>
+                    <p><b>No. Telp:</b> 0812-3456-7890</p>
+                    <p><b>Alamat Tujuan:</b> Jl. Cihanjuang No. 123, Cimahi Utara, Kota Cimahi</p>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
+
+                <div class="grup-input">
+                    <label for="karyawan">Pilih Karyawan</label>
+                    <select id="karyawan" name="karyawan" required>
+                        <option value="">-- Pilih Kurir --</option>
+                        <option value="asep">Asep</option>
+                        <option value="budi">Budi</option>
+                        <option value="jajang">Jajang</option>
+                    </select>
+                </div>
+
+                <div class="grup-input">
+                    <label for="catatan">Notes untuk kurir (Opsional)</label>
+                    <textarea id="catatan" name="catatan" rows="3" placeholder=""></textarea>
+                </div>
+
+                <div class="aksi-form">
+                    <button type="submit" class="tombol-simpan">Kirim Barang</button>
+                    <a href="transaksi-masuk.html" class="tombol-batal">Batal</a>
+                </div>
+            </div>
+
+        </div>
+            <!-- END -->
+       
+        </form>
+
+        
+    </div>
+
+</body>
+</html>

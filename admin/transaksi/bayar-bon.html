@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NATUNA Grosir</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">NATUNA Grosir</div>
+        
+        <ul class="menu-kiri">
+            <li><a href="../index.html" >Dashboard</a></li>
+            <li><a href="../data/jenis.html">Jenis Barang</a></li>
+            <li><a href="../data/barang.html">Barang</a></li>
+            <li><a href="../data/user.html">User</a></li>
+            <li><a href="../data/karyawan.html">Karyawan</a></li>
+        </ul>
+
+        <ul class="menu-kanan">
+            <li><a class="aktif" href="../transaksi/kasir.html">Kasir</a></li>
+            <li><a href="transaksi-masuk.html">Transaksi Masuk</a></li>
+            <li><a href="jadwal-pengiriman.html">Jadwal Pengiriman</a></li>
+            <li><a href="../laporan/laporan.html">Laporan</a></li>
+            <li><a style="color: red;" href="../../login.html">Logout</a></li>
+
+        </ul>
+    </div>
+    <div class="konten">
+        <h1>Bayarkan Bon : TRX0003</h1>
+        <p class="keterangan">Bayarkan bon pelanggan</p>
+        <form action="transaksi-masuk.html" method="post">
+        <div class="bungkus-form">
+            <div class="grup-input">
+                <label for="">Nama Pembeli</label>
+                <input value="Udin Jamaludin" type="text" name="" id="" disabled>
+            </div>
+            <div class="grup-input">
+                <label for="">Jumlah Kekurangan</label>
+                <input value="6000" type="number" name="" id="" disabled>
+            </div>
+            <div class="grup-input">
+                <label for="">Jumlah Bayar (Rp.)</label>
+                <input type="number" name="" id="">
+            </div>
+             <div class="aksi-form">
+                    <div class="aksi-form-kiri">
+
+                        <button type="submit" class="tombol-simpan">Simpan Data</button>
+                        <button type="reset" class="tombol-batal">Clear</button>
+                    </div>
+                    <div class="aksi-form-kanan">
+                        <a class="tombol-batal" href="transaksi-masuk.html">Kembali</a>
+                    </div>
+
+                    
+                </div>
+        </div>
+        </form>
+
+        
+    </div>
+
+</body>
+</html>

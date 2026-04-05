@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Barang - NATUNA Grosir</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">NATUNA Grosir</div>
+        
+        <ul class="menu-kiri">
+            <li><a href="../index.html" >Dashboard</a></li>
+            <li><a href="jenis.html">Jenis Barang</a></li>
+            <li><a href="barang.html">Barang</a></li>
+            <li><a href="user.html">User</a></li>
+            <li><a class="aktif" href="karyawan.html">Karyawan</a></li>
+        </ul>
+
+        <ul class="menu-kanan">
+            <li><a href="../transaksi/kasir.html">Kasir</a></li>
+            <li><a href="../transaksi/transaksi-masuk.html">Transaksi Masuk</a></li>
+            <li><a href="../transaksi/jadwal-pengiriman.html">Jadwal Pengiriman</a></li>
+            <li><a href="../laporan/laporan.html">Laporan</a></li>
+            <li><a style="color: red;" href="../../login.html">Logout</a></li>
+
+        </ul>
+    </div>
+    <div class="konten">
+        <h1>Data Karyawan</h1>
+        <p class="keterangan">Daftar Semua Karyawan</p>
+
+        <div class="header-konten">
+            <a class="tombol-insert" href="crud-page/insert-karyawan.html">
+                + Tambah Data
+            </a>
+            
+            <div class="grup-pencarian">
+                <input type="text" class="input-cari" placeholder="Cari...">
+                <button class="tombol-cari">Cari</button>
+            </div>
+        </div>  
+
+        <div class="bungkus-tabel">
+            <table class="tabel-data">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ID Karyawan</th>
+                        <th>Nama Karyawan</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>1</b></td>
+                        <td>EMP0001</td>
+                        <td>Zaenal</td>
+                        <td>Pria</td>
+                        <td>
+                            <a href="crud-page/edit-karyawan.html">
+                                <button class="tombol-edit">Edit</button>
+                            </a>                            
+                            <button onclick="confirm('Apakah Anda yakin ingin menghapus data karyawan ini?')" class="tombol-hapus">Hapus</button>
+                        </td>
+                    </tr>
+            
+                    
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
+    
+    
+</body>
+</html>

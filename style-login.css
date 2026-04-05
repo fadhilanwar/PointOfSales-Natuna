@@ -1,0 +1,122 @@
+*{
+    font-family: Figtree;
+}
+
+.body-login {
+    background-color: #FAFAFA;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+}
+
+.bungkus-login {
+    background-color: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border: 1px solid #e5e7eb;
+    box-sizing: border-box;
+}
+
+.header-login {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.judul-besar {
+    font-size: 30px;
+    font-weight: 300;
+    letter-spacing: 3px; 
+    margin: 0;
+    color: black;
+}
+
+.judul-kecil {
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    color: #6b7280;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.garis-pemisah {
+    width: 50px;
+    height: 1px;
+    background-color: black;
+    margin: 15px auto 0 auto;
+}
+
+.grup-input-login {
+    margin-bottom: 25px;
+}
+
+.grup-input-login label {
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #6b7280;
+    margin-bottom: 5px;
+}
+
+.input-garis {
+    width: 100%;
+    padding: 8px 0;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #d1d5db; 
+    font-size: 14px;
+    color: black;
+    box-sizing: border-box;
+    outline: none; 
+    transition: border-color 0.3s ease; 
+}
+
+.input-garis::placeholder {
+    color: #d1d5db;
+}
+
+.input-garis:focus {
+    border-bottom: 1px solid black;
+}
+
+.tombol-hitam {
+    width: 100%;
+    padding: 14px 0;
+    background-color: black;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid black;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.tombol-hitam:hover {
+    background-color: #222222;
+}
+
+.bantuan-login {
+    text-align: center;
+    font-size: 12px;
+    color: gray;
+    margin-top: 20px;
+}
+
+.link-wa {
+    color: #4682B4;
+    font-weight: bold;
+    text-decoration: none;
+    border-bottom: 1px solid black;
+    padding-bottom: 2px;
+}
+
+.link-wa:hover {
+    color: #315f86;
+}

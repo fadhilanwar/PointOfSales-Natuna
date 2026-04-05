@@ -3,40 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Jenis Barang - NATUNA Grosir</title>
+    <title>Data Barang - NATUNA Grosir</title>
     <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
-
     <div class="header">
         <div class="logo">NATUNA Grosir</div>
         
         <ul class="menu-kiri">
             <li><a href="../index.html" >Dashboard</a></li>
-            <li><a class="aktif" href="jenis.html">Jenis Barang</a></li>
-            <li><a href="barang.html">Barang</a></li>
-            <li><a href="user.html">User</a></li>
-            <li><a href="karyawan.html">Karyawan</a></li>
+            <li><a href="../data/jenis.html">Jenis Barang</a></li>
+            <li><a href="../data/barang.html">Barang</a></li>
+            <li><a href="../data/user.html">User</a></li>
+            <li><a href="../data/karyawan.html">Karyawan</a></li>
         </ul>
 
         <ul class="menu-kanan">
             <li><a href="../transaksi/kasir.html">Kasir</a></li>
             <li><a href="../transaksi/transaksi-masuk.html">Transaksi Masuk</a></li>
-            <li><a href="../transaksi/jadwal-pengiriman.html">Jadwal Pengiriman</a></li>
+            <li><a class="aktif"  href="../transaksi/jadwal-pengiriman.html">Jadwal Pengiriman</a></li>
             <li><a href="../laporan/laporan.html">Laporan</a></li>
             <li><a style="color: red;" href="../../login.html">Logout</a></li>
 
         </ul>
     </div>
-
     <div class="konten">
-        <h1>Data Jenis Barang</h1>
-        <p class="keterangan">Jenis Barang</p>
+        <h1>Data Pengiriman</h1>
+        <p class="keterangan">Pengiriman Pesanan Hari Ini</p>
 
         <div class="header-konten">
-            <a class="tombol-insert" href="crud-page/insert-jenis.html">
+            <!-- <a class="tombol-insert" href="crud-page/insert-barang.html">
                 + Tambah Data
-            </a>
+            </a> -->
             
             <div class="grup-pencarian">
                 <input type="text" class="input-cari" placeholder="Cari...">
@@ -49,21 +47,24 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>ID Barang</th>
-                        <th>Nama Jenis</th>
+                        <th>No Transaksi</th>
+                        <th>Nama Pembeli</th>
+                        <th>Total Pesanan</th>
+                        <th>Nama Kurir</th>
+                        <th>Waktu Pengantaran</th>
                         <th>Aksi</th>
-                      
+                    </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><b>1</b></td>
-                        <td>BRG0001</td>
-                        <td>Indomie Goreng</td>
-                        <td>
-                            <a href="crud-page/edit-jenis.html">
-                                <button class="tombol-edit">Edit</button>
-                            </a>                            
-                            <button onclick="confirm('Apakah Anda yakin ingin menghapus jenis barang ini?')" class="tombol-hapus">Hapus</button>
+                        <td>TRX0003</td>
+                        <td>Mustofa</td>
+                        <td>Rp. 18000</td>
+                        <td>Budi</td>
+                        <td>2026-02-04 19:00</td>
+                        <td>                                                  
+                            <button onclick="confirm('Apakah Anda yakin ingin menghapus transaksi ini?')" class="tombol-hapus">Hapus</button>
                         </td>
                     </tr>
             
@@ -72,7 +73,10 @@
             </table>
         </div>
 
-        </div>
 
+    </div>
+
+    
+    
 </body>
 </html>
