@@ -1,8 +1,9 @@
-*{
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
     margin: 0;
     padding: 0;
-    font-family: Figtree;
-
+    font-family: "Figtree", sans-serif;
 }
 
 /* STYLING ADMIN */
@@ -18,7 +19,7 @@ body {
     padding: 15px 25px;
     display: flex;
     align-items: center;
-    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .logo {
@@ -58,7 +59,8 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    margin-left: auto; /* Dorong menu ini ke paling kanan */
+    margin-left: auto;
+    /* Dorong menu ini ke paling kanan */
 }
 
 .menu-kanan li {
@@ -71,9 +73,10 @@ body {
 }
 
 /* --- BAGIAN KONTEN --- */
-.header-konten{
+.header-konten {
     margin-bottom: 20px;
 }
+
 .konten {
     padding: 30px 40px;
 }
@@ -95,7 +98,8 @@ h1 {
 /* --- BAGIAN CARD --- */
 .bungkus-kotak {
     display: flex;
-    justify-content: space-between; /* Biar ada jarak di antara kotak */
+    justify-content: space-between;
+    /* Biar ada jarak di antara kotak */
 }
 
 .kotak {
@@ -104,7 +108,7 @@ h1 {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 2px 2px 5px #cccccc;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 /* --- BAGIAN TABEL --- */
@@ -113,12 +117,14 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 2px 2px 5px #cccccc;
-    overflow: hidden; /* Supaya sudut lengkung (border-radius) tidak tertutup tabel */
+    overflow: hidden;
+    /* Supaya sudut lengkung (border-radius) tidak tertutup tabel */
 }
 
 .tabel-data {
     width: 100%;
-    border-collapse: collapse; /* Menghapus spasi bawaan antar garis tabel */
+    border-collapse: collapse;
+    /* Menghapus spasi bawaan antar garis tabel */
     font-size: 14px;
 }
 
@@ -134,20 +140,21 @@ h1 {
 }
 
 .tabel-data tbody tr:hover {
-    background-color: #f9fafb; /* Efek hover saat mouse melewati baris */
+    background-color: #f9fafb;
+    /* Efek hover saat mouse melewati baris */
 }
 
 .stok-hijau {
-    color: #16a34a; 
+    color: #16a34a;
 }
 
 .stok-merah {
-    color: #dc2626; 
+    color: #dc2626;
 }
 
 /* --- per tombol an --- */
 .tombol-edit {
-    background-color: #3b82f6; 
+    background-color: #3b82f6;
     color: white;
     border: none;
     padding: 6px 15px;
@@ -157,11 +164,11 @@ h1 {
 }
 
 .tombol-edit:hover {
-    background-color: #2563eb; 
+    background-color: #2563eb;
 }
 
 .tombol-hapus {
-    background-color: #ef4444; 
+    background-color: #ef4444;
     color: white;
     border: none;
     padding: 6px 15px;
@@ -170,26 +177,26 @@ h1 {
     font-size: 13px;
 }
 
-.aksi-form .aksi-form-kanan .tombol-batal{
+.aksi-form .aksi-form-kanan .tombol-batal {
     background-color: #ef4444;
     color: white;
 }
 
-.aksi-form .aksi-form-kanan .tombol-batal:hover{
+.aksi-form .aksi-form-kanan .tombol-batal:hover {
     background-color: #dc2626;
     color: white;
 }
 
 .tombol-hapus:hover {
-    background-color: #dc2626; 
+    background-color: #dc2626;
 }
 
 /* --- BAGIAN ATAS TABEL (TOMBOL & PENCARIAN) --- */
 .header-konten {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
 }
 
 /* Styling Tombol Tambah Data */
@@ -205,7 +212,8 @@ h1 {
 }
 
 .tombol-insert:hover {
-    background-color: #15803d; /* Hijau lebih gelap */
+    background-color: #15803d;
+    /* Hijau lebih gelap */
 }
 
 /* Styling Grup Pencarian */
@@ -227,25 +235,29 @@ h1 {
 }
 
 .tombol-cari {
-    background-color: #3b82f6; /* Warna biru */
+    background-color: #3b82f6;
+    /* Warna biru */
     color: white;
     border: 1px solid #3b82f6;
     padding: 8px 15px;
-    border-radius: 0 4px 4px 0; /* Sudut lengkung hanya di sebelah kanan */
+    border-radius: 0 4px 4px 0;
+    /* Sudut lengkung hanya di sebelah kanan */
     cursor: pointer;
     font-weight: bold;
 }
 
 .tombol-cari:hover {
-    background-color: #2563eb; /* Biru lebih gelap */
+    background-color: #2563eb;
+    /* Biru lebih gelap */
 }
 
 
 
 /* Styling Form CRUD */
-textarea, input{
-    font-family: Figtree;
+textarea, input {
+    font-family: "Figtree", sans-serif;
 }
+
 .bungkus-form {
     background-color: white;
     padding: 30px;
@@ -268,7 +280,7 @@ textarea, input{
     font-size: 14px;
 }
 
-.grup-input input, 
+.grup-input input,
 .grup-input select,
 .grup-input textarea {
     width: 100%;
@@ -280,7 +292,7 @@ textarea, input{
 }
 
 /* Efek saat input diklik/difokuskan */
-.grup-input input:focus, 
+.grup-input input:focus,
 .grup-input select:focus,
 .grup-input textarea:focus {
     border-color: #3b82f6;
@@ -290,11 +302,11 @@ textarea, input{
 .aksi-form {
     margin-top: 30px;
     display: flex;
-    gap: 15px; 
+    gap: 15px;
     justify-content: space-between;
 }
 
-.aksi-form-kiri{
+.aksi-form-kiri {
     display: flex;
     gap: 15px;
 }
@@ -311,11 +323,13 @@ textarea, input{
 }
 
 .tombol-simpan:hover {
-    background-color: #15803d; /* Hijau lebih gelap */
+    background-color: #15803d;
+    /* Hijau lebih gelap */
 }
 
 .tombol-batal {
-    background-color: #f3f4f6; /* Abu-abu terang */
+    background-color: #f3f4f6;
+    /* Abu-abu terang */
     color: #333;
     text-decoration: none;
     padding: 10px 20px;
@@ -323,9 +337,11 @@ textarea, input{
     border: 1px solid #ccc;
     font-size: 14px;
     font-weight: bold;
-    display: inline-block; /* Agar tag <a> bisa dikasih padding seperti tombol */
+    display: inline-block;
+    /* Agar tag <a> bisa dikasih padding seperti tombol */
 }
 
 .tombol-batal:hover {
-    background-color: #e5e7eb; /* Abu-abu lebih gelap sedikit */
-}   
+    background-color: #e5e7eb;
+    /* Abu-abu lebih gelap sedikit */
+}
