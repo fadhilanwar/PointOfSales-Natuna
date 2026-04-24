@@ -19,7 +19,9 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'user'])->default('user');
+            $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

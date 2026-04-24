@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('vehicle_number');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

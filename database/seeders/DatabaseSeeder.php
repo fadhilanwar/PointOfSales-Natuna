@@ -3,6 +3,13 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Cart;
+use App\Models\CartItem;
+use App\Models\Courier;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +19,78 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        // 1. Buat Admin & 10 User
+        User::factory()->create([
+            'name' => 'Admin Natuna',
+            'email' => 'admin@natunagas.com',
+            'role' => 'admin',
+        ]);
+        $users = User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // 2. Buat 5 Kurir & 20 Produk
+        $couriers = Courier::factory(5)->create();
+        $products = Product::factory(20)->create();
+
+        // 3. Skenario Keranjang: 3 User memiliki Cart Aktif
+        $usersWithCarts = $users->random(3);
+        foreach ($usersWithCarts as $user) {
+            $cart = Cart::create(['user_id' => $user->id]);
+
+            // Masukkan 2-3 produk random ke keranjang
+            $cartProducts = $products->random(rand(2, 3));
+            foreach ($cartProducts as $product) {
+                CartItem::create([
+                    'cart_id' => $cart->id,
+                    'product_id' => $product->id,
+                    'quantity' => rand(1, 3)
+                ]);
+            }
+        }
+
+        // 4. Skenario Pesanan Selesai (Order & OrderItem)
+        // Membuat 10 transaksi order
+        $orders = Order::factory(10)->make()->each(function ($order) use ($users, $couriers, $products) {
+            // Assign User
+            $order->user_id = $users->random()->id;
+
+            // Assign Courier jika statusnya shipping/completed
+            if (in_array($order->status, ['shipping', 'completed'])) {
+                $order->courier_id = $couriers->random()->id;
+            }
+
+            // Simpan header Order (grand_total masih 0)
+            $order->save();
+
+            // Pilih 1-4 produk random untuk dibeli
+            $orderProducts = $products->random(rand(1, 4));
+            $grandTotal = 0;
+
+            foreach ($orderProducts as $product) {
+                $qty = rand(1, 5);
+                $subtotal = $product->base_price * $qty;
+                $grandTotal += $subtotal;
+
+                // Create Order Item (Disinilah Snapshot Harga terjadi!)
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'quantity' => $qty,
+                    'cost_price_at_time' => $product->cost_price, // Snapshot modal
+                    'price_at_time' => $product->base_price,      // Snapshot jual
+                    'subtotal' => $subtotal,
+                ]);
+            }
+
+            // Update Grand Total setelah semua item dihitung
+            $order->update(['grand_total' => $grandTotal]);
+        });
+
+        // 5. Skenario Uji Coba Soft Deletes
+        // Hapus 2 user biasa secara acak (setelah mereka memiliki histori transaksi)
+        $usersToSoftDelete = $users->random(2);
+        foreach ($usersToSoftDelete as $deletedUser) {
+            $deletedUser->delete();
+            // Ini akan mengisi kolom deleted_at, tapi histori Order-nya di atas tetap utuh
+        }
     }
 }

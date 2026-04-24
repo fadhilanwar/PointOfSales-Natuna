@@ -40,6 +40,9 @@ return new class extends Migration
 
             $table->decimal('grand_total', 12, 2);
             $table->timestamps();
+
+            $table->index('status');
+            $table->index('order_source');
         });
     }
 

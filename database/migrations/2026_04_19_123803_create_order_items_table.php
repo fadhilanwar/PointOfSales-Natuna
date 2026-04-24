@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('restrict');
-            // restrict: cegah hapus produk jika sudah ada di transaksi
 
             $table->integer('quantity');
-            $table->decimal('cost_price_at_time', 12, 2); // Modal saat itu
-            $table->decimal('price_at_time', 12, 2); // Jual saat itu
+            $table->decimal('cost_price_at_time', 12, 2); // <- PASTIKAN BARIS INI ADA
+            $table->decimal('price_at_time', 12, 2);
             $table->decimal('subtotal', 12, 2);
             $table->timestamps();
         });
