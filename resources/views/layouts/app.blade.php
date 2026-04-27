@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id" class="antialiased">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natuna Grosir</title>
+    <meta name="theme-color" content="#06728A"> @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body
+    class="bg-gray-50/50 text-gray-800 pb-20 md:pb-0 font-['Plus_Jakarta_Sans'] selection:bg-[#06728A] selection:text-white">
+
+    <header
+        class="hidden md:block bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100 transition-all duration-300 ease-in-out">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center gap-8">
+
+            <a href="{{ route('home') }}"
+                class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#06728A] to-[#0891b2] tracking-tight cursor-pointer hover:opacity-80 transition-opacity duration-300 ease-in-out shrink-0">
+                Natuna Grosir
+            </a>
+
+            <div class="flex-1 max-w-2xl relative group cursor-pointer">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400 group-hover:text-[#06728A] transition-colors duration-300 ease-in-out"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <input type="text"
+                    class="w-full bg-gray-100 hover:bg-gray-200/50 focus:bg-white border border-transparent focus:border-[#06728A] rounded-full py-2.5 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#06728A]/10 shadow-sm hover:shadow transition-all duration-300 ease-in-out cursor-pointer"
+                    placeholder="Cari beras, minyak, tepung...">
+            </div>
+
+            <div class="flex items-center gap-2 text-gray-600 shrink-0">
+                <a href="#"
+                    class="px-3 py-2 rounded-lg hover:bg-[#F0F8FA] hover:text-[#06728A] font-medium transition-all duration-300 ease-in-out cursor-pointer flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                        </path>
+                    </svg>
+                    Pesanan
+                </a>
+                <a href="#"
+                    class="px-3 py-2 rounded-lg hover:bg-[#F0F8FA] hover:text-[#06728A] font-medium transition-all duration-300 ease-in-out cursor-pointer flex items-center gap-2 relative">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    Keranjang
+                    <span class="absolute top-1 right-1 flex h-3 w-3">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0891b2] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-[#06728A]"></span>
+                    </span>
+                </a>
+                <div class="w-px h-6 bg-gray-200 mx-2"></div> <a href="#"
+                    class="px-3 py-2 rounded-lg hover:bg-[#F0F8FA] hover:text-[#06728A] font-medium transition-all duration-300 ease-in-out cursor-pointer flex items-center gap-2">
+                    <img src="https://ui-avatars.com/api/?name=Haidar&color=06728A&background=CBE4ED" alt="Profile"
+                        class="w-7 h-7 rounded-full shadow-sm">
+                    Profil
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto md:px-6 lg:px-8 selection:bg-[#06728A] selection:text-white">
+        @yield('content')
+    </main>
+
+    <nav
+        class="md:hidden fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t border-gray-100 z-50 flex justify-around items-center py-2 px-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+        <a href="#"
+            class="flex flex-col items-center p-2 text-[#06728A] cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-1">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                </path>
+            </svg>
+            <span class="text-[10px] font-bold tracking-wide">BERANDA</span>
+        </a>
+        <a href="#"
+            class="flex flex-col items-center p-2 text-gray-400 hover:text-[#06728A] cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-1 relative">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                </path>
+            </svg>
+            <span class="text-[10px] font-medium tracking-wide">KERANJANG</span>
+            <span class="absolute top-1 right-3 h-2.5 w-2.5 rounded-full bg-[#06728A] border-2 border-white"></span>
+        </a>
+        <a href="#"
+            class="flex flex-col items-center p-2 text-gray-400 hover:text-[#06728A] cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-1">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                </path>
+            </svg>
+            <span class="text-[10px] font-medium tracking-wide">PESANAN</span>
+        </a>
+        <a href="#"
+            class="flex flex-col items-center p-2 text-gray-400 hover:text-[#06728A] cursor-pointer transition-all duration-300 ease-in-out hover:-translate-y-1">
+            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            <span class="text-[10px] font-medium tracking-wide">PROFIL</span>
+        </a>
+    </nav>
+</body>
+
+</html>
