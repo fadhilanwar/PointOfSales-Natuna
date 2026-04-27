@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,3 +20,10 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
+    Route::patch('/keranjang/{cartItem}', [CartController::class, 'updateQuantity']);
+    Route::delete('/keranjang/{cartItem}', [CartController::class, 'removeItem']);
+    Route::post('/checkout/process', [CartController::class, 'checkout'])->name('checkout.process');
+});
