@@ -34,8 +34,16 @@ Route::get('/admin/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
+
+    // Rute untuk Update Qty (+ dan -)
     Route::patch('/keranjang/{cartItem}', [CartController::class, 'updateQuantity']);
+
+    // PASTIKAN BARIS INI ADA UNTUK HAPUS PRODUK
     Route::delete('/keranjang/{cartItem}', [CartController::class, 'removeItem']);
+
+    // Rute Tambah dari Home (yang kita buat sebelumnya)
     Route::post('/keranjang/add', [CartController::class, 'add'])->name('cart.add');
+
+    // Rute Checkout
     Route::post('/checkout/process', [CartController::class, 'checkout'])->name('checkout.process');
 });

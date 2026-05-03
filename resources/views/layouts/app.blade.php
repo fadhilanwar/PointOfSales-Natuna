@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Natuna Grosir</title>
+
+    <!-- TAMBAHKAN BARIS INI AGAR AJAX/FETCH API BISA BEKERJA -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <meta name="theme-color" content="#06728A">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
