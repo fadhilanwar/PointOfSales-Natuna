@@ -199,7 +199,7 @@
                         qtyElement.textContent = currentQty;
                         subtotalElement.textContent = formatIDR(currentQty * price);
                         handleCartAction(itemId, `/keranjang/${itemId}?action=decrease`, 'PATCH',
-                        card); // Parameter untuk backend
+                            card); // Parameter untuk backend
                     }
 
                     // Remove Item

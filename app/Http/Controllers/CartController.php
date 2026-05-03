@@ -19,6 +19,47 @@ class CartController extends Controller
         return view('cart', compact('cart'));
     }
 
+    // Tambah produk ke keranjang
+    public function add(Request $request)
+    {
+        // Validasi input JSON
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        // Cek atau buat cart untuk user yang sedang login
+        $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+
+        // Cek apakah produk ini sudah ada di keranjang user
+        $cartItem = CartItem::where('cart_id', $cart->id)
+                            ->where('product_id', $request->product_id)
+                            ->first();
+
+        if ($cartItem) {
+            // Jika sudah ada, cukup tambahkan quantity-nya (+1 atau lebih)
+            $cartItem->quantity += $request->quantity;
+            $cartItem->save();
+        } else {
+            // Jika belum ada, buat record item baru
+            CartItem::create([
+                'cart_id' => $cart->id,
+                'product_id' => $request->product_id,
+                'quantity' => $request->quantity
+            ]);
+        }
+
+        // Hitung total jenis barang unik di keranjang
+        $totalItems = CartItem::where('cart_id', $cart->id)->count();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Berhasil ditambahkan!',
+            'total_items' => $totalItems
+        ]);
+    }
+
+
     // API: Update Qty (Fetch API)
     public function updateQuantity(Request $request, CartItem $cartItem)
     {

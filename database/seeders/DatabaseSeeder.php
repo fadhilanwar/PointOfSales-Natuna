@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Courier;
@@ -11,6 +10,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,12 +19,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Buat Admin & 10 User
+        // 1. Buat Akun Admin Statis & 10 User Dummy
         User::factory()->create([
             'name' => 'Admin Natuna',
-            'email' => 'admin@natunagas.com',
+            'username' => 'adminnatuna',
+            'email' => 'admin@natuna.com',
+            'password' => Hash::make('password'),
             'role' => 'admin',
+            'shop_name' => 'Natuna Pusat', // Opsional untuk admin
+            'address' => 'Jl. Pusat Grosir Natuna No. 1',
         ]);
+        
+        // Generate 10 pemilik warung/toko
         $users = User::factory(10)->create();
 
         // 2. Buat 5 Kurir & 20 Produk
