@@ -32,4 +32,10 @@ class Product extends Model
     {
         return $this->hasMany(StockMutation::class);
     }
+
+    // Relasi untuk melihat riwayat pembelian produk ini dari supplier mana saja
+    public function purchaseItems()
+    {
+        return $this->hasMany(PurchaseItem::class);
+    }
 }
