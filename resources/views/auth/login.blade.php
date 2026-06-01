@@ -14,7 +14,7 @@
 
     <!-- Login Container -->
     <div
-        class="w-full max-w-md bg-white rounded-[2rem] shadow-xl shadow-[#06728A]/5 p-8 md:p-10 transition-all duration-300">
+        class="w-full max-w-md bg-white rounded-4xl shadow-xl shadow-[#06728A]/5 p-8 md:p-10 transition-all duration-300">
 
         <!-- Logo & Header -->
         <div class="flex flex-col items-center justify-center mb-8">

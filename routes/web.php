@@ -3,6 +3,9 @@
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,9 +31,19 @@ Route::middleware('guest')->group(function () {
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::get('/admin/dashboard', function () {
-    return 'Halaman Admin';
-})->name('admin.dashboard')->middleware('auth');
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    
+    // Dashboard Admin
+    Route::get('/dashboard', function () {
+        return view('admin.pages.dashboard');
+    })->name('dashboard');
+
+    // CRUD Data Master (Users, Kategori, Produk)
+    // Route::resource otomatis membuatkan route untuk index, create, store, edit, update, dan destroy
+    Route::resource('users', UserController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
