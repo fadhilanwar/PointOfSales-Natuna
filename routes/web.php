@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,7 +31,7 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::get('/admin/dashboard', function () {
-    return 'Halaman Admin';
+    return view('admin.admin');
 })->name('admin.dashboard')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
@@ -44,6 +46,21 @@ Route::middleware('auth')->group(function () {
     // Rute Tambah dari Home (yang kita buat sebelumnya)
     Route::post('/keranjang/add', [CartController::class, 'add'])->name('cart.add');
 
-    // Rute Checkout
-    Route::post('/checkout/process', [CartController::class, 'checkout'])->name('checkout.process');
+    // Menampilkan Halaman Checkout
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+
+    /// Memproses Transaksi Checkout Awal
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+
+    // Halaman Upload Bukti Pembayaran (Khusus Transfer)
+    Route::get('/pembayaran/{order}', [CheckoutController::class, 'showPaymentPage'])->name('checkout.payment');
+    
+    // Proses Upload Bukti
+    Route::post('/pembayaran/{order}/upload', [CheckoutController::class, 'uploadPaymentProof'])->name('checkout.payment.upload');
+
+    // Daftar Pesanan
+    Route::get('/pesanan', [OrderController::class, 'index'])->name('orders.index');
+    
+    // Detail Pesanan (Route ini yang kita buat sekarang)
+    Route::get('/pesanan/{order}', [OrderController::class, 'show'])->name('orders.show');
 });

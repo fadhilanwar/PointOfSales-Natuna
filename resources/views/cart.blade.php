@@ -98,14 +98,14 @@
                         </span>
                     </div>
 
-                    <button id="btn-checkout"
+                    <a href="{{ route('checkout.index') }}"
                         class="w-full bg-[#06728A] hover:bg-[#055c70] text-white rounded-2xl py-3.5 text-sm font-bold tracking-wide flex items-center justify-center gap-2 transition-all shadow-md active:scale-[0.98] cursor-pointer">
-                        <span>BUAT PESANAN</span>
+                        <span>LANJUT PEMBAYARAN</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         @else
@@ -303,40 +303,6 @@
                         itemToDelete = itemId;
                         cardToDelete = card;
                         showModal();
-                    }
-                });
-            }
-
-            // Checkout
-            const btnCheckout = document.getElementById('btn-checkout');
-            if (btnCheckout) {
-                btnCheckout.addEventListener('click', async () => {
-                    btnCheckout.classList.add('opacity-75', 'cursor-wait');
-                    btnCheckout.innerHTML =
-                        `<svg class="animate-spin h-5 w-5 text-white inline-block" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Memproses...`;
-
-                    try {
-                        const response = await fetch('{{ route('checkout.process') }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json', // PENTING
-                                'X-CSRF-TOKEN': csrfToken
-                            }
-                        });
-
-                        const data = await response.json();
-
-                        if (response.ok && data.success) {
-                            window.location.href = data.redirect_url;
-                        } else {
-                            alert(data.message || 'Terjadi kesalahan sistem.');
-                            location.reload();
-                        }
-                    } catch (error) {
-                        console.error('Error Checkout:', error);
-                        alert('Koneksi terputus. Silakan coba lagi.');
-                        location.reload();
                     }
                 });
             }

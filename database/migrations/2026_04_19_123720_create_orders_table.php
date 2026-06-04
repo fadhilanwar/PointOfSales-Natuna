@@ -31,6 +31,9 @@ return new class extends Migration
                 'completed'         // Selesai
             ])->default('pending_approval');
 
+            // Menambahkan enum payment_method setelah kolom status
+            $table->enum('payment_method', ['transfer', 'cod', 'hutang'])->default('transfer');
+
             // Approval & Payment
             $table->text('rejection_reason')->nullable(); // Alasan batal wajib jika ditolak
             $table->string('payment_proof_path')->nullable(); // Path gambar bukti pembayaran
