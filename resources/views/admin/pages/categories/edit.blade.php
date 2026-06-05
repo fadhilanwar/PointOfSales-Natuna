@@ -16,7 +16,7 @@
                 Nama Kategori <span class="text-red-500">*</span>
             </label>
             <input type="text" id="category_name" name="category_name" value="{{ old('category_name', $category->category_name) }}" 
-                   class="w-full rounded-lg border border-slate-300 bg-transparent py-2.5 px-4 outline-none focus:border-[#0a7b8c] focus:ring-1 focus:ring-[#0a7b8c] @error('category_name') border-red-500 @enderror">
+                   class="w-full rounded-lg borde bg-transparent py-2.5 px-4 outline-none focus:border-[#0a7b8c] focus:ring-1 focus:ring-[#0a7b8c] @error('category_name') border-red-500 @enderror">
             @error('category_name')
                 <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
             @enderror
