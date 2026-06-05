@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\BankAccount;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Courier;
@@ -29,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'shop_name' => 'Natuna Pusat', // Opsional untuk admin
             'address' => 'Jl. Pusat Grosir Natuna No. 1',
         ]);
-        
+
         // Generate 10 pemilik warung/toko
         $users = User::factory(10)->create();
 
@@ -98,5 +99,20 @@ class DatabaseSeeder extends Seeder
             $deletedUser->delete();
             // Ini akan mengisi kolom deleted_at, tapi histori Order-nya di atas tetap utuh
         }
+
+        // 1. Buat 1 Rekening Statis Utama (Pasti ada dan pasti aktif)
+        BankAccount::create([
+            'bank_name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_name' => 'PT NATUNA GROSIR UTAMA',
+            'is_active' => true,
+        ]);
+
+        BankAccount::create([
+            'bank_name' => 'Mandiri',
+            'account_number' => '0987654321',
+            'account_name' => 'PT NATUNA GROSIR UTAMA',
+            'is_active' => true,
+        ]);
     }
 }
