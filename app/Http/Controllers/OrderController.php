@@ -9,10 +9,35 @@ use Illuminate\Support\Facades\Auth;
 class OrderController extends Controller
 {
     // Method Index untuk daftar pesanan (opsional, untuk kelengkapan)
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::where('user_id', Auth::id())->latest()->get();
-        return view('orders.index', compact('orders'));
+        $query = Order::where('user_id', Auth::id())->latest();
+
+        if ($request->has('search') && $request->search != '') {
+            $query->where('invoice_number', 'like', '%' . $request->search . '%');
+        }
+
+        $activeTab = $request->get('tab', 'semua');
+
+        switch ($activeTab) {
+            case 'belum_diproses':
+                $query->whereIn('status', ['pending_approval', 'approved', 'paid']);
+                break;
+            case 'sedang_dikirim':
+                $query->where('status', 'shipping');
+                break;
+            case 'belum_lunas':
+                $query->where('status', 'awaiting_payment');
+                break;
+            case 'selesai':
+                $query->where('status', 'completed');
+                break;
+        }
+
+        // Eksekusi pengambilan data dari database
+        $orders = $query->get();
+
+        return view('orders.index', compact('orders', 'activeTab'));
     }
 
     // Method Show untuk Detail Pesanan (Sesuai Tugas 1)

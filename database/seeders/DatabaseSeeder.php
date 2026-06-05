@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Buat Akun Admin Statis & 10 User Dummy
+        // 1. Buat Akun Admin, user, dan 10 User Dummy
         User::factory()->create([
             'name' => 'Admin Natuna',
             'username' => 'adminnatuna',
@@ -29,6 +29,16 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
             'shop_name' => 'Natuna Pusat', // Opsional untuk admin
             'address' => 'Jl. Pusat Grosir Natuna No. 1',
+        ]);
+
+        User::factory()->create([
+            'name' => 'User Natuna',
+            'username' => 'user123',
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('password'),
+            'role' => 'user',
+            'shop_name' => 'Toko User', // Opsional untuk admin
+            'address' => 'Jl. Sukamaju Raya No.99',
         ]);
 
         // Generate 10 pemilik warung/toko
