@@ -42,4 +42,12 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    /**
+     * Mengubah default Route Model Binding dari 'id' menjadi 'invoice_number'
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'invoice_number';
+    }
 }
