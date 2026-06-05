@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CourierController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
@@ -34,8 +36,9 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::get('/admin/dashboard', function () {
-    return view('admin.admin');
-})->name('admin.dashboard')->middleware('auth');
+    return view('admin.dashboard');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
@@ -46,7 +49,7 @@ Route::middleware('auth')->group(function () {
     // PASTIKAN BARIS INI ADA UNTUK HAPUS PRODUK
     Route::delete('/keranjang/{cartItem}', [CartController::class, 'removeItem']);
 
-    // Rute Tambah dari Home (yang kita buat sebelumnya)
+    // Rute Tambah dari (yang kita buat sebelumnya)
     Route::post('/keranjang/add', [CartController::class, 'add'])->name('cart.add');
 
     // Menampilkan Halaman Checkout
@@ -66,4 +69,24 @@ Route::middleware('auth')->group(function () {
     
     // Detail Pesanan (Route ini yang kita buat sekarang)
     Route::get('/pesanan/{order}', [OrderController::class, 'show'])->name('orders.show');
+});
+
+// ==========================================
+// ROUTE ADMIN (Tambahkan blok ini)
+// ==========================================
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    
+    // Dashboard Admin
+    Route::get('/dashboard', function () {
+        // Sesuaikan dengan lokasi file Anda. Jika tadi memindahkan ke folder 'pages', gunakan 'pages.admin'
+        return view('admin.pages.dashboard'); 
+    })->name('dashboard');
+
+    // Data Master (Otomatis membuat route index, create, store, edit, update, destroy)
+    Route::resource('users', UserController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('couriers', CourierController::class);
+    Route::resource('suppliers', SupplierController::class);
+
 });
