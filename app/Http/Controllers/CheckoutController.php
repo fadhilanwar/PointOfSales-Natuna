@@ -89,7 +89,7 @@ class CheckoutController extends Controller
                     ->with('success', 'Pesanan dibuat! Silakan unggah bukti transfer Anda.');
             }
 
-            return redirect()->route('orders.index')
+            return redirect()->route('orders.show', $order->invoice_number)
                 ->with('success', 'Pesanan berhasil dibuat dan menunggu konfirmasi Admin.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -134,7 +134,7 @@ class CheckoutController extends Controller
         ]);
 
         // PERBAIKAN: Redirect ke orders.show dengan membawa ID order
-        return redirect()->route('orders.show', $order->id)
+        return redirect()->route('orders.show', $order->invoice_number)
             ->with('success', 'Bukti pembayaran berhasil diunggah. Menunggu konfirmasi Admin.');
     }
 }
