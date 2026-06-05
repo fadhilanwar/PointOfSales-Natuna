@@ -29,7 +29,7 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::get('/admin/dashboard', function () {
-    return 'Halaman Admin';
+    return view('admin.dashboard');
 })->name('admin.dashboard')->middleware('auth');
 
 Route::middleware('auth')->group(function () {
