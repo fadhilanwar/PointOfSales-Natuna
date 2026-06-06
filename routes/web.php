@@ -76,6 +76,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 
     Route::get('/produk/{product:slug}', [HomeController::class, 'show'])->name('products.show');
+
+    // Rute Pencarian Produk
+    Route::get('/cari', [HomeController::class, 'search'])->name('products.search');
 });
 
 

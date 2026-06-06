@@ -48,4 +48,28 @@ class HomeController extends Controller
 
         return view('products.show', compact('product', 'relatedProducts'));
     }
+
+    /**
+     * Memproses pencarian produk
+     */
+    public function search(Request $request)
+    {
+        // 1. Tangkap kata kunci dari input form (name="q")
+        $query = $request->input('q');
+
+        // 2. Jika user menekan enter tanpa mengetik apa-apa, kembalikan ke Beranda
+        if (empty($query)) {
+            return redirect()->route('home');
+        }
+
+        // 3. Cari produk berdasarkan nama atau deskripsi, lalu paginasi 12 per halaman
+        $products = Product::where('name', 'like', "%{$query}%")
+            ->orWhere('description', 'like', "%{$query}%")
+            ->latest()
+            ->paginate(12)
+            ->appends(['q' => $query]); // Mempertahankan parameter 'q' saat pindah halaman
+
+        // 4. Lempar data ke view pencarian
+        return view('products.search', compact('products', 'query'));
+    }
 }
