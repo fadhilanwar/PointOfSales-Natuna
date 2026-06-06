@@ -31,17 +31,29 @@
             @endauth
         </div>
 
-        <div class="relative mb-6 md:hidden group cursor-pointer">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400 group-hover:text-[#06728A] transition-colors duration-300 ease-in-out"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </div>
-            <input type="text"
-                class="w-full bg-white hover:bg-gray-50 border border-gray-100 focus:border-[#06728A] rounded-full py-3.5 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#06728A]/10 shadow-sm transition-all duration-300 ease-in-out cursor-text"
-                placeholder="Cari produk grosir...">
+        <!-- Search Mobile (HCI: Touch-friendly & Native Keyboard Submit) -->
+        <div class="mb-6 md:hidden group">
+            <form action="{{ route('products.search') }}" method="GET" class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400 group-focus-within:text-[#06728A] transition-colors duration-300 ease-in-out"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+
+                <input type="search" name="q" value="{{ request('q') }}" required
+                    class="w-full bg-white hover:bg-gray-50 border border-gray-100 focus:border-[#06728A] rounded-full py-3.5 pl-11 pr-12 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#06728A]/10 shadow-sm transition-all duration-300 ease-in-out cursor-text"
+                    placeholder="Cari produk...">
+
+                <!-- Tombol Submit Mini (Visibilitas aksi yang jelas di layar kecil) -->
+                <button type="submit"
+                    class="absolute inset-y-1.5 right-1.5 w-10 h-10 flex items-center justify-center bg-[#06728A] text-white rounded-full active:scale-95 transition-transform shadow-sm cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </form>
         </div>
 
         <div

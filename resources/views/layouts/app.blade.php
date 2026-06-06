@@ -38,18 +38,27 @@
                     Natuna Grosir
                 </a>
 
-                <div class="flex-1 max-w-xl relative group cursor-pointer ml-4">
+                <form action="{{ route('products.search') }}" method="GET"
+                    class="relative w-full max-w-2xl group transition-all">
+
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400 group-hover:text-[#06728A] transition-colors duration-300 ease-in-out"
+                        <svg class="h-5 w-5 text-gray-400 group-focus-within:text-[#06728A] transition-colors duration-300"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
-                    <input type="text"
-                        class="w-full bg-gray-100 hover:bg-gray-200/50 focus:bg-white border border-transparent focus:border-[#06728A] rounded-full py-2.5 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#06728A]/10 shadow-sm hover:shadow transition-all duration-300 ease-in-out cursor-text"
-                        placeholder="Cari beras, minyak, tepung...">
-                </div>
+
+                    <input type="text" name="q" value="{{ request('q') }}" autocomplete="off"
+                        class="w-full bg-white hover:bg-gray-50 border border-gray-200 focus:border-[#06728A] rounded-full py-3.5 pl-12 pr-24 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#06728A]/15 shadow-sm transition-all duration-300 ease-in-out cursor-text text-gray-900 placeholder-gray-400"
+                        placeholder="Cari nama produk atau kategori grosir...">
+
+                    <button type="submit"
+                        class="absolute inset-y-1.5 right-1.5 bg-[#06728A] hover:bg-[#055c70] active:scale-95 text-white rounded-full px-5 text-sm font-bold shadow-sm transition-all duration-200 cursor-pointer flex items-center justify-center">
+                        Cari
+                    </button>
+
+                </form>
 
                 <div class="flex items-center gap-2 text-gray-600 shrink-0">
                     @auth
@@ -87,8 +96,8 @@
                             class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-transparent hover:border-[#06728A] transition-all duration-300 cursor-pointer overflow-hidden p-0.5 bg-gray-50 ml-1"
                             title="Profil & Pengaturan">
                             @if (auth()->user()->profile_photo_path)
-                                <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}"
-                                    alt="Profile" class="w-full h-full rounded-full object-cover shadow-sm">
+                                <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" alt="Profile"
+                                    class="w-full h-full rounded-full object-cover shadow-sm">
                             @else
                                 <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->shop_name ?? auth()->user()->username) }}&color=06728A&background=CBE4ED&bold=true"
                                     alt="Profile" class="w-full h-full rounded-full object-cover shadow-sm">
