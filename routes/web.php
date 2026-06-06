@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
 
     // Daftar Pesanan
     Route::get('/pesanan', [OrderController::class, 'index'])->name('orders.index');
-    // Detail Pesanan (Route ini yang kita buat sekarang)
+    // Detail Pesanan 
     Route::get('/pesanan/{order:invoice_number}', [OrderController::class, 'show'])->name('orders.show');
 
     // Halaman Profil
@@ -87,7 +87,6 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         return view('admin.pages.dashboard');
     })->name('dashboard');
 
-    // Data Master (Otomatis membuat route index, create, store, edit, update, destroy)
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
