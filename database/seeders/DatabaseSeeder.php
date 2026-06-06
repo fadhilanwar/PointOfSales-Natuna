@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\BankAccount;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Category;
 use App\Models\Courier;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -27,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@natuna.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
-            'shop_name' => 'Natuna Pusat', // Opsional untuk admin
+            'shop_name' => 'Natuna Pusat', // Opsional untuk admin  
             'address' => 'Jl. Pusat Grosir Natuna No. 1',
         ]);
 
@@ -46,6 +47,7 @@ class DatabaseSeeder extends Seeder
 
         // 2. Buat 5 Kurir & 20 Produk
         $couriers = Courier::factory(5)->create();
+        $categories = Category::factory(5)->create();
         $products = Product::factory(20)->create();
 
         // 3. Skenario Keranjang: 3 User memiliki Cart Aktif
@@ -124,5 +126,7 @@ class DatabaseSeeder extends Seeder
             'account_name' => 'PT NATUNA GROSIR UTAMA',
             'is_active' => true,
         ]);
+
+
     }
 }

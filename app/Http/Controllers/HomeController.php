@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Category;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,6 +14,8 @@ class HomeController extends Controller
     {
         // Ambil 8 produk terbaru
         $products = Product::latest()->take(8)->get();
+        // ambil 5 kategori produk
+        $categories = Category::take(5)->get();
 
         // Cek pesanan aktif jika user sudah login (Untuk Widget Status Pengiriman)
         $activeOrder = null;
@@ -24,7 +27,7 @@ class HomeController extends Controller
                 ->first();
         }
 
-        return view('home', compact('products', 'activeOrder'));
+        return view('home', compact('products', 'activeOrder', 'categories'));
     }
 
     /**

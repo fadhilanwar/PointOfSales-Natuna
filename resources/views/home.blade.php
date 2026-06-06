@@ -115,17 +115,25 @@
         @endauth
 
         <div class="mb-8">
-            <h3 class="text-lg font-bold text-gray-800 mb-4 tracking-tight">Kategori Populer</h3>
+            <div class="flex justify-between items-end mb-4">
+                <h3 class="text-lg font-bold text-gray-800 tracking-tight">Kategori Populer</h3>
+                <a href="{{ route('categories.index') }}"
+                    class="text-sm font-bold text-[#06728A] flex items-center hover:text-[#055c70] group cursor-pointer transition-colors duration-300 ease-in-out">
+                    Lihat Semua
+                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300 ease-in-out cursor-pointer"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+
             <div class="flex space-x-3 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
-                <button
-                    class="whitespace-nowrap px-6 py-2.5 rounded-full bg-[#06728A] text-white font-semibold text-sm shadow-md shadow-[#06728A]/20 hover:bg-[#055c70] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer border border-transparent">Semua
-                    Kategori</button>
-                <button
-                    class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm hover:shadow-md hover:text-[#06728A] hover:-translate-y-0.5 border border-gray-100 transition-all duration-300 ease-in-out cursor-pointer">Sembako</button>
-                <button
-                    class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm hover:shadow-md hover:text-[#06728A] hover:-translate-y-0.5 border border-gray-100 transition-all duration-300 ease-in-out cursor-pointer">Minuman</button>
-                <button
-                    class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm hover:shadow-md hover:text-[#06728A] hover:-translate-y-0.5 border border-gray-100 transition-all duration-300 ease-in-out cursor-pointer">Bumbu</button>
+                @foreach ($categories as $category)
+                    <a href="{{ route('categories.show', $category->slug) }}"
+                        class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm hover:shadow-md hover:text-[#06728A] hover:-translate-y-0.5 border border-gray-100 transition-all duration-300 ease-in-out cursor-pointer block">
+                        {{ $category->category_name }}
+                    </a>
+                @endforeach
             </div>
         </div>
 

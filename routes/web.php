@@ -13,6 +13,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController as KategoriController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -80,6 +81,10 @@ Route::middleware('auth')->group(function () {
 
     // Rute Pencarian Produk
     Route::get('/cari', [HomeController::class, 'search'])->name('products.search');
+    
+    // Rute Kategori Produk
+    Route::get('/kategori', [KategoriController::class, 'index'])->name('categories.index');
+    Route::get('/kategori/{category:slug}', [KategoriController::class, 'show'])->name('categories.show');
 });
 
 
@@ -107,5 +112,4 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::post('/pos/cart/add', [PosController::class, 'addToCart'])->name('pos.cart.add');
     Route::post('/pos/cart/update', [PosController::class, 'updateCart'])->name('pos.cart.update');
     Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
-
 });

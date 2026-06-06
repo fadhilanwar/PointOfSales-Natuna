@@ -54,9 +54,7 @@ class Product extends Model
         return 'slug';
     }
 
-    /**
-     * Relasi ke tabel Categories
-     */
+    //  Relasi ke tabel Categories
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
