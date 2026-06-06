@@ -181,7 +181,7 @@
 
                         @if ($s2 === 'active' && $order->status === 'awaiting_payment')
                             <div class="mt-3">
-                                <a href="{{ route('checkout.payment', $order->id) }}"
+                                <a href="{{ route('checkout.payment', $order) }}"
                                     class="inline-flex items-center gap-1.5 bg-[#06728A] text-white px-4 py-2 rounded-lg shadow-sm hover:bg-[#055c70] transition-colors text-xs font-bold active:scale-95">
                                     Unggah Bukti Bayar
                                 </a>
