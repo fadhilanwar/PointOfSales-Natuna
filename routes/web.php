@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CourierController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\PurchaseController;
+use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
@@ -99,5 +100,11 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('purchases', PurchaseController::class);
     // Receive Barang
     Route::patch('purchases/{purchase}/receive', [PurchaseController::class, 'receiveItem'])->name('purchases.receive');
+
+    // Kasir
+    Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+    Route::post('/pos/cart/add', [PosController::class, 'addToCart'])->name('pos.cart.add');
+    Route::post('/pos/cart/update', [PosController::class, 'updateCart'])->name('pos.cart.update');
+    Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
 
 });
