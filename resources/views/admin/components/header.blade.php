@@ -48,6 +48,7 @@
                     <span class="block text-xs font-medium text-slate-400">Administrator</span>
                 </span>
 
+                {{-- Untuk gambarnya nanti --}}
                 <div class="h-10 w-10 rounded-full bg-cyan-50 border border-cyan-200 flex items-center justify-center text-[#0a7b8c] font-bold text-sm shadow-sm select-none">
                     NP
                 </div>
