@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
+    // Pastikan category_id sudah masuk di fillable
     protected $fillable = [
+        'category_id',
         'barcode',
         'name',
         'slug',
@@ -51,27 +54,17 @@ class Product extends Model
         return 'slug';
     }
 
-    // Relasi : Setiap produk memiliki satu kategori
+    /**
+     * Relasi ke tabel Categories
+     */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     // Relasi: Satu Produk bisa ada di banyak detail pesanan
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
-    }
-
-    // Relasi: Riwayat mutasi stok untuk produk ini
-    public function stockMutations(): HasMany
-    {
-        return $this->hasMany(StockMutation::class);
-    }
-
-    // Relasi untuk melihat riwayat pembelian produk ini dari supplier mana saja
-    public function purchaseItems()
-    {
-        return $this->hasMany(PurchaseItem::class);
     }
 }

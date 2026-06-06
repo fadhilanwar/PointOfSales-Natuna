@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CourierController;
 use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
@@ -77,9 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/produk/{product:slug}', [HomeController::class, 'show'])->name('products.show');
 });
 
-// ==========================================
-// ROUTE ADMIN (Tambahkan blok ini)
-// ==========================================
+
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // Dashboard Admin
@@ -94,4 +93,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('couriers', CourierController::class);
     Route::resource('suppliers', SupplierController::class);
+
+    //Transaksi
+    Route::resource('purchases', PurchaseController::class);
+    // Receive Barang
+    Route::patch('purchases/{purchase}/receive', [PurchaseController::class, 'receiveItem'])->name('purchases.receive');
 });

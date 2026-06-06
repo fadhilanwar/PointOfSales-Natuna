@@ -9,16 +9,20 @@ class Purchase extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'invoice_number',
+        'supplier_id',
+        'status',
+        'grand_total',
+        'notes',
+    ];
 
-    // Pembelian ini berasal dari supplier mana
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
     }
 
-    // Detail barang apa saja yang ada di dalam pembelian ini
-    public function purchaseItems()
+    public function items()
     {
         return $this->hasMany(PurchaseItem::class);
     }

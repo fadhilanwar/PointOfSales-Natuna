@@ -3,69 +3,89 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Category; // <-- Pastikan ini ada
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-        return view('admin.pages.products.index');
+        // Gunakan with('category') agar query lebih optimal (Eager Loading)
+        $products = Product::with('category')->latest()->get();
+        return view('admin.pages.product.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
-        return view('admin.pages.products.index');
+        $categories = Category::all(); // Ambil semua kategori
+        return view('admin.pages.product.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-        
+        $request->validate([
+            'category_id' => 'required|exists:categories,id', // <-- Validasi Kategori
+            'barcode' => 'nullable|string|unique:products,barcode',
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cost_price' => 'required|numeric|min:0',
+            'base_price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'low_stock_threshold' => 'required|integer|min:0',
+        ]);
+
+        $data = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create($data);
+
+        return redirect()->route('admin.products.index')->with('success', 'Data produk berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Product $product)
     {
-        //
-        
+        $categories = Category::all(); // Ambil semua kategori
+        return view('admin.pages.product.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Product $product)
     {
-        //
-        return view('admin.pages.products.index');
+        $request->validate([
+            'category_id' => 'required|exists:categories,id', // <-- Validasi Kategori
+            'barcode' => 'nullable|string|unique:products,barcode,' . $product->id,
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cost_price' => 'required|numeric|min:0',
+            'base_price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'low_stock_threshold' => 'required|integer|min:0',
+        ]);
+
+        $data = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            if ($product->image_path) {
+                Storage::disk('public')->delete($product->image_path);
+            }
+            $data['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($data);
+
+        return redirect()->route('admin.products.index')->with('success', 'Data produk berhasil diperbarui!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Product $product)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-        return view('admin.pages.products.index');
+        if ($product->image_path) {
+            Storage::disk('public')->delete($product->image_path);
+        }
+        $product->delete();
+        return redirect()->route('admin.products.index')->with('success', 'Data produk berhasil dihapus!');
     }
 }
