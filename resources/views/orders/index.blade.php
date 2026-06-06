@@ -100,9 +100,9 @@
 
                     <div class="flex flex-col sm:flex-row gap-2 mt-2 md:mt-0 w-full md:w-auto shrink-0">
                         @if ($order->status === 'awaiting_payment' && $order->payment_method === 'transfer')
-                            <a href="{{ route('checkout.payment', $order->id) }}"
+                            <a href="{{ route('checkout.payment', $order) }}"
                                 class="flex-1 md:flex-none flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-sm active:scale-95 cursor-pointer">
-                                Upload Bukti Bayar
+                                Unggah Bukti Bayar
                             </a>
                         @endif
 

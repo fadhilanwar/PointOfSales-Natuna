@@ -6,9 +6,10 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -95,50 +96,43 @@ class CartController extends Controller
         ]);
     }
 
-    public function checkout(Request $request)
+    public function directCheckout(Request $request)
     {
-        $user = Auth::user();
-        $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
-
-        if (!$cart || $cart->items->isEmpty()) {
-            return response()->json(['success' => false, 'message' => 'Keranjang kosong'], 400);
-        }
+        // 1. Validasi input standar
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1'
+        ]);
 
         DB::beginTransaction();
         try {
-            $grandTotal = $cart->items->sum(function ($item) {
-                return $item->quantity * $item->product->base_price;
-            });
+            // 2. Ambil atau buat keranjang user saat ini
+            $cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
 
-            $order = Order::create([
-                'user_id' => $user->id,
-                'shipping_address' => $user->address,
-                'order_source' => 'online',
-                'status' => 'pending_approval',
-                'grand_total' => $grandTotal,
+            // 3. Kosongkan keranjang lama agar tidak bercampur
+            $cart->items()->delete();
+
+            // 4. Masukkan barang yang mau dibeli langsung ini ke keranjang
+            CartItem::create([
+                'cart_id' => $cart->id,
+                'product_id' => $request->product_id,
+                'quantity' => $request->quantity
             ]);
 
-            foreach ($cart->items as $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item->product_id,
-                    'quantity' => $item->quantity,
-                    'cost_price_at_time' => $item->product->cost_price ?? 0,
-                    'price_at_time' => $item->product->base_price,
-                    'subtotal' => $item->quantity * $item->product->base_price,
-                ]);
-            }
-
-            $cart->items()->delete();
             DB::commit();
 
+            // 5. KEMBALIKAN REDIRECT URL KE HALAMAN CHECKOUT (Tidak usah buat Order di sini!)
             return response()->json([
                 'success' => true,
-                'redirect_url' => url('/') // Nanti arahkan ke halaman sukses
+                'redirect_url' => route('checkout.index') // <--- Arahkan ke halaman pemilihan pembayaran
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan sistem.'], 500);
+            // Tampilkan pesan error asli di console/network untuk mempermudah debugging jika masih gagal
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memproses pembelian: ' . $e->getMessage()
+            ], 500);
         }
     }
 }
