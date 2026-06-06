@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('barcode')->unique()->nullable(); // Untuk scan POS
             $table->string('name');
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
+            $table->string('image_path')->nullable();
             $table->decimal('cost_price', 12, 2); // Harga modal
             $table->decimal('base_price', 12, 2); // Harga jual
             $table->integer('stock')->default(0);

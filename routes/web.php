@@ -36,11 +36,6 @@ Route::middleware('guest')->group(function () {
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-});
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
 
@@ -55,6 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     /// Memproses Transaksi Checkout Awal
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    // Rute Beli Langsung
+    Route::post('/direct-checkout', [CartController::class, 'directCheckout'])->name('cart.directCheckout');
 
     // Halaman Upload Bukti Pembayaran (Khusus Transfer)
     Route::get('/pembayaran/{order}', [CheckoutController::class, 'showPaymentPage'])->name('checkout.payment');
@@ -77,18 +74,18 @@ Route::middleware('auth')->group(function () {
     // edit foto profil
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 
-    
+    Route::get('/produk/{product:slug}', [HomeController::class, 'show'])->name('products.show');
 });
 
 // ==========================================
 // ROUTE ADMIN (Tambahkan blok ini)
 // ==========================================
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
-    
+
     // Dashboard Admin
     Route::get('/dashboard', function () {
         // Sesuaikan dengan lokasi file Anda. Jika tadi memindahkan ke folder 'pages', gunakan 'pages.admin'
-        return view('admin.pages.dashboard'); 
+        return view('admin.pages.dashboard');
     })->name('dashboard');
 
     // Data Master (Otomatis membuat route index, create, store, edit, update, destroy)
@@ -97,5 +94,4 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('couriers', CourierController::class);
     Route::resource('suppliers', SupplierController::class);
-
 });

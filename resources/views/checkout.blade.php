@@ -298,15 +298,15 @@
                     </path>
                 </svg>
             </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2 cursor-default">Batalkan Checkout?</h3>
-            <p class="text-sm text-gray-500 mb-6 cursor-default">Data formulir pembayaran yang Anda masukkan tidak akan
-                disimpan. Anda yakin?</p>
+            <h3 class="text-lg font-bold text-gray-900 mb-2 cursor-default">Tinggalkan halaman checkout?</h3>
+            <p class="text-sm text-gray-500 mb-6 cursor-default">Informasi yang sudah Anda isi belum disimpan. Jika keluar
+                sekarang, data tersebut akan hilang.</p>
             <div class="flex gap-3 justify-end">
                 <button type="button" id="btn-keep-checkout"
-                    class="px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">Lanjutkan</button>
+                    class="px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">Lanjutkan
+                    Checkout</button>
                 <button type="button" id="btn-confirm-cancel"
-                    class="px-4 py-2 text-sm font-bold text-white bg-red-500 hover:bg-red-600 rounded-xl shadow-md shadow-red-500/20 active:scale-95 transition-all cursor-pointer">Ya,
-                    Keluar</button>
+                    class="px-4 py-2 text-sm font-bold text-white bg-red-500 hover:bg-red-600 rounded-xl shadow-md shadow-red-500/20 active:scale-95 transition-all cursor-pointer">Keluar</button>
             </div>
         </div>
     </div>
