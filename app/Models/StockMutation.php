@@ -2,30 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\Order;
-use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StockMutation extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'product_id',
-        'order_id',
-        'type',
+        'order_id', // Nullable (hanya diisi jika dari transaksi penjualan)
+        'type',     // 'in' (Masuk) atau 'out' (Keluar)
         'quantity',
         'description',
     ];
-
-    public function product(): BelongsTo
-    {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function order(): BelongsTo
-    {
-        return $this->belongsTo(Order::class);
-    }
 }

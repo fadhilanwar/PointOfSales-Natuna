@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
-    protected $guarded = ['id'];
 
-    public function products()
-    {
-        return $this->hasMany(Product::class);
-    }
+    // Kolom yang diizinkan untuk diisi secara massal (Mass Assignment)
+    protected $fillable = [
+        'category_name',
+        'description',
+    ];
 }

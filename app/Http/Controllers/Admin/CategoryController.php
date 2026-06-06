@@ -3,63 +3,66 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan daftar kategori
     public function index()
     {
-        //
+        $categories = Category::latest()->get(); // Mengambil data dari terbaru
+        return view('admin.pages.categories.index', compact('categories'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Menampilkan form tambah kategori
     public function create()
     {
-        //
+        return view('admin.pages.categories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Menyimpan data kategori baru ke database
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'category_name' => 'required|string|max:255|unique:categories,category_name',
+            'description' => 'nullable|string',
+        ], [
+            'category_name.required' => 'Nama kategori wajib diisi.',
+            'category_name.unique' => 'Nama kategori sudah digunakan.',
+        ]);
+
+        Category::create($request->all());
+
+        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Menampilkan form edit kategori
+    public function edit(Category $category)
     {
-        //
+        return view('admin.pages.categories.edit', compact('category'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    // Memperbarui data kategori di database
+    public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'category_name' => 'required|string|max:255|unique:categories,category_name,' . $category->id,
+            'description' => 'nullable|string',
+        ], [
+            'category_name.required' => 'Nama kategori wajib diisi.',
+            'category_name.unique' => 'Nama kategori sudah digunakan.',
+        ]);
+
+        $category->update($request->all());
+
+        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Menghapus data kategori
+    public function destroy(Category $category)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $category->delete();
+        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil dihapus!');
     }
 }

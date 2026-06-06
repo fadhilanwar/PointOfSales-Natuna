@@ -3,17 +3,22 @@
 @section('content')
     <div class="px-4 py-6 md:py-8 md:px-0 relative">
 
-        <!-- Header Mobile -->
         <div class="flex justify-between items-center mb-6 md:hidden">
             <h1
                 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#06728A] to-[#0891b2] tracking-tight cursor-pointer">
-                Natuna Grosir</h1>
+                Natuna Grosir
+            </h1>
             @auth
-                <button
-                    class="p-1 rounded-full transition-all duration-300 ease-in-out cursor-pointer relative shadow-sm hover:scale-105">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->username) }}&color=06728A&background=CBE4ED"
-                        class="w-8 h-8 rounded-full">
-                </button>
+                <a href="{{ url('/profile') }}"
+                    class="p-1 rounded-full transition-all duration-300 ease-in-out cursor-pointer relative shadow-sm hover:scale-105 border-2 border-transparent hover:border-[#06728A]">
+                    @if (auth()->user()->profile_photo_path)
+                        <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}"
+                            class="w-8 h-8 rounded-full object-cover">
+                    @else
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->shop_name ?? auth()->user()->username) }}&color=06728A&background=CBE4ED&bold=true"
+                            class="w-8 h-8 rounded-full object-cover">
+                    @endif
+                </a>
             @else
                 <a href="{{ route('login') }}"
                     class="p-2 text-gray-400 hover:text-[#06728A] hover:bg-[#F0F8FA] rounded-full transition-all duration-300 ease-in-out cursor-pointer relative">
@@ -26,21 +31,31 @@
             @endauth
         </div>
 
-        <!-- Search Mobile -->
-        <div class="relative mb-6 md:hidden group cursor-pointer">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400 group-hover:text-[#06728A] transition-colors duration-300 ease-in-out"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </div>
-            <input type="text"
-                class="w-full bg-white hover:bg-gray-50 border border-gray-100 focus:border-[#06728A] rounded-full py-3.5 pl-12 pr-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#06728A]/10 shadow-sm transition-all duration-300 ease-in-out cursor-text"
-                placeholder="Cari produk grosir...">
+        <!-- Search Mobile (HCI: Touch-friendly & Native Keyboard Submit) -->
+        <div class="mb-6 md:hidden group">
+            <form action="{{ route('products.search') }}" method="GET" class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400 group-focus-within:text-[#06728A] transition-colors duration-300 ease-in-out"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+
+                <input type="search" name="q" value="{{ request('q') }}" required
+                    class="w-full bg-white hover:bg-gray-50 border border-gray-100 focus:border-[#06728A] rounded-full py-3.5 pl-11 pr-12 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#06728A]/10 shadow-sm transition-all duration-300 ease-in-out cursor-text"
+                    placeholder="Cari produk...">
+
+                <!-- Tombol Submit Mini (Visibilitas aksi yang jelas di layar kecil) -->
+                <button type="submit"
+                    class="absolute inset-y-1.5 right-1.5 w-10 h-10 flex items-center justify-center bg-[#06728A] text-white rounded-full active:scale-95 transition-transform shadow-sm cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </form>
         </div>
 
-        <!-- Hero Section -->
         <div
             class="bg-gradient-to-br from-[#06728A] to-[#055c70] rounded-3xl p-7 md:p-10 mb-8 text-white shadow-lg shadow-[#06728A]/20 relative overflow-hidden group hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-default">
             <div
@@ -63,11 +78,10 @@
             </div>
         </div>
 
-        <!-- Widget Pengiriman -->
         @auth
             @if ($activeOrder ?? false)
-                <div
-                    class="bg-[#CBE4ED] rounded-2xl p-5 mb-8 flex items-center justify-between shadow-sm hover:shadow-md hover:border-[#A4D2E1] border border-transparent transition-all duration-300 ease-in-out cursor-pointer group">
+                <a href="{{ route('orders.show', $activeOrder->invoice_number) }}"
+                    class="block bg-[#CBE4ED] rounded-2xl p-5 mb-8 flex items-center justify-between shadow-sm hover:shadow-md hover:border-[#A4D2E1] border border-transparent transition-all duration-300 ease-in-out cursor-pointer group">
                     <div>
                         <div class="flex items-center gap-2 mb-1">
                             <span class="relative flex h-2.5 w-2.5">
@@ -78,13 +92,15 @@
                             <h3 class="text-sm font-bold text-gray-800 tracking-wide cursor-pointer">
                                 {{ $activeOrder->invoice_number }}</h3>
                         </div>
-                        <p class="text-base font-semibold text-gray-800 mt-1 cursor-pointer">Sedang Dikirim</p>
+                        <p class="text-base font-semibold text-gray-800 mt-1 cursor-pointer">
+                            {{ $activeOrder->status === 'shipping' ? 'Sedang Dikirim' : 'Diproses Admin' }}
+                        </p>
                         <p class="text-xs font-medium text-gray-600 mt-1 flex items-center gap-1 cursor-pointer">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                             </svg>
-                            Kurir: {{ $activeOrder->courier->name ?? 'Internal' }}
+                            Kurir: {{ $activeOrder->courier->name ?? 'Internal / Belum Dialokasikan' }}
                         </p>
                     </div>
                     <div
@@ -94,11 +110,10 @@
                                 d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                         </svg>
                     </div>
-                </div>
+                </a>
             @endif
         @endauth
 
-        <!-- Kategori Populer -->
         <div class="mb-8">
             <h3 class="text-lg font-bold text-gray-800 mb-4 tracking-tight">Kategori Populer</h3>
             <div class="flex space-x-3 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
@@ -126,37 +141,37 @@
             </a>
         </div>
 
-        <!-- Grid Produk (Penting: Tambahan class "items-start" agar card lain tidak meregang) -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-8 items-start">
             @forelse($products ?? [] as $product)
-                <!-- Tambahan class "product-card" untuk target JS -->
                 <div
                     class="product-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-lg hover:shadow-[#06728A]/5 hover:-translate-y-1 hover:border-[#CBE4ED] transition-all duration-300 ease-in-out group relative cursor-default">
 
-                    <div class="aspect-w-1 aspect-h-1 w-full bg-gray-50 relative overflow-hidden cursor-pointer">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($product->name) }}&color=06728A&background=CBE4ED"
+                    <a href="{{ route('products.show', $product) }}"
+                        class="block aspect-w-1 aspect-h-1 w-full bg-gray-50 relative overflow-hidden cursor-pointer">
+                        <img src="{{ $product->image_path ? asset('storage/' . $product->image_path) : 'https://ui-avatars.com/api/?name=' . urlencode($product->name) . '&color=06728A&background=CBE4ED' }}"
                             alt="{{ $product->name }}"
                             class="w-full h-44 object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-in-out cursor-pointer">
-                    </div>
+                    </a>
 
                     <div class="p-4 flex flex-col flex-grow">
-                        <!-- Judul Produk (Penting: h-[40px] untuk memastikan tinggi konstan meskipun teks 1 baris) -->
                         <h4
                             class="text-sm font-bold text-gray-900 line-clamp-2 leading-snug h-[40px] group-hover:text-[#06728A] transition-colors duration-300 cursor-pointer">
-                            {{ $product->name }}
+                            <a href="{{ route('products.show', $product) }}" class="hover:underline outline-none">
+                                {{ $product->name }}
+                            </a>
                         </h4>
 
                         <div class="mt-2 mb-2">
                             <div class="text-xl font-bold text-[#06728A] tracking-tight cursor-text">Rp
                                 {{ number_format($product->base_price, 0, ',', '.') }}</div>
-                            <div class="text-[13px] font-medium text-gray-600 mt-0.5 cursor-text">/ dus</div>
+                            <div class="text-[13px] font-medium text-gray-600 mt-0.5 cursor-text">/
+                                {{ $product->unit ?? 'dus' }}</div>
                         </div>
 
                         <div class="h-px bg-gray-200 w-full mb-4 mt-1"></div>
 
                         <div class="mt-auto relative h-[42px] md:h-[46px]">
 
-                            <!-- Tombol "Tambah" Awal -->
                             <button type="button"
                                 class="btn-trigger absolute inset-0 w-full bg-[#06728A] text-white hover:bg-[#055c70] rounded-full text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all duration-300 z-10 cursor-pointer">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,7 +182,6 @@
                                 Tambah
                             </button>
 
-                            <!-- Pemilih Kuantitas -->
                             <div
                                 class="qty-controls absolute inset-0 w-full flex items-center justify-between gap-2 opacity-0 pointer-events-none transition-all duration-300 z-0 translate-y-2">
                                 <div
@@ -179,10 +193,8 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path>
                                         </svg>
                                     </button>
-
                                     <span
                                         class="qty-display font-bold text-gray-900 text-sm w-6 text-center cursor-text">1</span>
-
                                     <button type="button"
                                         class="btn-plus w-8 h-full flex items-center justify-center text-gray-800 hover:text-[#06728A] active:scale-90 transition-transform cursor-pointer">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -203,10 +215,8 @@
                             </div>
                         </div>
 
-                        <!-- Form Final (AJAX) -->
                         <div class="form-submit mt-3 hidden opacity-0 transition-opacity duration-300">
                             <input type="hidden" name="quantity" class="input-qty" value="1">
-
                             @auth
                                 <button type="button" onclick="addToCart(this)" data-product-id="{{ $product->id }}"
                                     class="w-full bg-[#06728A] text-white hover:bg-[#055c70] rounded-full py-2.5 text-sm font-bold flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-all cursor-pointer">
@@ -225,7 +235,7 @@
                                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
                                         </path>
                                     </svg>
-                                    Login untuk Tambah
+                                    Login
                                 </a>
                             @endauth
                         </div>
@@ -233,14 +243,13 @@
                 </div>
             @empty
                 <div
-                    class="col-span-2 lg:col-span-4 text-center py-12 bg-white rounded-2xl border border-gray-100 border-dashed">
+                    class="col-span-2 md:col-span-3 lg:col-span-4 text-center py-12 bg-white rounded-2xl border border-gray-100 border-dashed">
                     <p class="text-sm font-medium text-gray-500">Katalog sedang disiapkan.</p>
                 </div>
             @endforelse
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toast-notification"
         class="fixed top-5 md:top-10 left-1/2 transform -translate-x-1/2 flex items-center w-max p-4 space-x-3 text-white bg-[#06728A] rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-500 z-[100] translate-y-[-20px]"
         role="alert">
@@ -252,7 +261,6 @@
         <div class="text-sm font-semibold tracking-wide pr-2" id="toast-message">Produk berhasil ditambahkan.</div>
     </div>
 
-    <!-- Script JS Modular -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
@@ -332,7 +340,7 @@
                     const qtyDisplay = productCard.querySelector('.qty-display');
                     const inputQty = productCard.querySelector('.input-qty');
                     let qty = parseInt(inputQty.value);
-                    if (qty < 99) {
+                    if (qty < 99) { // Bisa diganti dengan max stock produk jika data dikirim ke frontend
                         qty++;
                         qtyDisplay.textContent = qty;
                         inputQty.value = qty;
@@ -341,7 +349,7 @@
             });
         });
 
-        // FUNGSI AJAX
+        // FUNGSI AJAX SUBMIT
         function addToCart(button) {
             const productId = button.getAttribute('data-product-id');
             const container = button.closest('.product-card');
@@ -371,7 +379,7 @@
                     if (data.status === 'success') {
                         showToast(data.message);
                         const btnCancel = container.querySelector('.btn-cancel');
-                        if (btnCancel) btnCancel.click(); // Otomatis menutup form setelah sukses
+                        if (btnCancel) btnCancel.click(); // Tutup form setelah sukses
                     } else {
                         alert('Gagal menambahkan produk.');
                     }
@@ -387,7 +395,7 @@
                 });
         }
 
-        // FUNGSI TOAST
+        // FUNGSI TOAST UI
         function showToast(message) {
             const toast = document.getElementById('toast-notification');
             document.getElementById('toast-message').textContent = message;

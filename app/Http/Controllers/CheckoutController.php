@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BankAccount;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class CheckoutController extends Controller
@@ -85,11 +86,11 @@ class CheckoutController extends Controller
 
             // 3. Logika Redirect Kondisional
             if ($request->payment_method === 'transfer') {
-                return redirect()->route('checkout.payment', $order->id)
+                return redirect()->route('checkout.payment', $order)
                     ->with('success', 'Pesanan dibuat! Silakan unggah bukti transfer Anda.');
             }
 
-            return redirect()->route('orders.index')
+            return redirect()->route('orders.show', $order)
                 ->with('success', 'Pesanan berhasil dibuat dan menunggu konfirmasi Admin.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -106,7 +107,7 @@ class CheckoutController extends Controller
         }
 
         // Ambil data rekening bank yang sedang aktif
-        $banks = \App\Models\BankAccount::where('is_active', true)->get();
+        $banks = BankAccount::where('is_active', true)->get();
 
         return view('payment', compact('order', 'banks'));
     }
@@ -134,7 +135,7 @@ class CheckoutController extends Controller
         ]);
 
         // PERBAIKAN: Redirect ke orders.show dengan membawa ID order
-        return redirect()->route('orders.show', $order->id)
+        return redirect()->route('orders.show', $order->invoice_number)
             ->with('success', 'Bukti pembayaran berhasil diunggah. Menunggu konfirmasi Admin.');
     }
 }
