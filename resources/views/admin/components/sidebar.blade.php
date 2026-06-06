@@ -51,12 +51,12 @@
 
                 <h3 class="mb-4 ml-4 mt-6 text-xs font-semibold text-slate-400 uppercase">Transaksi</h3>
                 <li><a href="{{ route('admin.purchases.index') }}"
-                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out text-slate-600 hover:bg-slate-100">
-                        <img src="{{ asset('assets/icons/supply.png') }}" class="w-5 h-5" alt="icon">Suplai Barang</a>
+                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.purchases.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+                        <img src="{{ asset('assets/icons/supply.png') }}" class="w-5 h-5 {{ request()->routeIs('admin.purchases.*') ? 'brightness-0 invert' : '' }}" alt="icon">Suplai Barang</a>
                 </li>
                 <li><a href="#"
-                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out text-slate-600 hover:bg-slate-100">
-                        <img src="{{ asset('assets/icons/cashier.png') }}" class="w-5 h-5" alt="icon">Penjualan</a>
+                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.sales.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+                        <img src="{{ asset('assets/icons/cashier.png') }}" class="w-5 h-5 {{ request()->routeIs('admin.suppliers.*') ? 'brightness-0 invert' : '' }}" alt="icon">Penjualan</a>
                 </li>
 
                 <h3 class="mb-4 ml-4 mt-6 text-xs font-semibold text-slate-400 uppercase">Laporan</h3>
