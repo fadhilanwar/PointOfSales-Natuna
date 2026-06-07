@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -30,6 +31,7 @@ class ProductFactory extends Factory
             'barcode' => fake()->unique()->ean13(),
             'name' => $productName,
 
+            'category_id' => Category::inRandomOrder()->first()->id ?? null,
             // 2. Generate slug dari nama yang sudah dibuat di atas
             'slug' => Str::slug($productName),
 
@@ -41,7 +43,6 @@ class ProductFactory extends Factory
             'stock' => $isLowStock ? fake()->numberBetween(1, 4) : fake()->numberBetween(10, 100),
             'low_stock_threshold' => 5,
 
-            // 3. Generate URL gambar dummy ukuran 400x400 dengan seed acak agar gambar tidak kembar
             'image_path' => null,
         ];
     }
