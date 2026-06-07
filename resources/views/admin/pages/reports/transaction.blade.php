@@ -7,9 +7,9 @@
             <h1 class="text-2xl font-extrabold text-slate-800">Rekap Penjualan (Orders)</h1>
             <p class="text-slate-500 text-sm mt-1">Laporan riwayat transaksi dari website dan kasir POS.</p>
         </div>
-        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors flex items-center gap-2 print:hidden">
+        {{-- <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors flex items-center gap-2 print:hidden">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> Cetak PDF
-        </button>
+        </button> --}}
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -68,7 +68,7 @@
                     </td>
                     <td class="px-6 py-4 font-extrabold text-slate-800 text-right">Rp {{ number_format($t->grand_total, 0, ',', '.') }}</td>
                     <td class="px-6 py-4 text-center print:hidden">
-                        <a href="{{ route('report.transaction.show', $t->id) }}" class="text-[#0a7b8c] font-bold hover:underline">Rincian Laporan</a>
+                        <a href="{{ route('report.transaction.show', $t->id) }}" class="inline-flex items-center gap-1.5 rounded-lg bg-blue-500 border border-slate-200 py-1.5 px-3 text-xs font-semibold text-white hover:bg-blue-400 transition-all shadow-sm">Detail Order</a>
                     </td>
                 </tr>
                 @empty

@@ -49,7 +49,7 @@
                         <span class="bg-slate-50 border border-slate-200 text-slate-700 text-[10px] font-bold px-3 py-1 rounded-md uppercase">{{ $trx->delivery_status }}</span>
                     </td>
                     <td class="px-6 py-4 text-center">
-                        <a href="{{ route('admin.transactions.show', $trx->id) }}" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold py-2 px-4 rounded-lg transition-colors">Cek & Proses</a>
+                        <a href="{{ route('admin.transactions.show', $trx->id) }}" class="bg-blue-600 hover:bg-blue-900 text-white text-xs font-bold py-2 px-4 rounded-lg transition-colors">Proses Pesanan</a>
                     </td>
                 </tr>
                 @empty

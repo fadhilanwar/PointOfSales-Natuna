@@ -6,9 +6,9 @@
         <a href="{{ route('report.transaction') }}" class="flex items-center gap-2 text-slate-500 hover:text-slate-800 font-bold w-max">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> Kembali ke Rekap
         </a>
-        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-4 rounded-lg text-sm">
+        {{-- <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-4 rounded-lg text-sm">
             Cetak Dokumen
-        </button>
+        </button> --}}
     </div>
 
     <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-6 flex justify-between items-start">

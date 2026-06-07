@@ -9,9 +9,9 @@
         </a>
         
         <div class="bg-white p-2 rounded-lg border border-slate-200 shadow-sm flex flex-wrap gap-2 items-center">
-            <span class="text-xs font-bold text-slate-400 uppercase mr-2">Pengiriman:</span>
             
             @if($transaction->delivery_status == 'pending')
+            <span class="text-xs font-bold text-slate-400 uppercase mr-2">Pengiriman:</span>
                 <form action="{{ route('admin.transactions.delivery', $transaction->id) }}" method="POST">
                     @csrf @method('PATCH')
                     <input type="hidden" name="delivery_status" value="processing">
@@ -35,6 +35,7 @@
                     <input type="hidden" name="delivery_status" value="delivered">
                     <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-md text-sm">Barang Sampai</button>
                 </form>
+               
             @endif
 
             @if(!in_array($transaction->delivery_status, ['delivered', 'cancelled']))
@@ -51,7 +52,7 @@
         <!-- Kolom Info Pembeli & Pembayaran -->
         <div class="space-y-6 lg:col-span-1">
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h3 class="font-bold text-slate-800 mb-3 border-b pb-2">Informasi Penerima</h3>
+                <h3 class="font-bold text-slate-800 mb-3 border-b pb-2">Informasi Pembeli</h3>
                 <p class="font-black text-lg text-slate-900">{{ $transaction->user?->name ?? 'Tamu' }}</p>
                 <p class="text-slate-600 mt-2 text-sm">{{ $transaction->shipping_address ?? '-' }}</p>
                 
@@ -124,9 +125,9 @@
                 @if($sisa > 0)
                     <form action="{{ route('admin.transactions.manual_payment', $transaction->id) }}" method="POST" class="mt-6 border-t border-slate-200 pt-4">
                         @csrf 
-                        <h4 class="text-xs font-bold text-[#0a7b8c] uppercase tracking-wider mb-2">Input Pembayaran Tunai (COD) / Susulan</h4>
-                        <input type="number" name="amount" min="1" max="{{ round($sisa) }}" placeholder="Nominal tunai yang diterima admin" required class="w-full text-sm border border-slate-300 rounded p-2 mb-3 outline-none focus:border-[#0a7b8c]">
-                        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded text-sm">Catat Uang Masuk</button>
+                        <h4 class="text-xs font-bold text-[#0a7b8c] uppercase tracking-wider mb-2">Bayar</h4>
+                        <input type="number" name="amount" min="1" max="{{ round($sisa) }}" placeholder="Uang diterima dari pembeli" required class="w-full text-sm border border-slate-300 rounded p-2 mb-3 outline-none focus:border-[#0a7b8c]">
+                        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded text-sm">Bayar Sisa</button>
                     </form>
                 @endif
             </div>
