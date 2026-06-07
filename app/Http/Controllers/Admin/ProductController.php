@@ -12,7 +12,19 @@ class ProductController extends Controller
 {
     public function index()
     {
-        // Gunakan with('category') agar query lebih optimal (Eager Loading)
+
+    $categories = Category::all();
+
+
+
+        if ($categories->isEmpty()) {
+            
+           return response("<script>
+                alert('Harap isi Data Kategori terlebih dahulu!');
+                window.location.href = '" . route('admin.categories.create') . "';
+            </script>");
+        }
+
         $products = Product::with('category')->latest()->get();
         return view('admin.pages.product.index', compact('products'));
     }
@@ -47,16 +59,24 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Data produk berhasil ditambahkan!');
     }
 
-    public function edit(Product $product)
+    // Ubah parameter menjadi $id
+    public function edit($id)
     {
-        $categories = Category::all(); // Ambil semua kategori
+        // Cari manual berdasarkan ID
+        $product = Product::findOrFail($id); 
+        $categories = Category::all(); 
+
         return view('admin.pages.product.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, Product $product)
+    // Ubah parameter menjadi $id
+    public function update(Request $request, $id)
     {
+        // Cari manual berdasarkan ID
+        $product = Product::findOrFail($id);
+
         $request->validate([
-            'category_id' => 'required|exists:categories,id', // <-- Validasi Kategori
+            'category_id' => 'required|exists:categories,id',
             'barcode' => 'nullable|string|unique:products,barcode,' . $product->id,
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -80,12 +100,17 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Data produk berhasil diperbarui!');
     }
 
-    public function destroy(Product $product)
+    // Ubah parameter menjadi $id
+    public function destroy($id)
     {
+        // Cari manual berdasarkan ID
+        $product = Product::findOrFail($id);
+
         if ($product->image_path) {
             Storage::disk('public')->delete($product->image_path);
         }
         $product->delete();
+        
         return redirect()->route('admin.products.index')->with('success', 'Data produk berhasil dihapus!');
     }
 }
