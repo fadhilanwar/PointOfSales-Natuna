@@ -14,10 +14,6 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('barcode')->unique()->nullable(); // Untuk scan POS
-<<<<<<< HEAD
-            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');            
-            $table->string('name');
-=======
             
             // Relasi kategori dari master
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
@@ -27,7 +23,6 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description')->nullable();
             
->>>>>>> 57c1e8b0fcbe0f4cf13995a156c48274d702822d
             $table->decimal('cost_price', 12, 2); // Harga modal
             $table->decimal('base_price', 12, 2); // Harga jual
             $table->integer('stock')->default(0);
