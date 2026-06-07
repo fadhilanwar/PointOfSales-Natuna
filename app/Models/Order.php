@@ -23,17 +23,23 @@ class Order extends Model
     public function payments()
     {
         return $this->hasMany(OrderPayment::class);
+        return $this->hasMany(OrderPayment::class, 'order_id')->latest();;
+
     }
 
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'order_id');
+
     }
 
     // 2. Relasi ke tabel users (Satu order dimiliki oleh satu user)
     public function user()
     {
         return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+
     }
 
     // 3. Accessor Buatan: Menghitung total uang yang SUDAH DI-ACC oleh Admin
@@ -45,4 +51,14 @@ class Order extends Model
             ->where('status', 'approved')
             ->sum('amount');
     }
+
+
+    public function courier()
+    {
+        return $this->belongsTo(Courier::class, 'courier_id');
+    }
+
+
+
+  
 }

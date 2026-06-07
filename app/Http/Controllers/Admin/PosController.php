@@ -175,12 +175,25 @@ class PosController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.pos.index')->with('success', 'Transaksi berhasil! Kembalian: Rp '.number_format($change_amount, 0, ',', '.'));
-
+            return redirect()->route('admin.pos.index')->with([
+                'success' => 'Transaksi berhasil dibuat!',
+                'order_id' => $order->id, // Sesuaikan dengan variabel pesanan Anda
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
 
             return back()->with('error', 'Terjadi kesalahan sistem: '.$e->getMessage());
         }
+
+        // ... kode simpan transaksi pos ...
+
+    }
+
+    public function receipt($id)
+    {
+        // Ambil data order khusus untuk struk
+        $order = Order::with(['user', 'items.product', 'payments'])->findOrFail($id);
+
+        return view('admin.pages.pos.receipt', compact('order'));
     }
 }

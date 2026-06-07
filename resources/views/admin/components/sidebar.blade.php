@@ -66,7 +66,11 @@
                 <h3 class="mb-4 ml-4 mt-6 text-xs font-semibold text-slate-400 uppercase">Laporan</h3>
                 <li><a href="#"
                         class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out text-slate-600 hover:bg-slate-100">
-                        <img src="{{ asset('assets/icons/report.png') }}" class="w-5 h-5" alt="icon">Laporan</a>
+                        <img src="{{ asset('assets/icons/report.png') }}" class="w-5 h-5" alt="icon">Laporan Suplai</a>
+                </li>
+                <li><a href="#"
+                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out text-slate-600 hover:bg-slate-100">
+                        <img src="{{ asset('assets/icons/report.png') }}" class="w-5 h-5" alt="icon">Laporan Penjualan</a>
                 </li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST"

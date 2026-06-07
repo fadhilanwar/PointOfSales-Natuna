@@ -20,7 +20,7 @@ return new class extends Migration
             // Alamat pengiriman barang
             $table->text('shipping_address')->nullable();
 
-            $table->foreignId('courier_id')->nullable()->after('user_id')->constrained('couriers')->onDelete('set null');
+            $table->foreignId('courier_id')->nullable()->constrained('couriers')->onDelete('set null');
             
             // Total tagihan keseluruhan (menggunakan decimal agar presisi untuk mata uang)
             $table->decimal('grand_total', 12, 2);
