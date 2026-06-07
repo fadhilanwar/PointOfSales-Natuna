@@ -39,7 +39,7 @@ Route::middleware('guest')->group(function () {
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth','role:user'])->group(function () {
     Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
 
     // Rute untuk Update Qty (+ dan -)
@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
 
     // Dashboard Admin
     Route::get('/dashboard', function () {
