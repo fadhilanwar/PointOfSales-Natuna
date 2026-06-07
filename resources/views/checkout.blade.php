@@ -82,6 +82,10 @@
                 <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
                     @csrf
 
+                    @foreach ($selectedIds as $id)
+                        <input type="hidden" name="selected_cart_ids[]" value="{{ $id }}">
+                    @endforeach
+                    
                     <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-gray-100 mb-6">
                         <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2 cursor-default">
                             <svg class="w-5 h-5 text-[#06728A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,7 +230,7 @@
                                     </div>
                                 </div>
                             </label>
-                            
+
                         </div>
                     </div>
 

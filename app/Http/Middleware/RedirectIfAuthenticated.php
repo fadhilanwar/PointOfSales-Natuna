@@ -10,21 +10,25 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
+            // Jika user ternyata SUDAH LOGIN, tapi nekat buka link /login atau /register
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                
+                // Cek rolenya. Jika dia Admin, paksa kembali ke dashboard admin
+                if (Auth::user()->role === 'admin') {
+                    return redirect('/admin/dashboard');
+                }
+                
+                // Jika dia User biasa, paksa kembali ke halaman beranda/landing page
+                return redirect('/');
             }
         }
 
+        // Jika dia BENAR-BENAR BELUM LOGIN (Tamu), persilakan buka halaman login
         return $next($request);
     }
 }
