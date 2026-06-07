@@ -73,6 +73,6 @@ class HomeController extends Controller
             ->appends(['q' => $query]); // Mempertahankan parameter 'q' saat pindah halaman
 
         // 4. Lempar data ke view pencarian
-        return view('products.search', compact('products', 'query'));
+        return view('product.search', compact('products', 'query'));
     }
 }
