@@ -11,7 +11,7 @@
     @endif
 
     @if(session('error'))
-    <div class="mb-4 p-4 text-sm font-medium text-red-800 rounded-lg bg-red-50 border border-red-200 shadow-sm font-semibold">
+    <div class="mb-4 p-4 text-sm text-red-800 rounded-lg bg-red-50 border border-red-200 shadow-sm font-semibold">
         {{ session('error') }}
     </div>
     @endif
@@ -115,7 +115,7 @@
                             @csrf
                             <input type="hidden" name="cart_item_id" value="{{ $item->id }}">
                             <input type="hidden" name="quantity" value="0">
-                            <button type="submit" class="text-red-400 hover:text-red-600 p-1.5 bg-red-50 hover:bg-red-100 rounded-md transition-colors" title="Hapus dari Keranjang">
+                            <button onclick="return confirm('Yakin menghapus barang {{ $item->product->name }} dari Keranjang Belanja.')" type="submit" class="text-red-400 hover:text-red-600 p-1.5 bg-red-50 hover:bg-red-100 rounded-md transition-colors" title="Hapus dari Keranjang">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         </form>
@@ -167,9 +167,9 @@
                     <span class="text-xl font-bold text-slate-800" id="display-change">Rp 0</span>
                 </div>
 
-                <button type="submit" form="pos-form" class="w-full bg-[#0a7b8c] text-white font-bold py-3.5 rounded-xl shadow-lg shadow-cyan-500/30 hover:bg-[#075e6b] hover:shadow-cyan-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm flex items-center justify-center gap-2" {{ $cartItems->count() == 0 ? 'disabled' : '' }}>
+                <button type="submit" form="pos-form" class="w-full bg-[#0a7b8c] cursor-pointer text-white font-bold py-3.5 rounded-xl shadow-lg shadow-cyan-500/30 hover:bg-[#075e6b] hover:shadow-cyan-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider text-sm flex items-center justify-center gap-2" {{ $cartItems->count() == 0 ? 'disabled' : '' }}>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    Proses Pembayaran
+                    Buat Transaksi
                 </button>
             </div>
         </div>
