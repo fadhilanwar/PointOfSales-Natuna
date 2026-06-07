@@ -15,6 +15,7 @@ class Order extends Model
         'user_id',
         'invoice_number',
         'shipping_address',
+        'courier_id',
         'grand_total',
         'delivery_status',
         'payment_status'
@@ -35,6 +36,11 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function courier()
+    {
+        return $this->belongsTo(Courier::class);
     }
 
     // 3. Accessor Buatan: Menghitung total uang yang SUDAH DI-ACC oleh Admin

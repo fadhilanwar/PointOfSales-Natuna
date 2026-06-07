@@ -58,7 +58,7 @@
                         class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.pos.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
                         <img src="{{ asset('assets/icons/cashier.png') }}" class="w-5 h-5 {{ request()->routeIs('admin.pos.*') ? 'brightness-0 invert' : '' }}" alt="icon">Penjualan</a>
                 </li>
-                <li><a href="#"
+                <li><a href="{{ route('admin.payments.index') }}"
                         class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.sales.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
                         <img src="{{ asset('assets/icons/order-user.png') }}" class="w-5 h-5 {{ request()->routeIs('admin.suppliers.*') ? 'brightness-0 invert' : '' }}" alt="icon">Pesanan Masuk</a>
                 </li>
