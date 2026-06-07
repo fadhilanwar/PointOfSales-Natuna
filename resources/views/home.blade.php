@@ -90,19 +90,35 @@
                                 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#06728A]"></span>
                             </span>
                             <h3 class="text-sm font-bold text-gray-800 tracking-wide cursor-pointer">
-                                {{ $activeOrder->invoice_number }}</h3>
+                                {{ $activeOrder->invoice_number }}
+                            </h3>
                         </div>
+
+                        {{-- Teks status pakai delivery_status (kolom baru) --}}
                         <p class="text-base font-semibold text-gray-800 mt-1 cursor-pointer">
-                            {{ $activeOrder->status === 'shipping' ? 'Sedang Dikirim' : 'Diproses Admin' }}
+                            @if ($activeOrder->delivery_status === 'shipping')
+                                Sedang Dikirim
+                            @elseif ($activeOrder->delivery_status === 'processing')
+                                Sedang Diproses
+                            @else
+                                Menunggu Konfirmasi Admin
+                            @endif
                         </p>
-                        <p class="text-xs font-medium text-gray-600 mt-1 flex items-center gap-1 cursor-pointer">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                            Kurir: {{ $activeOrder->courier->name ?? 'Internal / Belum Dialokasikan' }}
-                        </p>
+
+                        {{-- Tampilkan sisa tagihan jika belum lunas --}}
+                        @if ($activeOrder->payment_status === 'belum_lunas')
+                            @php $sisaAktif = $activeOrder->grand_total - $activeOrder->total_paid; @endphp
+                            <p class="text-xs font-medium text-orange-600 mt-1 flex items-center gap-1 cursor-pointer">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                    </path>
+                                </svg>
+                                Sisa Tagihan: Rp {{ number_format($sisaAktif, 0, ',', '.') }}
+                            </p>
+                        @endif
                     </div>
+
                     <div
                         class="bg-[#A4D2E1] p-3.5 rounded-2xl group-hover:bg-white/50 group-hover:scale-105 transition-all duration-300 ease-in-out cursor-pointer">
                         <svg class="w-7 h-7 text-[#06728A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
