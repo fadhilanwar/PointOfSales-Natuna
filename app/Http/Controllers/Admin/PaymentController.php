@@ -41,7 +41,7 @@ class PaymentController extends Controller
                 ->whereNull('payment_proof_path');
         }
 
-        $payments = $query->paginate(15)->withQueryString();
+        $payments = $query->paginate(15)->get();
 
         // Hitung badge count untuk tiap tab (agar admin tahu ada berapa yang perlu diproses)
         $countMenunggu   = OrderPayment::where('payment_method', 'transfer')

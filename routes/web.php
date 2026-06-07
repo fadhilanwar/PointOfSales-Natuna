@@ -39,7 +39,7 @@ Route::middleware('guest')->group(function () {
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-Route::middleware(['auth','role:user'])->group(function () {
+Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
 
     // Rute untuk Update Qty (+ dan -)
@@ -91,7 +91,7 @@ Route::middleware(['auth','role:user'])->group(function () {
 });
 
 
-Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
 
     // Dashboard Admin
     Route::get('/dashboard', function () {
@@ -117,15 +117,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group
     Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
     Route::get('pos/receipt/{id}', [App\Http\Controllers\Admin\PosController::class, 'receipt'])->name('pos.receipt');
 
-   Route::get('transactions', [App\Http\Controllers\Admin\TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('transactions', [App\Http\Controllers\Admin\TransactionController::class, 'index'])->name('transactions.index');
     Route::get('transactions/{id}', [App\Http\Controllers\Admin\TransactionController::class, 'show'])->name('transactions.show');
-    
+
     // Rute Atur Pengiriman & Kurir
     Route::patch('transactions/{id}/delivery', [App\Http\Controllers\Admin\TransactionController::class, 'updateDelivery'])->name('transactions.delivery');
-    
+
     // Rute Validasi ACC/Tolak Bukti Transfer
     Route::patch('transactions/{id}/payment/verify/{payment_id}', [App\Http\Controllers\Admin\TransactionController::class, 'verifyPayment'])->name('transactions.verify_payment');
-    
+
     // Rute Input Pembayaran Manual (Untuk COD Kasbon / Sisa Angsuran)
     Route::post('transactions/{id}/payment/manual', [App\Http\Controllers\Admin\TransactionController::class, 'addManualPayment'])->name('transactions.manual_payment');
 });
