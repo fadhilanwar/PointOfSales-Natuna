@@ -2,35 +2,76 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
- */
 class OrderFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
-        $status = fake()->randomElement(['pending_approval', 'approved', 'rejected', 'shipping', 'completed']);
+        // Tentukan delivery_status secara random dengan bobot realistis
+        $deliveryStatus = $this->faker->randomElement([
+            'pending',     // Baru masuk
+            'pending',     // Diperbanyak biar lebih realistis
+            'processing',
+            'shipping',
+            'delivered',
+            'cancelled',
+        ]);
+
+        // Kalau delivery sudah 'delivered', payment_status wajar 'lunas'
+        // Kalau masih 'pending'/'processing', wajar 'belum_lunas'
+        $paymentStatus = in_array($deliveryStatus, ['delivered'])
+            ? 'lunas'
+            : 'belum_lunas';
+
+        // Buat invoice number unik dengan format INV-YYYYMMDD-XXXX
+        // Pakai timestamp random biar datanya bervariasi
+        $randomDate = $this->faker->dateTimeBetween('-3 months', 'now');
+        $datePrefix = $randomDate->format('Ymd');
+
+        // Pakai uniqid biar tidak tabrakan antar factory call
+        $sequence = $this->faker->unique()->numberBetween(1, 9999);
+        $invoiceNumber = sprintf('INV-%s-%04d', $datePrefix, $sequence);
 
         return [
-            // Tambahkan baris invoice_number ini:
-            'invoice_number' => 'INV-' . fake()->date('Ymd') . '-' . fake()->unique()->numerify('####'),
-
-            'order_source' => fake()->randomElement(['pos', 'online']),
-            'status' => $status,
-            'rejection_reason' => $status === 'rejected' ? fake()->sentence() : null,
-            'payment_proof_path' => in_array($status, ['approved', 'shipping', 'completed']) ? 'dummy/proof.jpg' : null,
-
-            // Tambahkan juga payment_method agar sesuai dengan migrasi terbaru kita
-            'payment_method' => fake()->randomElement(['transfer', 'cod', 'hutang']),
-
-            'grand_total' => 0, // Akan dihitung ulang oleh Seeder
+            // user_id diisi dari luar (di Seeder), tapi kasih default kalau berdiri sendiri
+            'user_id'          => User::factory(),
+            'invoice_number'   => $invoiceNumber,
+            'shipping_address' => $this->faker->address(),
+            'grand_total'      => 0, // Akan di-update di Seeder setelah items dibuat
+            'delivery_status'  => $deliveryStatus,
+            'payment_status'   => $paymentStatus,
+            'created_at'       => $randomDate,
+            'updated_at'       => $randomDate,
         ];
+    }
+
+    // -------------------------------------------------------
+    // State Helper: Bisa dipakai di Seeder kalau mau spesifik
+    // Contoh: Order::factory()->pending()->create()
+    // -------------------------------------------------------
+    public function pending(): static
+    {
+        return $this->state(fn() => [
+            'delivery_status' => 'pending',
+            'payment_status'  => 'belum_lunas',
+        ]);
+    }
+
+    public function delivered(): static
+    {
+        return $this->state(fn() => [
+            'delivery_status' => 'delivered',
+            'payment_status'  => 'lunas',
+        ]);
+    }
+
+    public function cancelled(): static
+    {
+        return $this->state(fn() => [
+            'delivery_status' => 'cancelled',
+            'payment_status'  => 'belum_lunas',
+        ]);
     }
 }
