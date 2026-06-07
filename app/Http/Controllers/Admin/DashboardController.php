@@ -158,7 +158,7 @@ class DashboardController extends Controller
         // ============================================================
         // Kirim semua data ke view
         // ============================================================
-        return view('admin.dashboard', compact(
+        return view('admin.pages.dashboard', compact(
             'pendapatanBulanIni',
             'totalPiutang',
             'pesananMenunggu',

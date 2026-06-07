@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController as KategoriController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,10 +96,8 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
 
     // Dashboard Admin
-    Route::get('/dashboard', function () {
-        // Sesuaikan dengan lokasi file Anda. Jika tadi memindahkan ke folder 'pages', gunakan 'pages.admin'
-        return view('admin.pages.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);

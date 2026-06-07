@@ -238,183 +238,185 @@
         </div>
     </div>
 
-    {{-- ============================================================ --}}
-    {{-- SCRIPT CHART.JS + VANILLA JS FILTER                         --}}
-    {{-- ============================================================ --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script>
-        // --- DATA DARI CONTROLLER (PHP -> JavaScript) ---
-        // json_encode otomatis mengubah array PHP menjadi array JS
-        const dataSemuaBulan = @json($chartSemuaData);
-        const dataLunasBulan = @json($chartLunasData);
-        const dataBelumBulan = @json($chartBelumData);
+    @push('script')
+        {{-- ============================================================ --}}
+        {{-- SCRIPT CHART.JS + VANILLA JS FILTER                         --}}
+        {{-- ============================================================ --}}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+        <script>
+            // --- DATA DARI CONTROLLER (PHP -> JavaScript) ---
+            // json_encode otomatis mengubah array PHP menjadi array JS
+            const dataSemuaBulan = @json($chartSemuaData);
+            const dataLunasBulan = @json($chartLunasData);
+            const dataBelumBulan = @json($chartBelumData);
 
-        // Label 12 bulan dalam Bahasa Indonesia
-        const labelBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            // Label 12 bulan dalam Bahasa Indonesia
+            const labelBulan = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
-        // Ambil context canvas untuk Chart.js
-        const ctx = document.getElementById('salesChart').getContext('2d');
+            // Ambil context canvas untuk Chart.js
+            const ctx = document.getElementById('salesChart').getContext('2d');
 
-        // Buat gradient untuk tampilan chart yang lebih menarik
-        const gradientHijau = ctx.createLinearGradient(0, 0, 0, 280);
-        gradientHijau.addColorStop(0, 'rgba(6, 114, 138, 0.15)');
-        gradientHijau.addColorStop(1, 'rgba(6, 114, 138, 0)');
+            // Buat gradient untuk tampilan chart yang lebih menarik
+            const gradientHijau = ctx.createLinearGradient(0, 0, 0, 280);
+            gradientHijau.addColorStop(0, 'rgba(6, 114, 138, 0.15)');
+            gradientHijau.addColorStop(1, 'rgba(6, 114, 138, 0)');
 
-        // --- INISIALISASI CHART.JS ---
-        const salesChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labelBulan,
-                datasets: [{
-                    label: 'Total Penjualan',
-                    data: dataSemuaBulan, // Default tampilkan semua
-                    borderColor: '#06728A',
-                    backgroundColor: gradientHijau,
-                    borderWidth: 2.5,
-                    pointBackgroundColor: '#06728A',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    fill: true,
-                    tension: 0.4, // Lengkungan garis (0 = lurus, 1 = sangat melengkung)
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }, // Sembunyikan legend bawaan Chart.js
-                    tooltip: {
-                        backgroundColor: '#1e293b',
-                        titleColor: '#94a3b8',
-                        bodyColor: '#f8fafc',
-                        padding: 12,
-                        cornerRadius: 10,
-                        callbacks: {
-                            // Format angka di tooltip menjadi format rupiah
-                            label: function(context) {
-                                const nilai = context.parsed.y;
-                                return ' Rp ' + new Intl.NumberFormat('id-ID').format(nilai);
-                            }
-                        }
-                    }
+            // --- INISIALISASI CHART.JS ---
+            const salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labelBulan,
+                    datasets: [{
+                        label: 'Total Penjualan',
+                        data: dataSemuaBulan, // Default tampilkan semua
+                        borderColor: '#06728A',
+                        backgroundColor: gradientHijau,
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#06728A',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        fill: true,
+                        tension: 0.4, // Lengkungan garis (0 = lurus, 1 = sangat melengkung)
+                    }]
                 },
-                scales: {
-                    x: {
-                        grid: {
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
                             display: false
-                        }, // Hilangkan grid vertikal
-                        border: {
-                            display: false
-                        },
-                        ticks: {
-                            font: {
-                                size: 11,
-                                weight: '600'
-                            },
-                            color: '#94a3b8'
+                        }, // Sembunyikan legend bawaan Chart.js
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#94a3b8',
+                            bodyColor: '#f8fafc',
+                            padding: 12,
+                            cornerRadius: 10,
+                            callbacks: {
+                                // Format angka di tooltip menjadi format rupiah
+                                label: function(context) {
+                                    const nilai = context.parsed.y;
+                                    return ' Rp ' + new Intl.NumberFormat('id-ID').format(nilai);
+                                }
+                            }
                         }
                     },
-                    y: {
-                        grid: {
-                            color: '#f1f5f9',
-                            drawBorder: false
-                        },
-                        border: {
-                            display: false,
-                            dash: [4, 4]
-                        },
-                        ticks: {
-                            font: {
-                                size: 11
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }, // Hilangkan grid vertikal
+                            border: {
+                                display: false
                             },
-                            color: '#94a3b8',
-                            // Format sumbu Y menjadi singkatan (misal: 1.5 Jt)
-                            callback: function(value) {
-                                if (value >= 1000000) return (value / 1000000).toFixed(1) + ' Jt';
-                                if (value >= 1000) return (value / 1000).toFixed(0) + ' Rb';
-                                return value;
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    weight: '600'
+                                },
+                                color: '#94a3b8'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: '#f1f5f9',
+                                drawBorder: false
+                            },
+                            border: {
+                                display: false,
+                                dash: [4, 4]
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                },
+                                color: '#94a3b8',
+                                // Format sumbu Y menjadi singkatan (misal: 1.5 Jt)
+                                callback: function(value) {
+                                    if (value >= 1000000) return (value / 1000000).toFixed(1) + ' Jt';
+                                    if (value >= 1000) return (value / 1000).toFixed(0) + ' Rb';
+                                    return value;
+                                }
                             }
                         }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
                     }
-                },
-                interaction: {
-                    mode: 'index',
-                    intersect: false
                 }
-            }
-        });
-
-        // --- FUNGSI FILTER CHART (Vanilla JS) ---
-        // Dipanggil saat user klik tombol filter (Semua / Lunas / Belum Lunas)
-        function filterChart(filter) {
-            let dataYangDipilih;
-            let labelDataset;
-            let warnaGaris;
-            let gradientWarna;
-
-            // Pilih dataset yang sesuai berdasarkan filter yang diklik
-            if (filter === 'lunas') {
-                dataYangDipilih = dataLunasBulan;
-                labelDataset = 'Penjualan Lunas';
-                warnaGaris = '#10b981'; // Hijau emerald untuk lunas
-
-                // Buat gradient baru untuk warna hijau
-                const g = ctx.createLinearGradient(0, 0, 0, 280);
-                g.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
-                g.addColorStop(1, 'rgba(16, 185, 129, 0)');
-                gradientWarna = g;
-
-            } else if (filter === 'belum_lunas') {
-                dataYangDipilih = dataBelumBulan;
-                labelDataset = 'Penjualan Belum Lunas';
-                warnaGaris = '#f97316'; // Oranye untuk belum lunas
-
-                const g = ctx.createLinearGradient(0, 0, 0, 280);
-                g.addColorStop(0, 'rgba(249, 115, 22, 0.15)');
-                g.addColorStop(1, 'rgba(249, 115, 22, 0)');
-                gradientWarna = g;
-
-            } else {
-                // Default: tampilkan semua
-                dataYangDipilih = dataSemuaBulan;
-                labelDataset = 'Total Penjualan';
-                warnaGaris = '#06728A';
-                gradientWarna = gradientHijau; // Pakai gradient awal
-            }
-
-            // Update data dan tampilan chart tanpa reload halaman
-            salesChart.data.datasets[0].data = dataYangDipilih;
-            salesChart.data.datasets[0].label = labelDataset;
-            salesChart.data.datasets[0].borderColor = warnaGaris;
-            salesChart.data.datasets[0].backgroundColor = gradientWarna;
-            salesChart.data.datasets[0].pointBackgroundColor = warnaGaris;
-            salesChart.update('active'); // 'active' = animasi smooth saat update
-
-            // --- Update Tampilan Tombol Filter ---
-            // Hapus style "aktif" dari semua tombol, lalu berikan ke yang diklik
-            document.querySelectorAll('.chart-filter-btn').forEach(btn => {
-                btn.classList.remove('bg-white', 'text-[#06728A]', 'text-emerald-600', 'text-orange-500',
-                    'shadow-sm');
-                btn.classList.add('text-gray-500');
             });
 
-            const btnAktif = document.querySelector(`[data-filter="${filter}"]`);
-            btnAktif.classList.add('bg-white', 'shadow-sm');
-            btnAktif.classList.remove('text-gray-500');
+            // --- FUNGSI FILTER CHART (Vanilla JS) ---
+            // Dipanggil saat user klik tombol filter (Semua / Lunas / Belum Lunas)
+            function filterChart(filter) {
+                let dataYangDipilih;
+                let labelDataset;
+                let warnaGaris;
+                let gradientWarna;
 
-            // Warna teks tombol aktif sesuai tema dataset
-            if (filter === 'lunas') {
-                btnAktif.classList.add('text-emerald-600');
-            } else if (filter === 'belum_lunas') {
-                btnAktif.classList.add('text-orange-500');
-            } else {
-                btnAktif.classList.add('text-[#06728A]');
+                // Pilih dataset yang sesuai berdasarkan filter yang diklik
+                if (filter === 'lunas') {
+                    dataYangDipilih = dataLunasBulan;
+                    labelDataset = 'Penjualan Lunas';
+                    warnaGaris = '#10b981'; // Hijau emerald untuk lunas
+
+                    // Buat gradient baru untuk warna hijau
+                    const g = ctx.createLinearGradient(0, 0, 0, 280);
+                    g.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
+                    g.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                    gradientWarna = g;
+
+                } else if (filter === 'belum_lunas') {
+                    dataYangDipilih = dataBelumBulan;
+                    labelDataset = 'Penjualan Belum Lunas';
+                    warnaGaris = '#f97316'; // Oranye untuk belum lunas
+
+                    const g = ctx.createLinearGradient(0, 0, 0, 280);
+                    g.addColorStop(0, 'rgba(249, 115, 22, 0.15)');
+                    g.addColorStop(1, 'rgba(249, 115, 22, 0)');
+                    gradientWarna = g;
+
+                } else {
+                    // Default: tampilkan semua
+                    dataYangDipilih = dataSemuaBulan;
+                    labelDataset = 'Total Penjualan';
+                    warnaGaris = '#06728A';
+                    gradientWarna = gradientHijau; // Pakai gradient awal
+                }
+
+                // Update data dan tampilan chart tanpa reload halaman
+                salesChart.data.datasets[0].data = dataYangDipilih;
+                salesChart.data.datasets[0].label = labelDataset;
+                salesChart.data.datasets[0].borderColor = warnaGaris;
+                salesChart.data.datasets[0].backgroundColor = gradientWarna;
+                salesChart.data.datasets[0].pointBackgroundColor = warnaGaris;
+                salesChart.update('active'); // 'active' = animasi smooth saat update
+
+                // --- Update Tampilan Tombol Filter ---
+                // Hapus style "aktif" dari semua tombol, lalu berikan ke yang diklik
+                document.querySelectorAll('.chart-filter-btn').forEach(btn => {
+                    btn.classList.remove('bg-white', 'text-[#06728A]', 'text-emerald-600', 'text-orange-500',
+                        'shadow-sm');
+                    btn.classList.add('text-gray-500');
+                });
+
+                const btnAktif = document.querySelector(`[data-filter="${filter}"]`);
+                btnAktif.classList.add('bg-white', 'shadow-sm');
+                btnAktif.classList.remove('text-gray-500');
+
+                // Warna teks tombol aktif sesuai tema dataset
+                if (filter === 'lunas') {
+                    btnAktif.classList.add('text-emerald-600');
+                } else if (filter === 'belum_lunas') {
+                    btnAktif.classList.add('text-orange-500');
+                } else {
+                    btnAktif.classList.add('text-[#06728A]');
+                }
             }
-        }
-    </script>
+        </script>
+    @endpush
 
 @endsection
