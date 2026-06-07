@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/direct-checkout', [CartController::class, 'directCheckout'])->name('cart.directCheckout');
 
     // Halaman Upload Bukti Pembayaran (Khusus Transfer)
-    Route::get('/pembayaran/{order}', [CheckoutController::class, 'showPaymentPage'])->name('checkout.payment');
+    Route::get('/pembayaran/{order:invoice_number}', [CheckoutController::class, 'showPaymentPage'])->name('checkout.payment');
     // Proses Upload Bukti
     Route::post('/pembayaran/{order}/upload', [CheckoutController::class, 'uploadPaymentProof'])->name('checkout.payment.upload');
 
@@ -65,6 +65,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pesanan', [OrderController::class, 'index'])->name('orders.index');
     // Detail Pesanan 
     Route::get('/pesanan/{order:invoice_number}', [OrderController::class, 'show'])->name('orders.show');
+    // Pelunasan: User upload bukti bayar tambahan dari halaman detail pesanan
+    Route::post('/pesanan/{order:invoice_number}/bayar', [CheckoutController::class, 'storeAdditionalPayment'])
+        ->name('orders.pay');
 
     // Halaman Profil
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
@@ -81,7 +84,7 @@ Route::middleware('auth')->group(function () {
 
     // Rute Pencarian Produk
     Route::get('/cari', [HomeController::class, 'search'])->name('products.search');
-    
+
     // Rute Kategori Produk
     Route::get('/kategori', [KategoriController::class, 'index'])->name('categories.index');
     Route::get('/kategori/{category:slug}', [KategoriController::class, 'show'])->name('categories.show');

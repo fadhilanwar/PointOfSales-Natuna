@@ -20,9 +20,9 @@ class HomeController extends Controller
         // Cek pesanan aktif jika user sudah login (Untuk Widget Status Pengiriman)
         $activeOrder = null;
         if (Auth::check()) {
-            $activeOrder = Order::where('user_id', Auth::id())
-                ->whereIn('status', ['approved', 'shipping'])
-                ->with('courier') // Eager load relasi kurir
+            $activeOrder = Order::with('payments')
+                ->where('user_id', Auth::id())
+                ->whereIn('delivery_status', ['pending', 'processing', 'shipping'])
                 ->latest()
                 ->first();
         }
@@ -49,7 +49,7 @@ class HomeController extends Controller
             ->get()
             : collect(); // Kembalikan koleksi kosong jika tidak ada kategori
 
-        return view('products.show', compact('product', 'relatedProducts'));
+        return view('product.show', compact('product', 'relatedProducts'));
     }
 
     /**
