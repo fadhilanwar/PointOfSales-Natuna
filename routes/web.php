@@ -129,3 +129,12 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     // Rute Input Pembayaran Manual (Untuk COD Kasbon / Sisa Angsuran)
     Route::post('transactions/{id}/payment/manual', [App\Http\Controllers\Admin\TransactionController::class, 'addManualPayment'])->name('transactions.manual_payment');
 });
+
+Route::prefix('admin/report')->group(function () {
+    Route::get('transaction', [App\Http\Controllers\Admin\ReportController::class, 'transactionReport'])->name('report.transaction');
+    Route::get('transaction/{id}', [App\Http\Controllers\Admin\ReportController::class, 'showTransaction'])->name('report.transaction.show'); // Rute Baru
+    
+    Route::get('supply', [App\Http\Controllers\Admin\ReportController::class, 'supplyReport'])->name('report.supply');
+    Route::get('supply/{id}', [App\Http\Controllers\Admin\ReportController::class, 'showSupply'])->name('report.supply.show');
+});
+
