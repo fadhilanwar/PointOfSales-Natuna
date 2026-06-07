@@ -15,7 +15,7 @@
                 <form action="{{ route('admin.transactions.delivery', $transaction->id) }}" method="POST">
                     @csrf @method('PATCH')
                     <input type="hidden" name="delivery_status" value="processing">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-sm">ACC & Siapkan Kemasan</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-sm">Set Pengiriman</button>
                 </form>
             @elseif($transaction->delivery_status == 'processing')
                 <form action="{{ route('admin.transactions.delivery', $transaction->id) }}" method="POST" class="flex gap-2 items-center">
