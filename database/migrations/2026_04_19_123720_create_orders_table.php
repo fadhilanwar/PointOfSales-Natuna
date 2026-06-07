@@ -10,38 +10,38 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            
+
             // Relasi ke user yang memesan
-            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
-            
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+
             // Nomor unik pesanan, misalnya: INV-20260606-0001
             $table->string('invoice_number')->unique();
-                                                                                
+
             // Alamat pengiriman barang
-            $table->text('shipping_address')->nullable();
+            $table->text('shipping_address');
 
             $table->foreignId('courier_id')->nullable()->constrained('couriers')->onDelete('set null');
-            
             // Total tagihan keseluruhan (menggunakan decimal agar presisi untuk mata uang)
             $table->decimal('grand_total', 12, 2);
-            
+
             // STATUS 1: Status Pengiriman Barang
             // Defaultnya 'pending' (menunggu diproses)
             $table->enum('delivery_status', [
-                'pending', 
-                'processing', 
-                'shipping', 
-                'delivered', 
+                'pending',
+                'processing',
+                'shipping',
+                'delivered',
                 'cancelled'
+
             ])->default('pending')->nullable();
-            
+
             // STATUS 2: Status Pembayaran (Untuk sistem cicil/lunas)
             // Defaultnya 'belum_lunas'
             $table->enum('payment_status', [
-                'belum_lunas', 
+                'belum_lunas',
                 'lunas'
             ])->default('belum_lunas');
-            
+
             $table->timestamps();
         });
     }

@@ -14,44 +14,66 @@ use Illuminate\Support\Facades\DB;
 class CheckoutController extends Controller
 {
     // ============================================================
-    // HALAMAN CHECKOUT: Tampilkan ringkasan keranjang
+    // HALAMAN CHECKOUT: Menampilkan HANYA item yang dicentang
     // ============================================================
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
 
-        if (!$cart || $cart->items->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Keranjang belanja Anda masih kosong.');
+        // 1. Tangkap array ID keranjang yang dicentang oleh user (name="selected_cart_ids[]")
+        $selectedIds = $request->input('selected_cart_ids');
+
+        // Jika user memaksa masuk ke URL checkout tanpa milih barang, tendang balik
+        if (!$selectedIds || empty($selectedIds)) {
+            return redirect()->route('cart.index')->with('error', 'Silakan pilih minimal satu barang untuk di-checkout.');
         }
 
-        return view('checkout', compact('cart'));
+        // 2. Ambil data keranjang milik user, TAPI sertakan kondisi filter item yang ID-nya ada di array $selectedIds
+        $cart = Cart::with(['items' => function ($query) use ($selectedIds) {
+            // Filter query item: hanya ambil yang id-nya dicentang
+            $query->whereIn('id', $selectedIds)->with('product');
+        }])->where('user_id', $user->id)->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return redirect()->route('cart.index')->with('error', 'Barang tidak ditemukan di keranjang Anda.');
+        }
+
+        // Lempar variabel array ini ke view agar saat user tekan "Buat Pesanan", kita bisa mengirim ID ini lagi
+        return view('checkout', compact('cart', 'selectedIds'));
     }
 
     // ============================================================
-    // PROSES CHECKOUT: Buat Order + OrderPayment pertama
+    // PROSES CHECKOUT: Menyimpan Pesanan (Hanya barang yang dicentang)
     // ============================================================
     public function process(Request $request)
     {
-        // 1. Validasi input form
+        // 1. Validasi
         $request->validate([
-            'shipping_address' => 'required|string',
-            'payment_method'   => 'required|in:transfer,cod',
+            'shipping_address'    => 'required|string',
+            'payment_method'      => 'required|in:transfer,cod',
+            'selected_cart_ids'   => 'required|array', // Wajib menerima array ID
+            'selected_cart_ids.*' => 'exists:cart_items,id' // Pastikan ID-nya benar-benar ada di database
         ]);
 
         $user = Auth::user();
-        $cart = Cart::with('items.product')->where('user_id', $user->id)->first();
+
+        // 2. Ambil barang yang HANYA dicentang (sama seperti fungsi index)
+        $cart = Cart::with(['items' => function ($query) use ($request) {
+            $query->whereIn('id', $request->selected_cart_ids)->with('product');
+        }])->where('user_id', $user->id)->first();
 
         if (!$cart || $cart->items->isEmpty()) {
-            return back()->with('error', 'Keranjang belanja Anda masih kosong.');
+            return back()->with('error', 'Barang yang dipilih tidak valid.');
         }
 
-        // 2. Hitung grand total di backend — JANGAN percaya input dari form
-        $grandTotal = $cart->items->sum(fn($item) => $item->quantity * $item->product->base_price);
+        // 3. Hitung Grand Total dari item yang difilter
+        $grandTotal = 0;
+        foreach ($cart->items as $item) {
+            $grandTotal += $item->quantity * $item->product->base_price;
+        }
 
         DB::beginTransaction();
         try {
-            // 3. Buat nomor invoice unik per hari: INV-20260606-0001
             $datePrefix = now()->format('Ymd');
             $lastOrder  = Order::where('invoice_number', 'LIKE', "INV-{$datePrefix}-%")
                 ->lockForUpdate()
@@ -61,9 +83,6 @@ class CheckoutController extends Controller
             $sequence      = $lastOrder ? ((int) substr($lastOrder->invoice_number, -4)) + 1 : 1;
             $invoiceNumber = sprintf('INV-%s-%04d', $datePrefix, $sequence);
 
-            // 4. Simpan Order ke database
-            //    delivery_status: 'pending' (belum diproses admin)
-            //    payment_status: 'belum_lunas' (belum ada pembayaran yang diverifikasi)
             $order = Order::create([
                 'user_id'          => $user->id,
                 'invoice_number'   => $invoiceNumber,
@@ -73,7 +92,6 @@ class CheckoutController extends Controller
                 'payment_status'   => 'belum_lunas',
             ]);
 
-            // 5. Simpan semua item keranjang ke order_items (snapshot harga)
             foreach ($cart->items as $item) {
                 OrderItem::create([
                     'order_id'           => $order->id,
@@ -85,30 +103,25 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            // 6. Buat entri pertama di order_payments
-            //    Ini mencatat metode bayar yang dipilih user, status 'pending' (belum diverifikasi admin)
             OrderPayment::create([
                 'order_id'           => $order->id,
                 'amount'             => $grandTotal,
                 'type'               => 'full_payment',
                 'payment_method'     => $request->payment_method,
-                'payment_proof_path' => null, // Bukti belum ada, diupload nanti
+                'payment_proof_path' => null,
                 'status'             => 'pending',
             ]);
 
-            // 7. Kosongkan keranjang setelah order berhasil
-            $cart->items()->delete();
+            // 4. Hapus barang HANYA yang dicentang (Barang lain yang tidak dicentang tetap aman di keranjang)
+            $cart->items()->whereIn('id', $request->selected_cart_ids)->delete();
 
             DB::commit();
 
-            // 8. Redirect sesuai metode pembayaran
             if ($request->payment_method === 'transfer') {
-                // Transfer: user perlu upload bukti bayar
                 return redirect()->route('checkout.payment', $order->invoice_number)
                     ->with('success', 'Pesanan dibuat! Silakan unggah bukti transfer Anda.');
             }
 
-            // COD: langsung ke detail pesanan, tunggu konfirmasi admin
             return redirect()->route('orders.show', $order->invoice_number)
                 ->with('success', 'Pesanan berhasil dibuat! Admin akan segera memproses pesanan Anda.');
         } catch (\Exception $e) {
