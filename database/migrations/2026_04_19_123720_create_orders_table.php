@@ -32,7 +32,8 @@ return new class extends Migration
                 'shipping',
                 'delivered',
                 'cancelled'
-            ])->default('pending');
+
+            ])->default('pending')->nullable();
 
             // STATUS 2: Status Pembayaran (Untuk sistem cicil/lunas)
             // Defaultnya 'belum_lunas'

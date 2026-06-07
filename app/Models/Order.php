@@ -25,17 +25,23 @@ class Order extends Model
     public function payments()
     {
         return $this->hasMany(OrderPayment::class);
+        return $this->hasMany(OrderPayment::class, 'order_id')->latest();;
+
     }
 
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderItem::class, 'order_id');
+
     }
 
     // 2. Relasi ke tabel users (Satu order dimiliki oleh satu user)
     public function user()
     {
         return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+
     }
 
     public function courier()
@@ -52,4 +58,18 @@ class Order extends Model
             ->where('status', 'approved')
             ->sum('amount');
     }
+<<<<<<< HEAD
 }
+=======
+
+
+    public function courier()
+    {
+        return $this->belongsTo(Courier::class, 'courier_id');
+    }
+
+
+
+  
+}
+>>>>>>> 55977371a02d7e63ca0a2ce30af75272cb683ad1

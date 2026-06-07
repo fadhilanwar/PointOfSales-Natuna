@@ -115,4 +115,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group
     Route::post('/pos/cart/add', [PosController::class, 'addToCart'])->name('pos.cart.add');
     Route::post('/pos/cart/update', [PosController::class, 'updateCart'])->name('pos.cart.update');
     Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
+    Route::get('pos/receipt/{id}', [App\Http\Controllers\Admin\PosController::class, 'receipt'])->name('pos.receipt');
+
+   Route::get('transactions', [App\Http\Controllers\Admin\TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('transactions/{id}', [App\Http\Controllers\Admin\TransactionController::class, 'show'])->name('transactions.show');
+    
+    // Rute Atur Pengiriman & Kurir
+    Route::patch('transactions/{id}/delivery', [App\Http\Controllers\Admin\TransactionController::class, 'updateDelivery'])->name('transactions.delivery');
+    
+    // Rute Validasi ACC/Tolak Bukti Transfer
+    Route::patch('transactions/{id}/payment/verify/{payment_id}', [App\Http\Controllers\Admin\TransactionController::class, 'verifyPayment'])->name('transactions.verify_payment');
+    
+    // Rute Input Pembayaran Manual (Untuk COD Kasbon / Sisa Angsuran)
+    Route::post('transactions/{id}/payment/manual', [App\Http\Controllers\Admin\TransactionController::class, 'addManualPayment'])->name('transactions.manual_payment');
 });
