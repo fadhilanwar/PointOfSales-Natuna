@@ -12,13 +12,13 @@ return new class extends Migration
             $table->id();
 
             // Relasi ke user yang memesan
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
 
             // Nomor unik pesanan, misalnya: INV-20260606-0001
             $table->string('invoice_number')->unique();
 
             // Alamat pengiriman barang
-            $table->text('shipping_address');
+            $table->text('shipping_address')->nullable();
 
             $table->foreignId('courier_id')->nullable()->constrained('couriers')->onDelete('set null');
             // Total tagihan keseluruhan (menggunakan decimal agar presisi untuk mata uang)
