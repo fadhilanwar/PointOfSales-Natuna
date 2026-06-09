@@ -99,7 +99,7 @@
                                             onclick="return confirm('Masukan {{ $product->name }} kedalam Keranjang?')"
                                             class="w-full bg-slate-200 border border-slate-100 text-slate-600 font-semibold py-2 rounded-lg text-sm transition-all shadow-sm cursor-not-allowed"
                                             disabled>
-                                            Tambah
+                                            Stok Kosong
                                         </button>
                                     @endif
                                 </form>
@@ -207,21 +207,22 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">Metode Bayar</label>
-                            <select name="payment_method" form="pos-form"
+                            <select name="payment_method" id="payment-method" form="pos-form"
                                 class="w-full rounded-lg border border-slate-300 bg-slate-50 py-2.5 px-3 text-sm font-semibold text-slate-700 outline-none focus:border-[#0a7b8c] focus:bg-white transition-colors">
-                                <option value="cod">Cash    </option>
+                                <option value="cod">Cash</option>
                                 <option value="transfer">Transfer Bank</option>
                                 <option value="hutang">Hutang / Tempo</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 mb-1.5">Uang Diterima (Rp)</label>
+
+                        <div id="amount-paid-container" class="hidden">
+                            <label class="block text-xs font-bold text-slate-600 mb-1.5">Uang Diterima / DP (Rp)</label>
                             <input type="number" name="amount_paid" id="amount-paid" form="pos-form"
+                                value="{{ $grandTotal }}"
                                 class="w-full rounded-lg border border-slate-300 bg-slate-50 py-2.5 px-3 text-sm font-bold text-slate-800 outline-none focus:border-[#0a7b8c] focus:bg-white transition-colors placeholder:font-normal placeholder:text-slate-400"
                                 placeholder="Ketik nominal..." required {{ $cartItems->count() == 0 ? 'disabled' : '' }}>
                         </div>
                     </div>
-
                     <div class="p-3 border-b border-slate-100 bg-white">
                         <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Pembeli (wajib jika
                             hutang)</label>
@@ -266,10 +267,17 @@
             }).format(number);
         }
 
-        // Fungsi menghitung kembalian secara Real-Time (UI Only)
+        // 1. DEKLARASI VARIABEL (Cukup dilakukan satu kali saja di paling atas)
+        const paymentMethodSelect = document.getElementById('payment-method');
+        const amountPaidContainer = document.getElementById('amount-paid-container');
+        const amountPaidInput = document.getElementById('amount-paid');
+        const inputGrandTotal = document.getElementById('input-grand-total');
+        const searchProduct = document.getElementById('search-product');
+
+        // 2. FUNGSI MENGHITUNG KEMBALIAN (Cukup ditulis satu kali saja)
         function calculateChange() {
-            const grandTotal = parseInt(document.getElementById('input-grand-total').value) || 0;
-            const amountPaid = parseInt(document.getElementById('amount-paid').value) || 0;
+            const grandTotal = parseInt(inputGrandTotal.value) || 0;
+            const amountPaid = parseInt(amountPaidInput.value) || 0;
             const change = amountPaid - grandTotal;
 
             const displayChange = document.getElementById('display-change');
@@ -285,20 +293,42 @@
             }
         }
 
-        // Event listener untuk textfield uang diterima
-        const amountPaidInput = document.getElementById('amount-paid');
+        // 3. FUNGSI TOGGLE METODE BAYAR
+        function togglePaymentFields() {
+            if (paymentMethodSelect.value === 'hutang') {
+                // Jika Hutang, munculkan kolom input Uang Diterima (untuk input DP)
+                amountPaidContainer.classList.remove('hidden');
+            } else {
+                // Jika Cash/Transfer, sembunyikan kolom input
+                amountPaidContainer.classList.add('hidden');
+
+                // Kembalikan value uang diterima agar otomatis pas dengan total belanja
+                amountPaidInput.value = inputGrandTotal.value;
+                calculateChange(); // Panggil fungsi hitung kembalian agar reset jadi Rp 0
+            }
+        }
+
+        // 4. PASANG SEMUA EVENT LISTENER (Trigger / Pemicu Aksi)
+        if (paymentMethodSelect) {
+            paymentMethodSelect.addEventListener('change', togglePaymentFields);
+            // Panggil sekali saat halaman dimuat agar tampilannya menyesuaikan opsi default
+            togglePaymentFields();
+        }
+
         if (amountPaidInput) {
             amountPaidInput.addEventListener('input', calculateChange);
         }
 
         // Filter Pencarian Etalase Produk (Bisa scan barcode atau ketik nama)
-        document.getElementById('search-product').addEventListener('input', function(e) {
-            const term = e.target.value.toLowerCase();
-            document.querySelectorAll('.product-card').forEach(card => {
-                const name = card.getAttribute('data-name');
-                const barcode = card.getAttribute('data-barcode');
-                card.style.display = (name.includes(term) || barcode.includes(term)) ? 'flex' : 'none';
+        if (searchProduct) {
+            searchProduct.addEventListener('input', function(e) {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.product-card').forEach(card => {
+                    const name = card.getAttribute('data-name');
+                    const barcode = card.getAttribute('data-barcode');
+                    card.style.display = (name.includes(term) || barcode.includes(term)) ? 'flex' : 'none';
+                });
             });
-        });
+        }
     </script>
 @endsection
