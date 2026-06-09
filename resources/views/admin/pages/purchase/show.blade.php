@@ -36,7 +36,7 @@
 
         <div class="lg:col-span-1 space-y-6">
             <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-16 h-16 bg-cyan-50 rounded-bl-full -z-0"></div>
+                <div class="absolute top-0 right-0 w-16 h-16 bg-cyan-50 rounded-bl-full z-0"></div>
 
                 <h3
                     class="font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3 relative z-10 uppercase tracking-wider text-xs">
