@@ -209,8 +209,8 @@
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">Metode Bayar</label>
                             <select name="payment_method" id="payment-method" form="pos-form"
                                 class="w-full rounded-lg border border-slate-300 bg-slate-50 py-2.5 px-3 text-sm font-semibold text-slate-700 outline-none focus:border-[#0a7b8c] focus:bg-white transition-colors">
-                                <option value="cod">Cash</option>
-                                <option value="transfer">Transfer Bank</option>
+                                <option value="cod">Cash (Tunai)</option>
+                                <option value="transfer">Transfer Bank (Tunai)</option>
                                 <option value="hutang">Hutang / Tempo</option>
                             </select>
                         </div>
