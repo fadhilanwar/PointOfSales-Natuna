@@ -29,7 +29,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:8',
             'role' => 'required|in:admin,user',
             'shop_name' => 'nullable|string|max:255',
             // VALIDASI BARU: Menggunakan regex untuk membatasi karakter

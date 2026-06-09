@@ -23,7 +23,8 @@ return new class extends Migration
             $table->foreignId('courier_id')->nullable()->constrained('couriers')->onDelete('set null');
             // Total tagihan keseluruhan (menggunakan decimal agar presisi untuk mata uang)
             $table->decimal('grand_total', 12, 2);
-
+            $table->integer('tip_amount')->nullable()->default(0);
+            $table->integer('total_paid')->nullable()->default(0);
             // STATUS 1: Status Pengiriman Barang
             // Defaultnya 'pending' (menunggu diproses)
             $table->enum('delivery_status', [
