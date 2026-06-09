@@ -14,37 +14,32 @@ class DebtController extends Controller
      */
     public function index()
     {
-        // 1. Ambil data user yang HANYA memiliki pesanan berstatus 'belum_lunas'
-        // whereHas digunakan untuk memfilter user berdasarkan tabel relasinya (orders)
-        $users = User::whereHas('orders', function ($query) {
-            $query->where('payment_status', 'belum_lunas');
-        })->get();
+        // 1. Ambil semua pengguna dengan role 'user' (pelanggan)
+        $users = User::where('role', 'user')->get();
 
-        // 2. Hitung total hutang dari masing-masing user menggunakan perulangan sederhana
+        // 2. Hitung total hutang untuk masing-masing user
         foreach ($users as $user) {
             $totalHutangUser = 0;
-
-            // Ambil semua pesanan milik user ini yang masih ngutang
+            
+            // Ambil semua pesanan milik user ini yang status pembayarannya masih 'belum_lunas'
             $orders = Order::where('user_id', $user->id)
-                ->where('payment_status', 'belum_lunas')
-                ->get();
+                           ->where('payment_status', 'belum_lunas')
+                           ->get();
 
-            // Hitung sisa hutang per pesanan (memanggil accessor remaining_debt di Model Order)
+            // Hitung sisa hutang menggunakan accessor remaining_debt dari model Order
             foreach ($orders as $order) {
                 $totalHutangUser += $order->remaining_debt;
             }
 
-            // Simpan nilai total hutang ke dalam variabel dinamis baru milik user
-            // agar bisa dipanggil di view blade dengan $user->total_hutang
+            // Simpan nilai total hutang ke dalam variabel dinamis baru di objek user
             $user->total_hutang = $totalHutangUser;
         }
 
-        // 3. Opsional: Filter lagi untuk berjaga-jaga (Hanya tampilkan yang total hutangnya > 0)
-        // Kadang ada pesanan berstatus belum_lunas tapi sebenarnya uangnya pas (menunggu ACC admin)
-        $users = $users->filter(function ($user) {
-            return $user->total_hutang > 0;
-        });
+        // 3. REVISI UTAMA: Urutkan data user berdasarkan 'total_hutang' terbesar ke terkecil
+        // sortByDesc() adalah fungsi bawaan Laravel untuk mengurutkan koleksi data secara menurun (Descending)
+        $users = $users->sortByDesc('total_hutang');
 
+        // 4. Lempar data yang sudah terurut ke view
         return view('admin.pages.debts.index', compact('users'));
     }
 

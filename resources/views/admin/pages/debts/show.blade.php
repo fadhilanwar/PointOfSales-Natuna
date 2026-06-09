@@ -14,16 +14,31 @@
 </div>
 
 {{-- Card Ringkasan Total Hutang --}}
-<div class="mb-6 bg-red-50 border border-red-200 rounded-xl p-5 md:p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+{{-- REVISI: Card Ringkasan Total Hutang (Warna dinamis: Merah jika ada hutang, Hijau jika Lunas) --}}
+<div class="mb-6 border rounded-xl p-5 md:p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4
+    {{ $totalHutang > 0 ? 'bg-red-50 border-red-200' : 'bg-emerald-50 border-emerald-200' }}">
+    
     <div>
-        <p class="text-xs font-bold text-red-500 uppercase tracking-wider mb-1">Total Keseluruhan Hutang</p>
-        <p class="text-3xl font-black text-red-600 tracking-tight">Rp {{ number_format($totalHutang, 0, ',', '.') }}</p>
+        {{-- Teks label atas --}}
+        <p class="text-xs font-bold uppercase tracking-wider mb-1 
+            {{ $totalHutang > 0 ? 'text-red-500' : 'text-emerald-600' }}">
+            Total Keseluruhan Hutang
+        </p>
+        {{-- Angka nominal utama --}}
+        <p class="text-3xl font-black tracking-tight 
+            {{ $totalHutang > 0 ? 'text-red-600' : 'text-emerald-700' }}">
+            Rp {{ number_format($totalHutang, 0, ',', '.') }}
+        </p>
     </div>
-    <div class="text-left md:text-right bg-white/60 p-3 rounded-lg border border-red-100">
+
+    {{-- Kotak informasi toko di sebelah kanan --}}
+    <div class="text-left md:text-right p-3 rounded-lg border 
+        {{ $totalHutang > 0 ? 'bg-white/60 border-red-100' : 'bg-white/60 border-emerald-100' }}">
         <p class="text-[11px] font-bold text-slate-500 uppercase">Toko / Instansi</p>
         <p class="text-sm font-bold text-slate-800">{{ $user->shop_name ?? 'Personal' }}</p>
         <p class="text-xs text-slate-500 mt-0.5">{{ $user->phone_number ?? '-' }}</p>
     </div>
+
 </div>
 
 <div class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
