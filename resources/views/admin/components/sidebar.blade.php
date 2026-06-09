@@ -69,6 +69,12 @@
                             class="w-5 h-5 {{ request()->routeIs('admin.transactions.*') ? 'brightness-0 invert' : '' }}"
                             alt="icon">Pesanan Masuk</a>
                 </li>
+                <li><a href="{{ route('admin.debts.index') }}"
+                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.debts.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+                        <img src="{{ asset('assets/icons/order-user.png') }}"
+                            class="w-5 h-5 {{ request()->routeIs('admin.debts.*') ? 'brightness-0 invert' : '' }}"
+                            alt="icon">Histori Transaksi</a>
+                </li>
 
                 <h3 class="mb-4 ml-4 mt-6 text-xs font-semibold text-slate-400 uppercase">Laporan</h3>
                 <li>

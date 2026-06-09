@@ -1,20 +1,21 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CourierController;
-use App\Http\Controllers\Admin\SupplierController;
-use App\Http\Controllers\Admin\PurchaseController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PosController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\PurchaseController;
+use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\DebtController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController as KategoriController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CategoryController as KategoriController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -130,6 +131,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     // Rute Input Pembayaran Manual (Untuk COD Kasbon / Sisa Angsuran)
     Route::post('transactions/{id}/payment/manual', [App\Http\Controllers\Admin\TransactionController::class, 'addManualPayment'])->name('transactions.manual_payment');
+
+    Route::get('/hutang', [DebtController::class, 'index'])->name('debts.index');
+    Route::get('/hutang/{id}', [DebtController::class, 'show'])->name('debts.show');
 });
 
 Route::prefix('admin/report')->group(function () {
