@@ -33,7 +33,29 @@
 
                 <div class="mb-4">
                     <label class="mb-2 block text-sm font-semibold text-slate-800">Password <span class="text-red-500">*</span></label>
-                    <input type="password" name="password" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-[#0a7b8c]" required>
+                    <input id="password-input" type="password" name="password" class="w-full rounded-lg border border-slate-300 px-4 py-2.5 outline-none focus:border-[#0a7b8c]" required>
+                    {{-- Indikator Password --}}
+                <div class="mt-2 space-y-1.5">
+                    <div id="req-length" class="flex items-center text-xs font-medium text-gray-400 transition-colors duration-300">
+                        <svg class="w-3.5 h-3.5 mr-1.5 fill-current" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        Minimal 8 karakter
+                    </div>
+                    <div id="req-number" class="flex items-center text-xs font-medium text-gray-400 transition-colors duration-300">
+                        <svg class="w-3.5 h-3.5 mr-1.5 fill-current" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        Terdapat minimal 1 angka
+                    </div>
+                    <div id="req-capital" class="flex items-center text-xs font-medium text-gray-400 transition-colors duration-300">
+                        <svg class="w-3.5 h-3.5 mr-1.5 fill-current" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        Minimal 1 huruf kapital (A-Z)
+                    </div>
+                </div>
+
                     @error('password')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                 </div>
 
@@ -69,4 +91,37 @@
         <button type="submit" class="rounded-lg bg-[#0a7b8c] py-2.5 px-6 font-medium text-white hover:bg-[#075e6b] transition-all">Simpan Pengguna</button>
     </form>
 </div>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password-input');
+            const reqLength = document.getElementById('req-length');
+            const reqNumber = document.getElementById('req-number');
+            const reqCapital = document.getElementById('req-capital'); // Deklarasi variabel kapital
+
+            passwordInput.addEventListener('input', function(e) {
+                const val = e.target.value;
+
+                // 1. Cek panjang karakter (minimal 8)
+                if (val.length >= 8) {
+                    reqLength.classList.replace('text-gray-400', 'text-emerald-500');
+                } else {
+                    reqLength.classList.replace('text-emerald-500', 'text-gray-400');
+                }
+
+                // 2. Cek apakah ada angka (0-9)
+                if (/\d/.test(val)) {
+                    reqNumber.classList.replace('text-gray-400', 'text-emerald-500');
+                } else {
+                    reqNumber.classList.replace('text-emerald-500', 'text-gray-400');
+                }
+
+                // 3. Cek apakah ada huruf kapital (A-Z)
+                if (/[A-Z]/.test(val)) {
+                    reqCapital.classList.replace('text-gray-400', 'text-emerald-500');
+                } else {
+                    reqCapital.classList.replace('text-emerald-500', 'text-gray-400');
+                }
+            });
+        });
+    </script>
 @endsection

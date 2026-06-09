@@ -24,6 +24,11 @@
                         <img src="{{ asset('assets/icons/user.png') }}"
                             class="w-5 h-5 {{ request()->routeIs('admin.users.*') ? 'brightness-0 invert' : '' }}"
                             alt="icon">Users</a></li>
+                <li><a href="{{ route('admin.registrants.index') }}"
+                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.registrants.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+                        <img src="{{ asset('assets/icons/user.png') }}"
+                            class="w-5 h-5 {{ request()->routeIs('admin.registrants.*') ? 'brightness-0 invert' : '' }}"
+                            alt="icon">Pendaftaran</a></li>
 
                 <li><a href="{{ route('admin.categories.index') }}"
                         class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.categories.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">

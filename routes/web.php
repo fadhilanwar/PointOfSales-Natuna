@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\CourierController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\Admin\RegistrantController;
 use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\UserController;
@@ -37,10 +39,21 @@ Route::get('/', function () {
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/pendaftaran', [RegistrantController::class, 'index'])->name('admin.registrants.index');
+    Route::post('/pendaftaran/approve/{id}', [RegistrantController::class, 'approve'])->name('admin.registrants.approve');
+    Route::delete('/pendaftaran/reject/{id}', [RegistrantController::class, 'reject'])->name('admin.registrants.reject');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+
+
+// ==========================================================
+// RUTE PENDAFTARAN (Tambahkan ini jika belum ada)
+// ==========================================================
+Route::get('/register', [RegisterController::class, 'create'])->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
@@ -111,6 +124,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('products', ProductController::class);
     Route::resource('couriers', CourierController::class);
     Route::resource('suppliers', SupplierController::class);
+
+    // ... rute admin Anda yang lain ...
+
+    
 
     //Transaksi
     Route::resource('purchases', PurchaseController::class);
