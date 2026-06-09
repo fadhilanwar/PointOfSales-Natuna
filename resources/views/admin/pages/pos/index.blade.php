@@ -28,6 +28,7 @@
         @csrf
         <input type="hidden" name="invoice_number" value="{{ $invoice_number }}">
         <input type="hidden" name="grand_total" id="input-grand-total" value="{{ $grandTotal }}">
+        <input type="hidden" name="tip_amount" id="hidden-tip-amount" value="0">
     </form>
 
     <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
@@ -154,11 +155,11 @@
             <div class="border-t border-slate-200 bg-white p-5 rounded-b-xl space-y-5 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10 relative">
                 
                 <div class="flex justify-between items-end border-b border-slate-100 pb-4">
-                    <span class="font-bold text-slate-500 uppercase tracking-wider text-xs">Total Belanja</span>
-                    <span class="text-3xl font-extrabold text-[#0a7b8c] leading-none">Rp {{ number_format($grandTotal, 0, ',', '.') }}</span>
+                    <span class="font-bold text-slate-500 uppercase tracking-wider text-xs">Total Belanja <span id="label-tip" class="hidden text-amber-500">(+ Tip)</span></span>
+                    <span class="text-3xl font-extrabold text-[#0a7b8c] leading-none" id="display-final-total">Rp {{ number_format($grandTotal, 0, ',', '.') }}</span>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1.5">Metode Bayar</label>
                         <select name="payment_method" form="pos-form" class="w-full rounded-lg border border-slate-300 bg-slate-50 py-2.5 px-3 text-sm font-semibold text-slate-700 outline-none focus:border-[#0a7b8c] focus:bg-white transition-colors">
@@ -167,10 +168,16 @@
                             <option value="hutang">Hutang / Tempo</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Uang Diterima (Rp)</label>
-                        <input type="number" name="amount_paid" id="amount-paid" form="pos-form" class="w-full rounded-lg border border-slate-300 bg-slate-50 py-2.5 px-3 text-sm font-bold text-slate-800 outline-none focus:border-[#0a7b8c] focus:bg-white transition-colors placeholder:font-normal placeholder:text-slate-400" placeholder="Ketik nominal..." required {{ $cartItems->count() == 0 ? 'disabled' : '' }}>
-                    </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">Uang Diterima (Rp)</label>
+                    <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, ''); calculateChange();" name="amount_paid" id="amount-paid" form="pos-form" class="w-full rounded-lg border border-slate-300 bg-slate-50 py-2.5 px-3 text-sm font-bold text-slate-800 outline-none focus:border-[#0a7b8c] focus:bg-white transition-colors placeholder:font-normal placeholder:text-slate-400" placeholder="Ketik nominal..." required {{ $cartItems->count() == 0 ? 'disabled' : '' }}>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-600 mb-1.5">Tip / Upah (Opsional)</label>
+                    <input type="text" inputmode="numeric" id="tip-amount" class="w-full rounded-lg border border-slate-300 bg-slate-50 py-2.5 px-3 text-sm font-bold text-amber-600 outline-none focus:border-amber-500 focus:bg-white transition-colors placeholder:font-normal placeholder:text-slate-400" placeholder="Rp 0">
+                </div>
                 </div>
 
                 <div class="p-3 border-b border-slate-100 bg-white">
@@ -204,14 +211,32 @@
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
     }
 
-    // Fungsi menghitung kembalian secara Real-Time (UI Only)
     function calculateChange() {
-        const grandTotal = parseInt(document.getElementById('input-grand-total').value) || 0;
+        // 1. Ambil nilai dari inputan
+        const grandTotalCart = parseInt(document.getElementById('input-grand-total').value) || 0;
+        const tipAmount = parseInt(document.getElementById('tip-amount').value) || 0;
         const amountPaid = parseInt(document.getElementById('amount-paid').value) || 0;
-        const change = amountPaid - grandTotal;
+
+        // PERBAIKAN 3: Copy nilai tip_amount dari kotak input visual ke input tersembunyi
+        document.getElementById('hidden-tip-amount').value = tipAmount;
+
+        // 2. Hitung Total Akhir (Keranjang + Tip)
+        const finalTotal = grandTotalCart + tipAmount;
+        const change = amountPaid - finalTotal;
+
+        // 3. Update Text Total Belanja di Layar
+        document.getElementById('display-final-total').innerText = formatRupiah(finalTotal);
         
+        // Munculkan label penanda "(+ Tip)" jika kasir mengisi tip
+        if (tipAmount > 0) {
+            document.getElementById('label-tip').classList.remove('hidden');
+        } else {
+            document.getElementById('label-tip').classList.add('hidden');
+        }
+        
+        // 4. Update Tampilan Kembalian
         const displayChange = document.getElementById('display-change');
-        if (change >= 0 && grandTotal > 0 && amountPaid > 0) {
+        if (change >= 0 && finalTotal > 0 && amountPaid > 0) {
             displayChange.innerText = formatRupiah(change);
             displayChange.className = "text-xl font-bold text-emerald-600";
         } else if (amountPaid > 0 && change < 0) {
@@ -229,7 +254,7 @@
         amountPaidInput.addEventListener('input', calculateChange);
     }
 
-    // Filter Pencarian Etalase Produk (Bisa scan barcode atau ketik nama)
+    // Filter Pencarian Etalase Produk
     document.getElementById('search-product').addEventListener('input', function(e) {
         const term = e.target.value.toLowerCase();
         document.querySelectorAll('.product-card').forEach(card => {
@@ -239,20 +264,15 @@
         });
     });
 
-    // FUNGSI BARU: Edit Harga Khusus Keranjang
+    // Edit Harga Khusus Keranjang
     function editCartPrice(itemId, currentPrice) {
-        // Munculkan popup prompt bawaan browser
         let newPrice = prompt("Masukkan harga nego/khusus untuk item ini:", currentPrice);
 
-        // Jika kasir mengisi angka dan menekan OK
         if (newPrice !== null && newPrice.trim() !== "") {
-            // Bersihkan input (misal kasir mengetik "Rp 3.000", diubah otomatis jadi "3000")
             let cleanPrice = parseInt(newPrice.replace(/[^0-9]/g, '')); 
             
             if (!isNaN(cleanPrice) && cleanPrice >= 0) {
-                // Masukkan harga ke form tersembunyi
                 document.getElementById('input-price-' + itemId).value = cleanPrice;
-                // Submit form secara otomatis
                 document.getElementById('form-price-' + itemId).submit();
             } else {
                 alert("Nominal harga tidak valid!");

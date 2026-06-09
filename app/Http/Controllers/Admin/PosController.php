@@ -131,80 +131,99 @@ class PosController extends Controller
         }
 
         $request->validate([
-            'invoice_number' => 'required|unique:orders,invoice_number',
             'user_id' => 'required_if:payment_method,hutang|nullable|exists:users,id',
             'payment_method' => 'required|in:cod,transfer,hutang',
             'amount_paid' => 'required|numeric|min:0',
             'grand_total' => 'required|numeric|min:0',
         ]);
 
-        $change_amount = $request->amount_paid - $request->grand_total;
+        // 1. GENERATE INVOICE BARU (Aman dari Double-Click)
+        $safe_invoice = 'INV-'.date('YmdHis').'-'.rand(100, 999);
 
+        // 2. Kalkulasi Total & Tip
+        $cartGrandTotal = $request->grand_total;
+        $tipAmount = $request->tip_amount ? (int) $request->tip_amount : 0; 
+        $amountPaid = $request->amount_paid;
+
+        $finalGrandTotal = $cartGrandTotal + $tipAmount;
+        $change_amount = $amountPaid - $finalGrandTotal;
+
+        // Cegah kasir yang uangnya kurang tapi mau bayar tunai/transfer
         if ($change_amount < 0 && $request->payment_method != 'hutang') {
             return back()->with('error', 'Uang pembayaran kurang dari Total Belanja!');
         }
 
+        // 3. Validasi Uang Masuk & Status
+        $validTotalPaid = ($amountPaid >= $finalGrandTotal) ? $finalGrandTotal : $amountPaid;
+        $paymentStatus = ($amountPaid >= $finalGrandTotal) ? 'lunas' : 'belum_lunas';
+
+        // 4. MULAI TRANSAKSI DATABASE YANG AMAN
         try {
             DB::beginTransaction();
 
-            if ($request->amount_paid < $request->grand_total) {
+            // SATU KALI CREATE ORDER SAJA
+            $order = Order::create([
+                'invoice_number'  => $safe_invoice,
+                'user_id'         => $request->user_id,
+                'payment_method'  => $request->payment_method,
+                'delivery_status' => 'delivered', // Transaksi POS pasti langsung diterima
+                'grand_total'     => $finalGrandTotal, 
+                'tip_amount'      => $tipAmount,       
+                'total_paid'      => $validTotalPaid,
+                'payment_status'  => $paymentStatus,
+            ]);
 
-                $order = Order::create([
-                    'invoice_number' => $request->invoice_number,
-                    'user_id' => $request->user_id,
-                    'delivery_status' => 'delivered',
-                    'payment_status' => 'belum_lunas',
-                    'payment_method' => $request->payment_method,
-                    'grand_total' => $request->grand_total,
-                ]);
+            // Jika ada uang yang diserahkan (Baik lunas maupun Uang Muka/DP)
+           $methodForPayment = ($request->payment_method == 'hutang') ? 'cod' : $request->payment_method;
 
-            } elseif ($request->amount_paid == $request->grand_total) {
-                $order = Order::create([
-                    'invoice_number' => $request->invoice_number,
-                    'user_id' => $request->user_id,
-                    'delivery_status' => 'delivered',
-                    'payment_status' => 'lunas',
-                    'payment_method' => $request->payment_method,
-                    'grand_total' => $request->grand_total,
-                ]);
-            }
-
+            $order->payments()->create([
+                'amount'         => $validTotalPaid,
+                // BENAR: Gunakan variabel $methodForPayment yang sudah disaring
+                'payment_method' => $methodForPayment, 
+                'status'         => 'approved',
+            ]);
+            // Simpan Detail Keranjang
             foreach ($cart->items as $item) {
+                // AMBIL HARGA CUSTOM (Nego) JIKA ADA
+                $priceToUse = $item->custom_price ?? $item->product->base_price;
+
                 $order->items()->create([
-                    'product_id' => $item->product_id,
-                    'quantity' => $item->quantity,
+                    'product_id'         => $item->product_id,
+                    'quantity'           => $item->quantity,
                     'cost_price_at_time' => $item->product->cost_price,
-                    'price_at_time' => $item->product->base_price,
-                    'subtotal' => $item->quantity * $item->product->base_price,
+                    'price_at_time'      => $priceToUse, // Harga yang sudah disesuaikan
+                    'subtotal'           => $item->quantity * $priceToUse,
                 ]);
 
+                // Potong Stok
                 $item->product->decrement('stock', $item->quantity);
 
+                // Catat Riwayat Mutasi Stok
                 StockMutation::create([
-                    'product_id' => $item->product_id,
-                    'order_id' => $order->id,
-                    'type' => 'out',
-                    'quantity' => $item->quantity,
-                    'description' => 'Terjual via Kasir: '.$order->invoice_number,
+                    'product_id'  => $item->product_id,
+                    'order_id'    => $order->id,
+                    'type'        => 'out',
+                    'quantity'    => $item->quantity,
+                    'description' => 'Terjual via Kasir: '.$safe_invoice,
                 ]);
             }
 
+            // Bersihkan keranjang setelah berhasil
             $cart->items()->delete();
 
+            // Kunci Transaksi
             DB::commit();
 
             return redirect()->route('admin.pos.index')->with([
                 'success' => 'Transaksi berhasil dibuat!',
-                'order_id' => $order->id, // Sesuaikan dengan variabel pesanan Anda
+                'order_id' => $order->id, 
             ]);
-        } catch (\Exception $e) {
-            DB::rollBack();
 
+        } catch (\Exception $e) {
+            // Jika ada satu saja yang error (misal jaringan putus), batalkan semua!
+            DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan sistem: '.$e->getMessage());
         }
-
-        // ... kode simpan transaksi pos ...
-
     }
 
     public function receipt($id)

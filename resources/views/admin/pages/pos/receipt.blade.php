@@ -20,7 +20,7 @@
         .divider { border-bottom: 1px dashed #000; margin: 10px 0; }
         .header h1 { font-size: 16px; margin: 0 0 5px 0; }
         .header p { margin: 2px 0; font-size: 10px; }
-        table { w-full; width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
         td { padding: 2px 0; vertical-align: top; }
         .item-name { padding-bottom: 2px; }
         .footer { text-align: center; font-size: 10px; margin-top: 15px; }
@@ -32,9 +32,6 @@
 </head>
 <body>
 
-   
-
-    <!-- Header Toko -->
     <div class="header text-center">
         <h1>NATUNA GROSIR</h1>
         <p>Jl. Jati Utama</p>
@@ -43,7 +40,6 @@
 
     <div class="divider"></div>
 
-    <!-- Info Transaksi -->
     <table style="font-size: 10px;">
         <tr>
             <td>No. Trans</td>
@@ -61,7 +57,6 @@
 
     <div class="divider"></div>
 
-    <!-- Daftar Barang -->
     <table>
         @foreach($order->items as $item)
         <tr>
@@ -77,51 +72,56 @@
 
     <div class="divider"></div>
 
-    <!-- Total & Pembayaran -->
     @php
-        // Mengambil data uang dari tabel order_payments jika ada
-        $amountPaid = $order->payment ? $order->payment->amount : 0;
+        // PERBAIKAN UTAMA: Langsung ambil data dari kolom total_paid di database order
+        $amountPaid = $order->total_paid ?? 0;
         $kembalian = $amountPaid - $order->grand_total;
+        $sisaHutang = $order->grand_total - $amountPaid;
     @endphp
 
     <table>
+        @if($order->tip_amount > 0)
+        <tr>
+            <td>UPAH ANGKUT / TIP</td>
+            <td class="text-right">Rp {{ number_format($order->tip_amount, 0, ',', '.') }}</td>
+        </tr>
+        @endif
+
         <tr>
             <td class="font-bold">TOTAL BELANJA</td>
             <td class="font-bold text-right">Rp {{ number_format($order->grand_total, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td>TUNAI</td>
+            <td>{{ $order->payment_status == 'belum_lunas' ? 'UANG MUKA (DP)' : 'TUNAI / DIBAYAR' }}</td>
             <td class="text-right">Rp {{ number_format($amountPaid, 0, ',', '.') }}</td>
         </tr>
+        
+        @if($kembalian > 0 && $order->payment_status == 'lunas')
         <tr>
             <td>KEMBALI</td>
-            <td class="text-right">Rp {{ number_format($kembalian > 0 ? $kembalian : 0, 0, ',', '.') }}</td>
+            <td class="text-right">Rp {{ number_format($kembalian, 0, ',', '.') }}</td>
         </tr>
+        @endif
     </table>
 
-    <!-- Status Hutang Jika Ada -->
     @if($order->payment_status == 'belum_lunas')
     <div class="divider"></div>
     <div class="text-center font-bold" style="font-size: 10px;">
         *** STATUS: BELUM LUNAS (PIUTANG) *** <br>
-        Sisa Hutang: Rp {{ number_format($order->grand_total - $amountPaid, 0, ',', '.') }}
+        Sisa Hutang: Rp {{ number_format($sisaHutang > 0 ? $sisaHutang : 0, 0, ',', '.') }}
     </div>
     @endif
 
     <div class="divider"></div>
 
-    <!-- Footer -->
     <div class="footer">
         <p>Terima kasih atas kunjungan Anda!</p>
         <p>Barang yang sudah dibeli tidak dapat ditukar/dikembalikan.</p>
     </div>
 
-    <!-- Script untuk Otomatis Membuka Jendela Print -->
     <script>
         window.onload = function() {
             window.print();
-            
-           
         }
     </script>
 </body>

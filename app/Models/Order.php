@@ -16,8 +16,10 @@ class Order extends Model
         'shipping_address',
         'courier_id',
         'grand_total',
+        'tip_amount',
         'delivery_status',
-        'payment_status'
+        'payment_status',
+        'total_paid'
     ];
 
     // 1. Relasi ke tabel order_payments
