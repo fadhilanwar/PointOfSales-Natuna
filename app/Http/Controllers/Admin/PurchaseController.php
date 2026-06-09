@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Purchase;
-use App\Models\PurchaseItem;
 use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\StockMutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PurchaseController extends Controller
 {
@@ -43,45 +43,68 @@ class PurchaseController extends Controller
     {
         $request->validate([
             'invoice_number' => 'required|unique:purchases,invoice_number',
-            'supplier_id' => 'required|exists:suppliers,id',
-            'product_id' => 'required|array',
-            'product_id.*' => 'required|exists:products,id',
-            'quantity' => 'required|array',
-            'cost_price' => 'required|array',
-            'notes' => 'nullable|string',
+            'supplier_id'    => 'required', 
+            'product_id'     => 'required|array',
+            'product_id.*'   => 'required',
+            'quantity'       => 'required|array',
+            'cost_price'     => 'required|array',
+            'notes'          => 'nullable|string',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // 1. Hitung Grand Total dari array inputan
+            $supplierInput = $request->supplier_id;
+            $supplier = is_numeric($supplierInput) ? Supplier::find($supplierInput) : null;
+
+            if (!$supplier) {
+                $supplier = Supplier::create([
+                    'supplier_name' => $supplierInput,
+                ]);
+            }
+            $finalSupplierId = $supplier->id;
+
             $grand_total = 0;
             $items = [];
             
             for ($i = 0; $i < count($request->product_id); $i++) {
                 $qty = $request->quantity[$i];
                 $price = $request->cost_price[$i];
+                $productInput = $request->product_id[$i];
+
+                $product = is_numeric($productInput) ? Product::find($productInput) : null;
+
+                if (!$product) {
+                    $product = Product::create([
+                        'name'       => $productInput,
+                        'slug'       => Str::slug($productInput) . '-' . time(),
+                        'cost_price' => $price,
+                        'base_price' => $price, 
+                        'stock'      => 0,      
+                    ]);
+                }
+
                 $subtotal = $qty * $price;
                 $grand_total += $subtotal;
 
                 $items[] = [
-                    'product_id' => $request->product_id[$i],
-                    'quantity' => $qty,
+                    'product_id' => $product->id, // Gunakan ID produk (baik yang lama atau yang baru dibuat)
+                    'quantity'   => $qty,
                     'cost_price' => $price,
-                    'subtotal' => $subtotal,
+                    'subtotal'   => $subtotal,
                 ];
             }
 
-            // 2. Simpan Data Utama (Purchase)
+            // Simpan Data Utama (Purchase)
             $purchase = Purchase::create([
                 'invoice_number' => $request->invoice_number,
-                'supplier_id' => $request->supplier_id,
-                'status' => 'pending', // Status awal masuk selalu pending
-                'grand_total' => $grand_total,
-                'notes' => $request->notes,
+                'supplier_id'    => $finalSupplierId,
+                'status'         => 'pending',
+                'grand_total'    => $grand_total,
+                'notes'          => $request->notes,
             ]);
 
-            // 3. Simpan Detail Barang (Purchase Items)
+            // Simpan Detail Barang (Purchase Items)
             foreach ($items as $item) {
                 $purchase->items()->create($item);
             }
@@ -94,8 +117,6 @@ class PurchaseController extends Controller
             return back()->with('error', 'Terjadi kesalahan sistem: ' . $e->getMessage());
         }
     }
-
-    // ... method sebelumnya (index, create, store) ...
 
     public function receiveItem(Purchase $purchase)
     {
