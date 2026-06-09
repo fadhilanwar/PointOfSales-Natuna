@@ -37,7 +37,7 @@
     <!-- Header Toko -->
     <div class="header text-center">
         <h1>NATUNA GROSIR</h1>
-        <p>Jl. Contoh Alamat Grosir No. 123</p>
+        <p>Jl. Jati Utama</p>
         <p>Telp: 0812-3456-7890</p>
     </div>
 
@@ -121,8 +121,7 @@
         window.onload = function() {
             window.print();
             
-            // Opsional: Otomatis tutup jendela setelah print selesai
-            // window.onafterprint = function() { window.close(); }
+           
         }
     </script>
 </body>

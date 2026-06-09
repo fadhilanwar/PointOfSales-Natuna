@@ -27,8 +27,11 @@ class PosController extends Controller
 
         // 2. Hitung Grand Total di Controller
         $grandTotal = 0;
+        
         foreach ($cartItems as $item) {
-            $grandTotal += ($item->quantity * $item->product->base_price);
+            // Gunakan Null Coalescing Operator (??) untuk memilih harga
+            $priceToUse = $item->custom_price ?? $item->product?->base_price ?? 0;
+            $grandTotal += ($item->quantity * $priceToUse);
         }
 
         return view('admin.pages.pos.index', compact('products', 'customers', 'invoice_number', 'cartItems', 'grandTotal'));
@@ -59,40 +62,55 @@ class PosController extends Controller
 
     public function updateCart(Request $request)
     {
+        // 1. Validasi Input
         $request->validate([
             'cart_item_id' => 'required|exists:cart_items,id',
+            'action'       => 'nullable|string',
+            'quantity'     => 'nullable|integer|min:0',
+            'custom_price' => 'nullable|numeric|min:0',
         ]);
 
-        $cartItem = CartItem::findOrFail($request->cart_item_id);
+        // 2. Cari data item di keranjang beserta data produknya
+        $cartItem = \App\Models\CartItem::with('product')->find($request->cart_item_id);
 
-        // 1. Jika request berasal dari tombol Plus / Minus
-        if ($request->has('action')) {
-            if ($request->action == 'plus') {
-                if ($cartItem->quantity + 1 > $cartItem->product->stock) {
-                    return back()->with('error', 'Stok maksimal tercapai!');
-                }
-                $cartItem->increment('quantity');
-            } elseif ($request->action == 'minus') {
-                if ($cartItem->quantity - 1 <= 0) {
-                    $cartItem->delete();
-                } else {
-                    $cartItem->decrement('quantity');
-                }
-            }
+        if (!$cartItem) {
+            return back()->with('error', 'Item tidak ditemukan di keranjang.');
         }
-        // 2. Jika request berasal dari Textfield (Ketik Angka + Enter)
-        elseif ($request->has('quantity')) {
-            $qty = (int) $request->quantity;
-            if ($qty <= 0) {
-                $cartItem->delete();
-            } elseif ($qty > $cartItem->product->stock) {
-                $cartItem->update(['quantity' => $cartItem->product->stock]);
 
-                return back()->with('error', 'Stok maksimal untuk '.$cartItem->product->name.' hanya '.$cartItem->product->stock);
-            } else {
-                $cartItem->update(['quantity' => $qty]);
-            }
+        // 3. FUNGSI BARU: Tangkap Request Edit Harga Khusus (Nego)
+        if ($request->action === 'update_price') {
+            $cartItem->update([
+                'custom_price' => $request->custom_price
+            ]);
+            return back()->with('success', 'Harga khusus / harga nego berhasil diterapkan!');
         }
+
+        // 4. Logika Update Kuantitas (+ / - / Input Manual)
+        $newQuantity = $cartItem->quantity;
+
+        if ($request->action === 'plus') {
+            $newQuantity++;
+        } elseif ($request->action === 'minus') {
+            $newQuantity--;
+        } elseif ($request->has('quantity')) {
+            $newQuantity = $request->quantity;
+        }
+
+        // 5. Cek Jika Kuantitas 0 (Hapus dari Keranjang)
+        if ($newQuantity <= 0) {
+            $cartItem->delete();
+            return back()->with('success', 'Barang dihapus dari keranjang belanja.');
+        }
+
+        // 6. Validasi Sisa Stok Master Produk
+        if ($cartItem->product && $newQuantity > $cartItem->product->stock) {
+            return back()->with('error', 'Gagal! Sisa stok ' . $cartItem->product->name . ' hanya ' . $cartItem->product->stock);
+        }
+
+        // 7. Simpan Update Kuantitas
+        $cartItem->update([
+            'quantity' => $newQuantity
+        ]);
 
         return back();
     }

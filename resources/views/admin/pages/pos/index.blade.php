@@ -8,7 +8,6 @@
         <span class="font-bold">{{ session('success') }}</span>
         
         @if(session('order_id'))
-            <!-- Tombol Cetak Struk dengan target="_blank" -->
             <a href="{{ route('admin.pos.receipt', session('order_id')) }}" 
                target="_blank"
                class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-4 rounded-md shadow-sm transition-colors text-xs flex items-center gap-1.5">
@@ -86,15 +85,29 @@
                 <span class="text-xs font-bold px-2.5 py-1 bg-white border border-slate-200 rounded-md text-slate-500">{{ $invoice_number }}</span>
             </div>
 
-            
-
             <div class="flex-1 overflow-y-auto p-3 bg-slate-50/30">
                 @forelse($cartItems as $item)
                 <div class="flex justify-between items-center p-3 mb-3 bg-white border border-slate-100 rounded-xl shadow-sm hover:border-[#0a7b8c]/30 transition-colors">
                     
                     <div class="flex-1 min-w-0 pr-3">
-                        <h4 class="font-bold text-sm text-slate-800 truncate" title="{{ $item->product->name }}">{{ $item->product->name }}</h4>
-                        <div class="text-[#0a7b8c] font-bold text-xs mt-1">Rp {{ number_format($item->product->base_price, 0, ',', '.') }}</div>
+                        <h4 class="font-bold text-sm text-slate-800 truncate" title="{{ $item->product?->name ?? 'Produk Dihapus' }}">{{ $item->product?->name ?? 'Produk Telah Dihapus' }}</h4>
+                        
+                        <div class="flex items-center gap-1.5 mt-1">
+                            <div class="text-[#0a7b8c] font-bold text-xs">
+                                Rp {{ number_format($item->custom_price ?? $item->product?->base_price ?? 0, 0, ',', '.') }}
+                            </div>
+                            
+                            <button type="button" onclick="editCartPrice('{{ $item->id }}', '{{ $item->custom_price ?? $item->product?->base_price ?? 0 }}')" class="text-slate-400 hover:text-amber-500 transition-colors" title="Ubah Harga Khusus (Nego)">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </button>
+
+                            <form id="form-price-{{ $item->id }}" action="{{ route('admin.pos.cart.update') }}" method="POST" class="hidden">
+                                @csrf
+                                <input type="hidden" name="cart_item_id" value="{{ $item->id }}">
+                                <input type="hidden" name="action" value="update_price">
+                                <input type="hidden" name="custom_price" id="input-price-{{ $item->id }}" value="">
+                            </form>
+                        </div>
                     </div>
                     
                     <div class="flex items-center gap-1.5">
@@ -108,7 +121,7 @@
                         <form action="{{ route('admin.pos.cart.update') }}" method="POST" class="m-0">
                             @csrf
                             <input type="hidden" name="cart_item_id" value="{{ $item->id }}">
-                            <input type="number" name="quantity" value="{{ $item->quantity }}" min="0" max="{{ $item->product->stock }}" 
+                            <input type="number" name="quantity" value="{{ $item->quantity }}" min="0" max="{{ $item->product?->stock ?? 0 }}" 
                                    title="Ketik angka lalu tekan Enter untuk menyimpan"
                                    class="w-12 text-center font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-md py-1 px-1 outline-none focus:border-[#0a7b8c] focus:bg-white transition-all">
                         </form>
@@ -124,7 +137,7 @@
                             @csrf
                             <input type="hidden" name="cart_item_id" value="{{ $item->id }}">
                             <input type="hidden" name="quantity" value="0">
-                            <button onclick="return confirm('Yakin menghapus barang {{ $item->product->name }} dari Keranjang Belanja.')" type="submit" class="text-red-400 hover:text-red-600 p-1.5 bg-red-50 hover:bg-red-100 rounded-md transition-colors" title="Hapus dari Keranjang">
+                            <button onclick="return confirm('Yakin menghapus barang {{ $item->product?->name ?? 'ini' }} dari Keranjang Belanja?')" type="submit" class="text-red-400 hover:text-red-600 p-1.5 bg-red-50 hover:bg-red-100 rounded-md transition-colors" title="Hapus dari Keranjang">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         </form>
@@ -161,15 +174,15 @@
                 </div>
 
                 <div class="p-3 border-b border-slate-100 bg-white">
-                        <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Pembeli (wajib jika hutang)</label>
+                    <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Pembeli (wajib jika hutang)</label>
 
-                <select name="user_id" form="pos-form" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:border-[#0a7b8c] p-2.5 outline-none font-medium transition-colors">
-                    <option value="">-- Pilih Pelanggan (Wajib) --</option>
-                    @foreach($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->name }} {{ $customer->shop_name ? '('.$customer->shop_name.')' : '' }}</option>
-                    @endforeach
-                </select>
-            </div>
+                    <select name="user_id" form="pos-form" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:border-[#0a7b8c] p-2.5 outline-none font-medium transition-colors">
+                        <option value="">-- Pilih Pelanggan (Wajib) --</option>
+                        @foreach($customers as $customer)
+                            <option value="{{ $customer->id }}">{{ $customer->name }} {{ $customer->shop_name ? '('.$customer->shop_name.')' : '' }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
                 <div class="flex justify-between items-center pt-2">
                     <span class="font-bold text-slate-500 text-sm">Kembalian</span>
@@ -225,5 +238,26 @@
             card.style.display = (name.includes(term) || barcode.includes(term)) ? 'flex' : 'none';
         });
     });
+
+    // FUNGSI BARU: Edit Harga Khusus Keranjang
+    function editCartPrice(itemId, currentPrice) {
+        // Munculkan popup prompt bawaan browser
+        let newPrice = prompt("Masukkan harga nego/khusus untuk item ini:", currentPrice);
+
+        // Jika kasir mengisi angka dan menekan OK
+        if (newPrice !== null && newPrice.trim() !== "") {
+            // Bersihkan input (misal kasir mengetik "Rp 3.000", diubah otomatis jadi "3000")
+            let cleanPrice = parseInt(newPrice.replace(/[^0-9]/g, '')); 
+            
+            if (!isNaN(cleanPrice) && cleanPrice >= 0) {
+                // Masukkan harga ke form tersembunyi
+                document.getElementById('input-price-' + itemId).value = cleanPrice;
+                // Submit form secara otomatis
+                document.getElementById('form-price-' + itemId).submit();
+            } else {
+                alert("Nominal harga tidak valid!");
+            }
+        }
+    }
 </script>
 @endsection
