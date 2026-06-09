@@ -17,7 +17,7 @@ class PosController extends Controller
 {
     public function index()
     {
-        $products = Product::where('stock', '>', 0)->latest()->get();
+        $products = Product::latest()->get();
         $customers = User::where('role', 'user')->latest()->get();
         $invoice_number = 'INV-'.date('Ymd').'-'.rand(1000, 9999);
 

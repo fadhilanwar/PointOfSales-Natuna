@@ -167,7 +167,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-8 items-start">
             @forelse($products ?? [] as $product)
-                <div
+                <div data-stock="{{ $product->stock }}"
                     class="product-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-lg hover:shadow-[#06728A]/5 hover:-translate-y-1 hover:border-[#CBE4ED] transition-all duration-300 ease-in-out group relative cursor-default">
 
                     <a href="{{ route('products.show', $product) }}"
@@ -190,6 +190,10 @@
                                 {{ number_format($product->base_price, 0, ',', '.') }}</div>
                             <div class="text-[13px] font-medium text-gray-600 mt-0.5 cursor-text">/
                                 {{ $product->unit ?? 'dus' }}</div>
+                            <span
+                                class="text-[10px] font-bold px-2 py-1 rounded-md {{ $product->stock <= 5 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-slate-100 text-slate-500 border border-slate-200' }}">
+                                Stok: {{ $product->stock }}
+                            </span>
                         </div>
 
                         <div class="h-px bg-gray-200 w-full mb-4 mt-1"></div>
@@ -363,11 +367,20 @@
                     const productCard = e.target.closest('.btn-plus').closest('.product-card');
                     const qtyDisplay = productCard.querySelector('.qty-display');
                     const inputQty = productCard.querySelector('.input-qty');
+
                     let qty = parseInt(inputQty.value);
-                    if (qty < 99) { // Bisa diganti dengan max stock produk jika data dikirim ke frontend
+
+                    // Ambil batas maksimal stok dari atribut data-stock di HTML
+                    let maxStock = parseInt(productCard.getAttribute('data-stock')) || 0;
+
+                    // Cek apakah qty saat ini masih di bawah stok maksimal
+                    if (qty < maxStock) {
                         qty++;
                         qtyDisplay.textContent = qty;
                         inputQty.value = qty;
+                    } else {
+                        // Jika sudah mentok, tampilkan alert/pesan kepada user
+                        alert('Stok maksimal untuk produk ini adalah ' + maxStock + ' dus.');
                     }
                 }
             });
