@@ -181,7 +181,12 @@
                 </div>
 
                 <div class="p-3 border-b border-slate-100 bg-white">
-                    <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Pembeli (wajib jika hutang)</label>
+                    <div class="flex justify-between items-end mb-1.5">
+                        <label class="block text-xs font-bold text-slate-600">Nama Pembeli (wajib jika hutang)</label>
+                        <a href="{{ route('admin.users.create', ['redirect_to' => 'pos']) }}" class="text-[10px] bg-cyan-100 text-[#0a7b8c] px-2 py-1 rounded font-bold hover:bg-[#0a7b8c] hover:text-white transition-colors shadow-sm">
+                            + Tambah Baru
+                        </a>
+                    </div>
 
                     <select name="user_id" form="pos-form" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-lg focus:border-[#0a7b8c] p-2.5 outline-none font-medium transition-colors">
                         <option value="">-- Pilih Pelanggan (Wajib) --</option>

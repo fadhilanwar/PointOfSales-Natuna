@@ -151,22 +151,31 @@
 <script>
 $(document).ready(function() {
     
-    // Inisialisasi Select2 pada saat halaman pertama dimuat
+    // Inisialisasi Select2 dengan fitur TAGS diaktifkan
     function initSelect2() {
         $('.searchable-select').select2({
-            width: '100%' // Agar responsif mengikuti lebar kolom
+            width: '100%',
+            tags: true, // Mengizinkan user mengetik teks bebas
+            createTag: function (params) {
+                var term = $.trim(params.term);
+                if (term === '') {
+                    return null;
+                }
+                return {
+                    id: term,
+                    text: term + ' (Buat Baru)', // Menandakan bahwa ini data baru ke user
+                    newTag: true
+                }
+            }
         });
     }
     
-    // Panggil inisialisasi pertama
     initSelect2();
 
-    // Fungsi Format Rupiah
     function formatRupiah(number) {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
     }
 
-    // Fungsi Hitung Total
     function calculateTotal() {
         let grandTotal = 0;
         $('.item-row').each(function() {
@@ -180,7 +189,7 @@ $(document).ready(function() {
         $('#grand-total-text').text(formatRupiah(grandTotal));
     }
 
-    // Event Listener saat produk dipilih dari Select2
+    // Event Listener saat produk dipilih / diketik
     $(document).on('select2:select', '.product-select', function (e) {
         let currentSelect = $(this);
         let selectedValue = currentSelect.val();
@@ -195,57 +204,62 @@ $(document).ready(function() {
 
         if (isDuplicate) {
             alert('Produk ini sudah ada di dalam daftar! Silakan ubah jumlah (Qty) pada baris yang sudah ada.');
-            
-            // Reset dropdown ke pilihan kosong
             currentSelect.val('').trigger('change');
-            // Kosongkan harga modal
             currentSelect.closest('tr').find('.price-input').val('');
-            
             calculateTotal();
-            return false; // Hentikan eksekusi script selanjutnya
+            return false; 
         }
 
-        // 2. JIKA TIDAK DUPLIKAT, LANJUT AMBIL HARGA MODAL
-        let price = currentSelect.find(':selected').data('price');
-        currentSelect.closest('tr').find('.price-input').val(price || '');
+        // 2. CEK HARGA (Produk Lama vs Produk Baru)
+        let selectedOption = currentSelect.find(':selected');
+        let price = selectedOption.attr('data-price');
+
+        if (typeof price !== 'undefined' && price !== false) {
+            // Jika produk lama, otomatis isi harga modal
+            currentSelect.closest('tr').find('.price-input').val(price);
+        } else {
+            // Jika produk baru, biarkan kosong agar admin mengisinya manual, lalu arahkan kursor ke sana
+            currentSelect.closest('tr').find('.price-input').val('').focus();
+        }
+        
         calculateTotal();
     });
 
-    // Event Listener saat Qty atau Harga diubah manual
     $(document).on('input', '.qty-input, .price-input', function() {
         calculateTotal();
     });
 
-    // Tambah Baris Baru
     $('#btn-add-item').click(function() {
-        // Ambil HTML mentah dari Template
         let templateContent = $('#row-template').html();
-        
-        // Tambahkan ke Container
         $('#items-container').append(templateContent);
         
-        // Munculkan tombol hapus jika baris lebih dari 1
         $('.btn-remove').removeClass('hidden');
 
-        // Penting: Inisialisasi ulang Select2 HANYA pada baris yang baru ditambahkan
+        // Inisialisasi ulang Select2 (dengan tags true) pada baris baru
         $('#items-container .item-row:last .searchable-select').select2({
-            width: '100%'
+            width: '100%',
+            tags: true,
+            createTag: function (params) {
+                var term = $.trim(params.term);
+                if (term === '') { return null; }
+                return {
+                    id: term,
+                    text: term + ' (Buat Baru)',
+                    newTag: true
+                }
+            }
         });
         
         calculateTotal();
     });
 
-    // Hapus Baris
     $(document).on('click', '.btn-remove', function() {
         let rowCount = $('.item-row').length;
-        
-        // Sisakan minimal 1 baris (jangan dihapus semua)
         if (rowCount > 1) {
             $(this).closest('tr').remove();
             calculateTotal();
         }
 
-        // Sembunyikan tombol hapus jika sisa 1 baris
         if ($('.item-row').length === 1) {
             $('.btn-remove').addClass('hidden');
         }
