@@ -3,12 +3,15 @@
 @section('content')
 <div class="mb-6 flex items-center justify-between">
     <h2 class="text-2xl font-bold text-slate-800">Tambah Pengguna</h2>
-    <a href="{{ route('admin.users.index') }}" class="text-sm text-slate-500 hover:text-[#0a7b8c]">Kembali</a>
+    <a href="{{ request('redirect_to') == 'pos' ? route('admin.pos.index') : route('admin.users.index') }}" class="text-sm text-slate-500 hover:text-[#0a7b8c]">Kembali</a>
 </div>
 
 <div class="rounded-xl border border-slate-200 bg-white shadow-sm p-6 max-w-4xl">
     <form action="{{ route('admin.users.store') }}" method="POST">
         @csrf
+        @if(request('redirect_to'))
+            <input type="hidden" name="redirect_to" value="{{ request('redirect_to') }}">
+        @endif
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
                 <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b pb-2">Informasi Akun</h3>

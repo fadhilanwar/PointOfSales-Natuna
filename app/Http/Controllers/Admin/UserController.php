@@ -46,6 +46,10 @@ class UserController extends Controller
 
         User::create($data);
 
+        if ($request->filled('redirect_to') && $request->redirect_to === 'pos') {
+            return redirect()->route('admin.pos.index')->with('success', 'Pelanggan baru berhasil ditambahkan! Silakan pilih namanya di kolom pembeli.');
+        }
+
         return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil ditambahkan!');
     }
 
