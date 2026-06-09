@@ -52,22 +52,44 @@
                 <h3 class="mb-4 ml-4 mt-6 text-xs font-semibold text-slate-400 uppercase">Transaksi</h3>
                 <li><a href="{{ route('admin.purchases.index') }}"
                         class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.purchases.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
-                        <img src="{{ asset('assets/icons/supply.png') }}" class="w-5 h-5 {{ request()->routeIs('admin.purchases.*') ? 'brightness-0 invert' : '' }}" alt="icon">Suplai Barang</a>
+                        <img src="{{ asset('assets/icons/supply.png') }}"
+                            class="w-5 h-5 {{ request()->routeIs('admin.purchases.*') ? 'brightness-0 invert' : '' }}"
+                            alt="icon">Suplai Barang</a>
                 </li>
                 <li><a href="{{ route('admin.pos.index') }}"
                         class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.pos.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
-                        <img src="{{ asset('assets/icons/cashier.png') }}" class="w-5 h-5 {{ request()->routeIs('admin.pos.*') ? 'brightness-0 invert' : '' }}" alt="icon">Penjualan</a>
+                        <img src="{{ asset('assets/icons/cashier.png') }}"
+                            class="w-5 h-5 {{ request()->routeIs('admin.pos.*') ? 'brightness-0 invert' : '' }}"
+                            alt="icon">Penjualan</a>
                 </li>
-                <li><a href="#"
-                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.sales.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
-                        <img src="{{ asset('assets/icons/order-user.png') }}" class="w-5 h-5 {{ request()->routeIs('admin.suppliers.*') ? 'brightness-0 invert' : '' }}" alt="icon">Pesanan Masuk</a>
+
+                <li><a href="{{ route('admin.transactions.index') }}"
+                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.transactions.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+                        <img src="{{ asset('assets/icons/order-user.png') }}"
+                            class="w-5 h-5 {{ request()->routeIs('admin.transactions.*') ? 'brightness-0 invert' : '' }}"
+                            alt="icon">Pesanan Masuk</a>
+                </li>
+                <li><a href="{{ route('admin.debts.index') }}"
+                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('admin.debts.*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+                        <img src="{{ asset('assets/icons/order-user.png') }}"
+                            class="w-5 h-5 {{ request()->routeIs('admin.debts.*') ? 'brightness-0 invert' : '' }}"
+                            alt="icon">Histori Transaksi</a>
                 </li>
 
                 <h3 class="mb-4 ml-4 mt-6 text-xs font-semibold text-slate-400 uppercase">Laporan</h3>
-                <li><a href="#"
-                        class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out text-slate-600 hover:bg-slate-100">
-                        <img src="{{ asset('assets/icons/report.png') }}" class="w-5 h-5" alt="icon">Laporan</a>
-                </li>
+                <li>
+    <a href="{{ route('report.supply') }}"
+       class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('report.supply*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+        <img src="{{ asset('assets/icons/report-supply.png') }}" class="w-5 h-5 {{ request()->routeIs('report.supply') ? 'brightness-0 invert' : '' }}" alt="icon">Laporan Suplai
+    </a>
+</li>
+
+<li>
+    <a href="{{ route('report.transaction') }}"
+       class="group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out {{ request()->routeIs('report.transaction*') ? 'bg-[#0a7b8c] text-white' : 'text-slate-600 hover:bg-slate-100' }}">
+        <img src="{{ asset('assets/icons/report-sale.png') }}" class="w-5 h-5 {{ request()->routeIs('report.transaction*') ? 'brightness-0 invert' : '' }}" alt="icon">Laporan Penjualan
+    </a>
+</li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST"
                         onsubmit="return confirm('Apakah Anda yakin ingin keluar dari sistem?');">

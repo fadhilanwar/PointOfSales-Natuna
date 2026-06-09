@@ -90,19 +90,35 @@
                                 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#06728A]"></span>
                             </span>
                             <h3 class="text-sm font-bold text-gray-800 tracking-wide cursor-pointer">
-                                {{ $activeOrder->invoice_number }}</h3>
+                                {{ $activeOrder->invoice_number }}
+                            </h3>
                         </div>
+
+                        {{-- Teks status pakai delivery_status (kolom baru) --}}
                         <p class="text-base font-semibold text-gray-800 mt-1 cursor-pointer">
-                            {{ $activeOrder->status === 'shipping' ? 'Sedang Dikirim' : 'Diproses Admin' }}
+                            @if ($activeOrder->delivery_status === 'shipping')
+                                Sedang Dikirim
+                            @elseif ($activeOrder->delivery_status === 'processing')
+                                Sedang Diproses
+                            @else
+                                Menunggu Konfirmasi Admin
+                            @endif
                         </p>
-                        <p class="text-xs font-medium text-gray-600 mt-1 flex items-center gap-1 cursor-pointer">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                            Kurir: {{ $activeOrder->courier->name ?? 'Internal / Belum Dialokasikan' }}
-                        </p>
+
+                        {{-- Tampilkan sisa tagihan jika belum lunas --}}
+                        @if ($activeOrder->payment_status === 'belum_lunas')
+                            @php $sisaAktif = $activeOrder->grand_total - $activeOrder->total_paid; @endphp
+                            <p class="text-xs font-medium text-orange-600 mt-1 flex items-center gap-1 cursor-pointer">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                    </path>
+                                </svg>
+                                Sisa Tagihan: Rp {{ number_format($sisaAktif, 0, ',', '.') }}
+                            </p>
+                        @endif
                     </div>
+
                     <div
                         class="bg-[#A4D2E1] p-3.5 rounded-2xl group-hover:bg-white/50 group-hover:scale-105 transition-all duration-300 ease-in-out cursor-pointer">
                         <svg class="w-7 h-7 text-[#06728A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,17 +131,25 @@
         @endauth
 
         <div class="mb-8">
-            <h3 class="text-lg font-bold text-gray-800 mb-4 tracking-tight">Kategori Populer</h3>
+            <div class="flex justify-between items-end mb-4">
+                <h3 class="text-lg font-bold text-gray-800 tracking-tight">Kategori Populer</h3>
+                <a href="{{ route('categories.index') }}"
+                    class="text-sm font-bold text-[#06728A] flex items-center hover:text-[#055c70] group cursor-pointer transition-colors duration-300 ease-in-out">
+                    Lihat Semua
+                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300 ease-in-out cursor-pointer"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+
             <div class="flex space-x-3 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
-                <button
-                    class="whitespace-nowrap px-6 py-2.5 rounded-full bg-[#06728A] text-white font-semibold text-sm shadow-md shadow-[#06728A]/20 hover:bg-[#055c70] hover:-translate-y-0.5 transition-all duration-300 ease-in-out cursor-pointer border border-transparent">Semua
-                    Kategori</button>
-                <button
-                    class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm hover:shadow-md hover:text-[#06728A] hover:-translate-y-0.5 border border-gray-100 transition-all duration-300 ease-in-out cursor-pointer">Sembako</button>
-                <button
-                    class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm hover:shadow-md hover:text-[#06728A] hover:-translate-y-0.5 border border-gray-100 transition-all duration-300 ease-in-out cursor-pointer">Minuman</button>
-                <button
-                    class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm hover:shadow-md hover:text-[#06728A] hover:-translate-y-0.5 border border-gray-100 transition-all duration-300 ease-in-out cursor-pointer">Bumbu</button>
+                @foreach ($categories as $category)
+                    <a href="{{ route('categories.show', $category->slug) }}"
+                        class="whitespace-nowrap px-6 py-2.5 rounded-full bg-white text-gray-600 font-semibold text-sm shadow-sm hover:shadow-md hover:text-[#06728A] hover:-translate-y-0.5 border border-gray-100 transition-all duration-300 ease-in-out cursor-pointer block">
+                        {{ $category->category_name }}
+                    </a>
+                @endforeach
             </div>
         </div>
 
@@ -143,7 +167,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-8 items-start">
             @forelse($products ?? [] as $product)
-                <div
+                <div data-stock="{{ $product->stock }}"
                     class="product-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-lg hover:shadow-[#06728A]/5 hover:-translate-y-1 hover:border-[#CBE4ED] transition-all duration-300 ease-in-out group relative cursor-default">
 
                     <a href="{{ route('products.show', $product) }}"
@@ -166,6 +190,10 @@
                                 {{ number_format($product->base_price, 0, ',', '.') }}</div>
                             <div class="text-[13px] font-medium text-gray-600 mt-0.5 cursor-text">/
                                 {{ $product->unit ?? 'dus' }}</div>
+                            <span
+                                class="text-[10px] font-bold px-2 py-1 rounded-md {{ $product->stock <= 5 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-slate-100 text-slate-500 border border-slate-200' }}">
+                                Stok: {{ $product->stock }}
+                            </span>
                         </div>
 
                         <div class="h-px bg-gray-200 w-full mb-4 mt-1"></div>
@@ -339,11 +367,20 @@
                     const productCard = e.target.closest('.btn-plus').closest('.product-card');
                     const qtyDisplay = productCard.querySelector('.qty-display');
                     const inputQty = productCard.querySelector('.input-qty');
+
                     let qty = parseInt(inputQty.value);
-                    if (qty < 99) { // Bisa diganti dengan max stock produk jika data dikirim ke frontend
+
+                    // Ambil batas maksimal stok dari atribut data-stock di HTML
+                    let maxStock = parseInt(productCard.getAttribute('data-stock')) || 0;
+
+                    // Cek apakah qty saat ini masih di bawah stok maksimal
+                    if (qty < maxStock) {
                         qty++;
                         qtyDisplay.textContent = qty;
                         inputQty.value = qty;
+                    } else {
+                        // Jika sudah mentok, tampilkan alert/pesan kepada user
+                        alert('Stok maksimal untuk produk ini adalah ' + maxStock + ' dus.');
                     }
                 }
             });

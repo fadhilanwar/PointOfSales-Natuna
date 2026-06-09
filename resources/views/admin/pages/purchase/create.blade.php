@@ -180,11 +180,34 @@ $(document).ready(function() {
         $('#grand-total-text').text(formatRupiah(grandTotal));
     }
 
-    // Event Listener saat produk dipilih dari Select2 (Ambil Harga Modal Otomatis)
-    // Di Select2, kita harus mendengarkan event khusus 'select2:select'
+    // Event Listener saat produk dipilih dari Select2
     $(document).on('select2:select', '.product-select', function (e) {
-        let price = $(this).find(':selected').data('price');
-        $(this).closest('tr').find('.price-input').val(price || '');
+        let currentSelect = $(this);
+        let selectedValue = currentSelect.val();
+        
+        // 1. CEK DUPLIKASI BARANG
+        let isDuplicate = false;
+        $('.product-select').not(currentSelect).each(function() {
+            if ($(this).val() === selectedValue && selectedValue !== "") {
+                isDuplicate = true;
+            }
+        });
+
+        if (isDuplicate) {
+            alert('Produk ini sudah ada di dalam daftar! Silakan ubah jumlah (Qty) pada baris yang sudah ada.');
+            
+            // Reset dropdown ke pilihan kosong
+            currentSelect.val('').trigger('change');
+            // Kosongkan harga modal
+            currentSelect.closest('tr').find('.price-input').val('');
+            
+            calculateTotal();
+            return false; // Hentikan eksekusi script selanjutnya
+        }
+
+        // 2. JIKA TIDAK DUPLIKAT, LANJUT AMBIL HARGA MODAL
+        let price = currentSelect.find(':selected').data('price');
+        currentSelect.closest('tr').find('.price-input').val(price || '');
         calculateTotal();
     });
 
@@ -201,6 +224,9 @@ $(document).ready(function() {
         // Tambahkan ke Container
         $('#items-container').append(templateContent);
         
+        // Munculkan tombol hapus jika baris lebih dari 1
+        $('.btn-remove').removeClass('hidden');
+
         // Penting: Inisialisasi ulang Select2 HANYA pada baris yang baru ditambahkan
         $('#items-container .item-row:last .searchable-select').select2({
             width: '100%'
@@ -211,8 +237,18 @@ $(document).ready(function() {
 
     // Hapus Baris
     $(document).on('click', '.btn-remove', function() {
-        $(this).closest('tr').remove();
-        calculateTotal();
+        let rowCount = $('.item-row').length;
+        
+        // Sisakan minimal 1 baris (jangan dihapus semua)
+        if (rowCount > 1) {
+            $(this).closest('tr').remove();
+            calculateTotal();
+        }
+
+        // Sembunyikan tombol hapus jika sisa 1 baris
+        if ($('.item-row').length === 1) {
+            $('.btn-remove').addClass('hidden');
+        }
     });
 });
 </script>

@@ -82,6 +82,10 @@
                 <form action="{{ route('checkout.process') }}" method="POST" id="checkout-form">
                     @csrf
 
+                    @foreach ($selectedIds as $id)
+                        <input type="hidden" name="selected_cart_ids[]" value="{{ $id }}">
+                    @endforeach
+                    
                     <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-gray-100 mb-6">
                         <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2 cursor-default">
                             <svg class="w-5 h-5 text-[#06728A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -227,28 +231,6 @@
                                 </div>
                             </label>
 
-                            <label class="relative cursor-pointer block">
-                                <input type="radio" name="payment_method" value="hutang" class="peer sr-only"
-                                    {{ old('payment_method') === 'hutang' ? 'checked' : '' }}>
-                                <div
-                                    class="flex items-center justify-between p-4 bg-white border-2 border-gray-100 rounded-xl hover:bg-gray-50 peer-checked:border-[#06728A] peer-checked:bg-[#F0F8FA] peer-checked:[&_.outer-circle]:border-[#06728A] peer-checked:[&_.inner-circle]:scale-100 peer-checked:[&_.icon-method]:text-[#06728A] transition-all duration-300">
-                                    <div class="flex items-center gap-3">
-                                        <svg class="icon-method w-6 h-6 text-gray-400 transition-colors" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
-                                            </path>
-                                        </svg>
-                                        <span class="font-bold text-sm text-gray-800">Tempo / Hutang</span>
-                                    </div>
-                                    <div
-                                        class="outer-circle w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center transition-colors">
-                                        <div
-                                            class="inner-circle w-2.5 h-2.5 rounded-full bg-[#06728A] scale-0 transition-transform">
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
                         </div>
                     </div>
 

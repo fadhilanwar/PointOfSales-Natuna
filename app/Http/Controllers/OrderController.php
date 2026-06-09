@@ -8,50 +8,40 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    // Method Index untuk daftar pesanan (opsional, untuk kelengkapan)
     public function index(Request $request)
     {
-        $query = Order::where('user_id', Auth::id())->latest();
+        $query = Order::with('payments')->where('user_id', Auth::id())->latest();
 
-        if ($request->has('search') && $request->search != '') {
+        if ($request->filled('search')) {
             $query->where('invoice_number', 'like', '%' . $request->search . '%');
         }
 
         $activeTab = $request->get('tab', 'semua');
 
-        switch ($activeTab) {
-            case 'belum_diproses':
-                $query->whereIn('status', ['pending_approval', 'approved', 'paid']);
-                break;
-            case 'sedang_dikirim':
-                $query->where('status', 'shipping');
-                break;
-            case 'belum_lunas':
-                $query->where('status', 'awaiting_payment');
-                break;
-            case 'selesai':
-                $query->where('status', 'completed');
-                break;
+        if ($activeTab === 'diproses') {
+            $query->where('delivery_status', 'processing');
+        } elseif ($activeTab === 'dikirim') {
+            $query->where('delivery_status', 'shipping');
+        } elseif ($activeTab === 'belum_lunas') {
+            $query->where('payment_status', 'belum_lunas');
+        } elseif ($activeTab === 'selesai') {
+            $query->where('delivery_status', 'delivered');
         }
 
-        // Eksekusi pengambilan data dari database
         $orders = $query->get();
 
         return view('orders.index', compact('orders', 'activeTab'));
     }
 
-    // Method Show untuk Detail Pesanan (Sesuai Tugas 1)
     public function show(Order $order)
     {
-        // Proteksi Keamanan Ke-1: Pastikan pesanan ini milik user yang sedang login
         if ($order->user_id !== Auth::id()) {
-            abort(403, 'Akses Ditolak: Anda tidak memiliki izin untuk melihat detail pesanan ini.');
+            abort(403, 'Akses Ditolak.');
         }
 
-        // Eager Loading: Muat relasi item dan data master produk agar tidak N+1 Query Problem
-        $order->load('items.product');
+        // Load relasi items, produknya, dan semua riwayat pembayaran
+        $order->load(['items.product', 'payments']);
 
-        // Kembalikan ke view
         return view('orders.show', compact('order'));
     }
 }

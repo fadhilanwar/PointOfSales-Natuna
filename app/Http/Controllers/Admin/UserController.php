@@ -32,26 +32,23 @@ class UserController extends Controller
             'password' => 'required|string|min:6',
             'role' => 'required|in:admin,user',
             'shop_name' => 'nullable|string|max:255',
-            'phone_number' => 'nullable|string|max:20',
+            // VALIDASI BARU: Menggunakan regex untuk membatasi karakter
+            'phone_number' => ['nullable', 'string', 'max:20', 'regex:/^[0-9\+\-]+$/'],
             'address' => 'nullable|string',
+        ], [
+            // (Opsional) Pesan error kustom agar user paham letak kesalahannya
+            'phone_number.regex' => 'Nomor telepon hanya boleh berisi angka, tanda plus (+), dan setrip (-).'
         ]);
 
         $data = $request->all();
         // Enkripsi password menggunakan Hash bawaan Laravel
-        $data['password'] = Hash::make($request->password); 
+        $data['password'] = Hash::make($request->password);
 
         User::create($data);
 
         return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil ditambahkan!');
     }
 
-    // 4. Menampilkan form edit pengguna
-    public function edit(User $user)
-    {
-        return view('admin.pages.users.edit', compact('user'));
-    }
-
-    // 5. Memproses pembaruan data pengguna
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -62,8 +59,12 @@ class UserController extends Controller
             'password' => 'nullable|string|min:6', // Password boleh kosong saat update
             'role' => 'required|in:admin,user',
             'shop_name' => 'nullable|string|max:255',
-            'phone_number' => 'nullable|string|max:20',
+            // VALIDASI BARU: Terapkan regex yang sama pada proses update
+            'phone_number' => ['nullable', 'string', 'max:20', 'regex:/^[0-9\+\-]+$/'],
             'address' => 'nullable|string',
+        ], [
+            // (Opsional) Pesan error kustom
+            'phone_number.regex' => 'Nomor telepon hanya boleh berisi angka, tanda plus (+), dan setrip (-).'
         ]);
 
         $data = $request->all();
@@ -80,6 +81,14 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Data pengguna berhasil diperbarui!');
     }
 
+    // 4. Menampilkan form edit pengguna
+    public function edit(User $user)
+    {
+        return view('admin.pages.users.edit', compact('user'));
+    }
+
+    // 5. Memproses pembaruan data pengguna
+
     // 6. Menghapus data pengguna
     public function destroy(User $user)
     {
@@ -89,7 +98,7 @@ class UserController extends Controller
         }
 
         $user->delete();
-        
+
         return redirect()->route('admin.users.index')->with('success', 'Pengguna berhasil dihapus!');
     }
-}   
+}
