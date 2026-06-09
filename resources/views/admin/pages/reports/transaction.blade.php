@@ -7,9 +7,6 @@
             <h1 class="text-2xl font-extrabold text-slate-800">Rekap Penjualan (Orders)</h1>
             <p class="text-slate-500 text-sm mt-1">Laporan riwayat transaksi dari website dan kasir POS.</p>
         </div>
-        {{-- <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors flex items-center gap-2 print:hidden">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg> Cetak PDF
-        </button> --}}
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -24,21 +21,19 @@
     </div>
 
     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-6 print:hidden">
-        <form method="GET" action="{{ route('report.transaction') }}" class="flex gap-4 items-end">
+        <form method="GET" action="{{ route('report.transaction') }}" class="flex flex-wrap gap-4 items-end">
             <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1.5">Bulan</label>
-                <select name="month" class="bg-slate-50 border border-slate-200 text-sm rounded-lg p-2.5 outline-none w-40">
-                    <option value="">Semua Bulan</option>
-                    @foreach(range(1, 12) as $m)
-                        <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>{{ date('F', mktime(0,0,0,$m,1)) }}</option>
-                    @endforeach
-                </select>
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Dari Tanggal</label>
+                <input type="date" name="start_date" value="{{ request('start_date') }}" class="bg-slate-50 border border-slate-200 text-sm rounded-lg p-2.5 outline-none w-40 focus:border-[#0a7b8c]">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-600 mb-1.5">Tahun</label>
-                <input type="number" name="year" value="{{ request('year', date('Y')) }}" class="bg-slate-50 border border-slate-200 text-sm rounded-lg p-2.5 outline-none w-32">
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Sampai Tanggal</label>
+                <input type="date" name="end_date" value="{{ request('end_date') }}" class="bg-slate-50 border border-slate-200 text-sm rounded-lg p-2.5 outline-none w-40 focus:border-[#0a7b8c]">
             </div>
-            <button type="submit" class="bg-[#0a7b8c] hover:bg-[#075e6b] text-white font-bold py-2.5 px-5 rounded-lg text-sm transition-colors">Terapkan Filter</button>
+            <div class="flex gap-2">
+                <button type="submit" class="bg-[#0a7b8c] hover:bg-[#075e6b] text-white font-bold py-2.5 px-5 rounded-lg text-sm transition-colors">Filter Range</button>
+                <a href="{{ route('report.transaction') }}" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 px-5 rounded-lg text-sm transition-colors">Reset</a>
+            </div>
         </form>
     </div>
 
@@ -72,7 +67,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="6" class="p-8 text-center text-slate-500">Tidak ada data penjualan pada periode ini.</td></tr>
+                <tr><td colspan="6" class="p-8 text-center text-slate-500">Tidak ada data penjualan pada periode tanggal ini.</td></tr>
                 @endforelse
             </tbody>
         </table>

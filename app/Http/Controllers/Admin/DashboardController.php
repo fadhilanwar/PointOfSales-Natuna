@@ -8,6 +8,7 @@ use App\Models\OrderPayment;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request; 
 
 class DashboardController extends Controller
 {
@@ -171,4 +172,147 @@ class DashboardController extends Controller
         ));
 
     }
+
+
+public function filterData(Request $request)
+{
+    $mode = $request->input('mode', 'bulan'); // 'tahun' | 'bulan' | 'minggu'
+    $value = $request->input('value'); // tahun: "2024", bulan: "2024-06", minggu: "2024-W24"
+
+    // ============================================================
+    // Parse rentang tanggal berdasarkan mode
+    // ============================================================
+    switch ($mode) {
+        case 'tahun':
+            $year = (int) $value;
+            $startDate = now()->setYear($year)->startOfYear();
+            $endDate   = now()->setYear($year)->endOfYear();
+            break;
+
+        case 'minggu':
+            // Format input: "2024-W24"
+            [$y, $w] = explode('-W', $value);
+            $startDate = now()->setISODate((int)$y, (int)$w)->startOfWeek();
+            $endDate   = $startDate->copy()->endOfWeek();
+            break;
+
+        case 'bulan':
+        default:
+            // Format input: "2024-06"
+            [$y, $m] = explode('-', $value);
+            $startDate = now()->setYear((int)$y)->setMonth((int)$m)->startOfMonth();
+            $endDate   = $startDate->copy()->endOfMonth();
+            break;
+    }
+
+    // ============================================================
+    // Hitung ulang semua metrics dengan rentang tanggal baru
+    // ============================================================
+    $pendapatanBulanIni = OrderPayment::where('status', 'approved')
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->sum('amount');
+
+    $totalPiutang = Order::where('payment_status', 'belum_lunas')
+        ->where('delivery_status', '!=', 'cancelled')
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->get()
+        ->sum(function ($order) {
+            $sudahDibayar = $order->payments()
+                ->where('status', 'approved')
+                ->sum('amount');
+            return max(0, $order->grand_total - $sudahDibayar);
+        });
+
+    $pesananMenunggu = Order::where('delivery_status', 'pending')
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->count();
+
+    // ============================================================
+    // Chart data — formatnya berbeda tiap mode
+    // ============================================================
+    if ($mode === 'tahun') {
+        // Tampilkan per bulan dalam tahun tersebut
+        $rawChart = Order::select(
+            DB::raw('MONTH(created_at) as period'),
+            DB::raw('payment_status'),
+            DB::raw('SUM(grand_total) as total')
+        )
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->where('delivery_status', '!=', 'cancelled')
+            ->groupBy('period', 'payment_status')
+            ->get();
+
+        $labels = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+        $all = array_fill(0, 12, 0);
+        $lunas = array_fill(0, 12, 0);
+        $belum = array_fill(0, 12, 0);
+
+        foreach ($rawChart as $row) {
+            $i = $row->period - 1;
+            $all[$i] += $row->total;
+            if ($row->payment_status === 'lunas') $lunas[$i] += $row->total;
+            else $belum[$i] += $row->total;
+        }
+
+    } elseif ($mode === 'minggu') {
+        // Tampilkan per hari (7 hari)
+        $rawChart = Order::select(
+            DB::raw('DAYOFWEEK(created_at) as period'),
+            DB::raw('payment_status'),
+            DB::raw('SUM(grand_total) as total')
+        )
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->where('delivery_status', '!=', 'cancelled')
+            ->groupBy('period', 'payment_status')
+            ->get();
+
+        // DAYOFWEEK: 1=Minggu, 2=Sen, ..., 7=Sab → kita reindex ke 0-6 (Sen–Min)
+        $labels = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+        $all = array_fill(0, 7, 0);
+        $lunas = array_fill(0, 7, 0);
+        $belum = array_fill(0, 7, 0);
+
+        foreach ($rawChart as $row) {
+            $i = ($row->period - 2 + 7) % 7; // Konversi: Senin = 0
+            $all[$i] += $row->total;
+            if ($row->payment_status === 'lunas') $lunas[$i] += $row->total;
+            else $belum[$i] += $row->total;
+        }
+
+    } else {
+        // Bulan — tampilkan per tanggal (1–31)
+        $rawChart = Order::select(
+            DB::raw('DAY(created_at) as period'),
+            DB::raw('payment_status'),
+            DB::raw('SUM(grand_total) as total')
+        )
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->where('delivery_status', '!=', 'cancelled')
+            ->groupBy('period', 'payment_status')
+            ->get();
+
+        $daysInMonth = $endDate->day;
+        $labels = array_map('strval', range(1, $daysInMonth));
+        $all = array_fill(0, $daysInMonth, 0);
+        $lunas = array_fill(0, $daysInMonth, 0);
+        $belum = array_fill(0, $daysInMonth, 0);
+
+        foreach ($rawChart as $row) {
+            $i = $row->period - 1;
+            $all[$i]  += $row->total;
+            if ($row->payment_status === 'lunas') $lunas[$i] += $row->total;
+            else $belum[$i] += $row->total;
+        }
+    }
+
+    return response()->json([
+        'pendapatan'  => $pendapatanBulanIni,
+        'piutang'     => $totalPiutang,
+        'menunggu'    => $pesananMenunggu,
+        'chartSemua'  => $all,
+        'chartLunas'  => $lunas,
+        'chartBelum'  => $belum,
+        'chartLabels' => $labels,
+    ]);
+}
 }

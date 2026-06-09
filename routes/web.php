@@ -95,12 +95,16 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/kategori/{category:slug}', [KategoriController::class, 'show'])->name('categories.show');
 });
 
+Route::get('/admin/dashboard/filter', [DashboardController::class, 'filterData'])
+    ->name('admin.dashboard.filter');
+
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
 
     // Dashboard Admin
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    
 
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);

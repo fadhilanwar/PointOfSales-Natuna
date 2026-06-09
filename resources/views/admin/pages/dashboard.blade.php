@@ -5,13 +5,37 @@
     {{-- ============================================================ --}}
     {{-- HEADER HALAMAN                                               --}}
     {{-- ============================================================ --}}
-    <div class="mb-8">
+   <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
         <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Dashboard</h1>
         <p class="text-sm text-gray-500 mt-1 font-medium">
             Ringkasan bisnis Natuna GAS —
-            <span class="text-[#06728A] font-semibold">{{ now()->translatedFormat('d F Y') }}</span>
+            <span class="text-[#06728A] font-semibold" id="label-periode">{{ now()->translatedFormat('d F Y') }}</span>
         </p>
     </div>
+
+    {{-- ===== COMBOBOX FILTER PERIODE ===== --}}
+    <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-3 py-2 shadow-sm self-start sm:self-auto">
+        {{-- Mode selector --}}
+        <select id="filter-mode"
+            class="text-xs font-bold text-gray-600 bg-transparent border-none outline-none cursor-pointer pr-1">
+            <option value="tahun">Pertahun</option>
+            <option value="bulan" selected>Perbulan</option>
+            <option value="minggu">Perminggu</option>
+        </select>
+
+        <div class="w-px h-4 bg-gray-200"></div>
+
+        {{-- Value selector — berubah sesuai mode --}}
+        <select id="filter-value"
+            class="text-xs font-semibold text-[#06728A] bg-transparent border-none outline-none cursor-pointer">
+            {{-- Diisi oleh JS --}}
+        </select>
+
+        {{-- Loading spinner --}}
+        <div id="filter-spinner" class="hidden w-4 h-4 border-2 border-[#06728A] border-t-transparent rounded-full animate-spin"></div>
+    </div>
+</div>
 
     {{-- ============================================================ --}}
     {{-- SECTION 1: 4 KARTU METRIK UTAMA                             --}}
@@ -31,7 +55,7 @@
                 <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">Bulan Ini</span>
             </div>
             <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Pendapatan Lunas</p>
-            <p class="text-xl font-black text-gray-900 leading-tight">
+            <p id="card-pendapatan" class="text-xl font-black text-gray-900 leading-tight">
                 Rp {{ number_format($pendapatanBulanIni, 0, ',', '.') }}
             </p>
         </div>
@@ -49,7 +73,7 @@
                 <span class="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Perlu Tagih</span>
             </div>
             <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Total Piutang</p>
-            <p class="text-xl font-black text-gray-900 leading-tight">
+            <p id="card-piutang" class="text-xl font-black text-gray-900 leading-tight">
                 Rp {{ number_format($totalPiutang, 0, ',', '.') }}
             </p>
         </div>
@@ -70,7 +94,7 @@
                 @endif
             </div>
             <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Menunggu Konfirmasi</p>
-            <p class="text-xl font-black text-gray-900 leading-tight">
+            <p id="card-menunggu-wrapper" class="text-xl font-black text-gray-900 leading-tight">
                 {{ $pesananMenunggu }}
                 <span class="text-sm font-bold text-gray-400">pesanan</span>
             </p>
@@ -239,11 +263,157 @@
     </div>
 
     @push('script')
+
+        
         {{-- ============================================================ --}}
         {{-- SCRIPT CHART.JS + VANILLA JS FILTER                         --}}
         {{-- ============================================================ --}}
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
         <script>
+            // ============================================================
+// FILTER PERIODE — COMBOBOX LOGIC
+// ============================================================
+
+// Referensi URL untuk AJAX request
+const filterUrl = '{{ route("admin.dashboard.filter") }}';
+let activeChartFilter = 'semua'; // track filter chart yang aktif
+
+// ---- Generate opsi untuk setiap mode ----
+function buildOptions(mode) {
+    const now = new Date();
+    const sel = document.getElementById('filter-value');
+    sel.innerHTML = '';
+
+    if (mode === 'tahun') {
+        for (let y = now.getFullYear(); y >= now.getFullYear() - 4; y--) {
+            const opt = new Option(y, y);
+            if (y === now.getFullYear()) opt.selected = true;
+            sel.appendChild(opt);
+        }
+
+    } else if (mode === 'bulan') {
+        const bulanID = ['Januari','Februari','Maret','April','Mei','Juni',
+                         'Juli','Agustus','September','Oktober','November','Desember'];
+        // Tampilkan 12 bulan ke belakang dari sekarang
+        for (let i = 0; i < 12; i++) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+            const label = `${bulanID[d.getMonth()]} ${d.getFullYear()}`;
+            const opt = new Option(label, val);
+            if (i === 0) opt.selected = true;
+            sel.appendChild(opt);
+        }
+
+    } else if (mode === 'minggu') {
+        // Tampilkan 12 minggu ke belakang
+        for (let i = 0; i < 12; i++) {
+            const d = new Date(now);
+            d.setDate(d.getDate() - (i * 7));
+            // Hitung ISO week number
+            const startOfWeek = new Date(d);
+            startOfWeek.setDate(d.getDate() - ((d.getDay() + 6) % 7)); // Senin
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            const weekNum = getISOWeek(d);
+            const year = getISOWeekYear(d);
+            const val = `${year}-W${String(weekNum).padStart(2,'0')}`;
+            const fmt = d => `${d.getDate()}/${d.getMonth()+1}`;
+            const label = `${fmt(startOfWeek)} – ${fmt(endOfWeek)} (W${weekNum})`;
+            const opt = new Option(label, val);
+            if (i === 0) opt.selected = true;
+            sel.appendChild(opt);
+        }
+    }
+}
+
+// Helper: ISO week number
+function getISOWeek(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+function getISOWeekYear(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    return d.getUTCFullYear();
+}
+
+// ---- Fetch data dari server ----
+async function fetchFilteredData() {
+    const mode  = document.getElementById('filter-mode').value;
+    const value = document.getElementById('filter-value').value;
+    const spinner = document.getElementById('filter-spinner');
+
+    if (!value) return;
+
+    spinner.classList.remove('hidden');
+
+    try {
+        const res  = await fetch(`${filterUrl}?mode=${mode}&value=${encodeURIComponent(value)}`);
+        const data = await res.json();
+
+        // --- Update label periode ---
+        const labelMap = {
+            tahun: `Tahun ${value}`,
+            bulan: document.getElementById('filter-value').options[document.getElementById('filter-value').selectedIndex].text,
+            minggu: document.getElementById('filter-value').options[document.getElementById('filter-value').selectedIndex].text,
+        };
+        document.getElementById('label-periode').textContent = labelMap[mode];
+
+        // --- Update 4 kartu metrik ---
+        document.getElementById('card-pendapatan').textContent =
+            'Rp ' + new Intl.NumberFormat('id-ID').format(data.pendapatan);
+        document.getElementById('card-piutang').textContent =
+            'Rp ' + new Intl.NumberFormat('id-ID').format(data.piutang);
+        document.getElementById('card-menunggu').textContent = data.menunggu;
+
+        // --- Update chart labels & data ---
+        salesChart.data.labels = data.chartLabels;
+
+        // Pilih dataset sesuai filter aktif
+        let newData;
+        if (activeChartFilter === 'lunas') newData = data.chartLunas;
+        else if (activeChartFilter === 'belum_lunas') newData = data.chartBelum;
+        else newData = data.chartSemua;
+
+        salesChart.data.datasets[0].data = newData;
+        salesChart.update('active');
+
+        // Simpan data baru ke variabel global agar tombol filter chart tetap berfungsi
+        Object.assign(dataSemuaBulan, { length: 0 });
+        data.chartSemua.forEach((v,i) => dataSemuaBulan[i] = v); dataSemuaBulan.length = data.chartSemua.length;
+        Object.assign(dataLunasBulan, { length: 0 });
+        data.chartLunas.forEach((v,i) => dataLunasBulan[i] = v); dataLunasBulan.length = data.chartLunas.length;
+        Object.assign(dataBelumBulan, { length: 0 });
+        data.chartBelum.forEach((v,i) => dataBelumBulan[i] = v); dataBelumBulan.length = data.chartBelum.length;
+
+    } catch(e) {
+        console.error('Filter error:', e);
+    } finally {
+        spinner.classList.add('hidden');
+    }
+}
+
+// ---- Event listeners ----
+document.getElementById('filter-mode').addEventListener('change', function() {
+    buildOptions(this.value);
+    fetchFilteredData();
+});
+
+document.getElementById('filter-value').addEventListener('change', fetchFilteredData);
+
+// ---- Init: build opsi default (perbulan) saat halaman load ----
+buildOptions('bulan');
+
+// Override filterChart() agar update activeChartFilter
+const _origFilterChart = filterChart;
+window.filterChart = function(filter) {
+    activeChartFilter = filter;
+    _origFilterChart(filter);
+};
             // --- DATA DARI CONTROLLER (PHP -> JavaScript) ---
             // json_encode otomatis mengubah array PHP menjadi array JS
             const dataSemuaBulan = @json($chartSemuaData);
